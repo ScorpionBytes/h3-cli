@@ -34,7 +34,7 @@ All shell commands listed below should be run from the root directory of this re
 git clone git@gitlab.com:h3upperbounds/data/h3-cli.git
 ```
 
-If you don't have `git`, you can download this zip file instead: [h3-cli.zip](h3-cli.zip).
+If you don't have `git`, you can download the repo as a zip file from the download menu above.
 
 
 #### 2. Install dependencies: `jq` and `curl`

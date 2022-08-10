@@ -46,23 +46,6 @@ Set your API key in `H3_API_KEY` in your shell environment :
 export H3_API_KEY="{your key here}"
 ```
 
-> **H3-internal note:** the script defaults to `prod` settings for `H3_AUTH_URL` and `H3_GQL_URL`. 
-> You can override them for develop and stage.
-> 
-> ```shell
-> # prod (default):
-> export H3_AUTH_URL=https://api.horizon3ai.com/v1/auth
-> export H3_GQL_URL=https://api.horizon3ai.com/v1/graphql
-> 
-> # stage:
-> export H3_AUTH_URL=https://api.stage.h3ai.io/v1/auth
-> export H3_GQL_URL=https://api.stage.h3ai.io/v1/graphql
-> 
-> # develop:
-> export H3_AUTH_URL=https://api.develop.h3ai.io/v1/auth
-> export H3_GQL_URL=https://api.develop.h3ai.io/v1/graphql
-> ```
-
 #### 4. Run hello_world.graphql
 
 Run the [hello_world.graphql](queries/hello_world.graphql) query to test basic connectivity to the API.

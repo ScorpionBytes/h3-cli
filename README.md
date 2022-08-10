@@ -24,7 +24,20 @@ Documentation for the H3 GraphQL API can be found here: [https://h3-graphql-docs
 
 ## Getting started 
 
-#### 1. Install dependencies: `jq` and `curl`
+The steps below will get you up and running with the H3 CLI.  These instructions were tested on 
+a MacOS machine and should work in any POSIX-compliant shell environment with `bash` support.
+All shell commands listed below should be run from the root directory of this repo.
+
+#### 1. Clone this repo
+
+```shell
+git clone git@gitlab.com:h3upperbounds/data/h3-cli.git
+```
+
+If you don't have `git`, you can download this zip file instead: [h3-cli.zip](h3-cli.zip).
+
+
+#### 2. Install dependencies: `jq` and `curl`
 
 The h3-cli has dependencies on `jq` and `curl`. `jq` is a sed-like JSON parser. `curl` is a popular CLI tool for fetching URLs. 
 
@@ -33,12 +46,12 @@ The h3-cli has dependencies on `jq` and `curl`. `jq` is a sed-like JSON parser. 
 
 
 
-#### 2. Obtain an API key
+#### 3. Obtain an API key
 
 Obtain an API key from the Portal under the User -> Settings menu: [https://portal.horizon3ai.com/settings/api](https://portal.horizon3ai.com/settings/api).
 
 
-#### 3. Set up your shell environment
+#### 4. Set up your shell environment
 
 Set your API key in `H3_API_KEY` in your shell environment :
 
@@ -46,7 +59,7 @@ Set your API key in `H3_API_KEY` in your shell environment :
 export H3_API_KEY="{your key here}"
 ```
 
-#### 4. Run hello_world.graphql
+#### 5. Run hello_world.graphql
 
 Run the [hello_world.graphql](queries/hello_world.graphql) query to test basic connectivity to the API.
 
@@ -61,7 +74,7 @@ For pretty printing, use `jq`:
 ```
 
 
-#### 5. Fetch the list of pentests in your account
+#### 6. Fetch the list of pentests in your account
 
 ```shell
 ./h3.sh queries/pentests.graphql | jq .
@@ -91,7 +104,7 @@ For example check out the results of these commands:
 ```
 
 
-#### 6. Fetch a specific pentest from your account
+#### 7. Fetch a specific pentest from your account
 
 Pass the `op_id` as a parameter to [pentest.graphql](queries/pentest.graphql).
 

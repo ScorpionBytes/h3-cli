@@ -53,7 +53,13 @@ Obtain an API key from the Portal under the User -> Settings menu: [https://port
 
 #### 4. Set up your shell environment
 
-Set your API key in `H3_API_KEY` in your shell environment :
+Change into your root directory of h3-cli:
+
+```shell
+cd <path/to/h3-cli>
+```
+
+Set your API key in `H3_API_KEY` in your shell environment:
 
 ```shell
 export H3_API_KEY="{your key here}"
@@ -94,10 +100,19 @@ For example, `search` is supported as a parameter in [pentests.graphql](queries/
 For example check out the results of these commands:
 
 ```shell
-./h3.sh queries/pentests.graphql | jq -r .data.pentests_page.pentests[].op_id
-./h3.sh queries/pentests.graphql | jq -r .data.pentests_page.pentests[].name
+./h3.sh queries/pentests.graphql | jq -r '.data.pentests_page.pentests[].op_id'
+```
+
+```shell
+./h3.sh queries/pentests.graphql | jq -r '.data.pentests_page.pentests[].name'
+```
+
+```shell
 ./h3.sh queries/pentests.graphql \
     | jq -r '.data.pentests_page.pentests[] | {op_id, name, scheduled_at, state}'
+```
+
+```shell
 ./h3.sh queries/pentests.graphql \
     | jq -r '.data.pentests_page.pentests[] | {op_id, name, scheduled_at, state}' \
     | jq -rsf to_csv.jq

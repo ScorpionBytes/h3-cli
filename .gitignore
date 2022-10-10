@@ -1,3 +1,6 @@
 .*.swp
 .*.un~
 .*.jwt
+.idea
+.h3-cli.jwt
+*.conf

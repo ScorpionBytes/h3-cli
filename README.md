@@ -6,21 +6,22 @@ available through the Horizon3.ai Portal.  At a high level, the API allows
 you to:
 
 * schedule an autonomous pentest
-* download and run NodeZero 
+* download and run NodeZero™
 * monitor the status of a pentest while it is running
 * retrieve a pentest report after it's complete
 
 The API can be used for a variety of use cases such as periodically scheduling assessments 
 of your environment or kicking off a pentest as part of a continuous integration build pipeline.
 
-
 [[_TOC_]]
 
-## GraphQL API documentation
+## Introduction
 
-The H3 API is a [GraphQL](https://graphql.org/) API.
-Documentation for the H3 GraphQL API can be found here: [https://h3-graphql-docsite.horizon3ai.com/](https://h3-graphql-docsite.horizon3ai.com/).
+The Horizon3.ai API is powered by GraphQL.  In addition to this CLI document, 
+relevant documentation includes:
 
+- [Horizon3.ai GraphQL API Reference](https://h3-graphql-docsite.horizon3ai.com/)
+- [Learn about GraphQL](https://graphql.org/)
 
 ## Getting started 
 
@@ -36,7 +37,6 @@ git clone git@gitlab.com:h3upperbounds/data/h3-cli.git
 
 If you don't have `git`, you can download the repo as a zip file from the download menu above.
 
-
 #### 2. Install dependencies: `jq` and `curl`
 
 The h3-cli has dependencies on `jq` and `curl`. `jq` is a sed-like JSON parser. `curl` is a popular CLI tool for fetching URLs. 
@@ -44,16 +44,19 @@ The h3-cli has dependencies on `jq` and `curl`. `jq` is a sed-like JSON parser. 
 * Download `jq` from here: [https://stedolan.github.io/jq/](https://stedolan.github.io/jq/)
 * Download `curl` from here: [https://curl.se/download.html](https://curl.se/download.html)
 
-
-
 #### 3. Obtain an API key
 
 Obtain an API key from the Portal under the User -> Settings menu: [https://portal.horizon3ai.com/settings/api](https://portal.horizon3ai.com/settings/api).
 
-
 #### 4. Set up your shell environment
 
-Set your API key in `H3_API_KEY` in your shell environment :
+Change into your root directory of h3-cli:
+
+```shell
+cd <path/to/h3-cli>
+```
+
+Set your API key in `H3_API_KEY` in your shell environment:
 
 ```shell
 export H3_API_KEY="{your key here}"
@@ -72,7 +75,6 @@ For pretty printing, use `jq`:
 ```shell
 ./h3.sh queries/hello_world.graphql | jq .
 ```
-
 
 #### 6. Fetch the list of pentests in your account
 
@@ -94,15 +96,23 @@ For example, `search` is supported as a parameter in [pentests.graphql](queries/
 For example check out the results of these commands:
 
 ```shell
-./h3.sh queries/pentests.graphql | jq -r .data.pentests_page.pentests[].op_id
-./h3.sh queries/pentests.graphql | jq -r .data.pentests_page.pentests[].name
+./h3.sh queries/pentests.graphql | jq -r '.data.pentests_page.pentests[].op_id'
+```
+
+```shell
+./h3.sh queries/pentests.graphql | jq -r '.data.pentests_page.pentests[].name'
+```
+
+```shell
 ./h3.sh queries/pentests.graphql \
     | jq -r '.data.pentests_page.pentests[] | {op_id, name, scheduled_at, state}'
+```
+
+```shell
 ./h3.sh queries/pentests.graphql \
     | jq -r '.data.pentests_page.pentests[] | {op_id, name, scheduled_at, state}' \
     | jq -rsf to_csv.jq
 ```
-
 
 #### 7. Fetch a specific pentest from your account
 
@@ -112,66 +122,81 @@ Pass the `op_id` as a parameter to [pentest.graphql](queries/pentest.graphql).
 ./h3.sh queries/pentest.graphql '{"op_id":"your-op-id-here"}' | jq .
 ```
 
+> The terms "op" and "pentest" are often used interchangeably.
 
 ## Schedule a pentest
 
-To schedule a pentest using the default configuration template (`Default 1 - Recommended`):
+To schedule a pentest, it is required that an _op template_ be specified.
+Horizon3.ai provides new users with a default op template, named `Default 1 - Recommended`.
+
+For experienced users, custom op template(s) may be created via the [Horizon3.ai portal](https://portal.horizon3ai.com/).
+To create a custom op template, walk through the _Run a Pentest_ modal until you see the 
+option to customize the pentest configuration.
+
+> A custom op template may be created without actually running the pentest. 
+
+To schedule a pentest using the default op template:
 
 ```shell
 ./h3.sh queries/schedule_op_template.graphql | jq .
 ```
 
-You can also configure your own op template(s) in the Portal.
-Op templates are created within the Run-a-Pentest modal.
-(Note that you can create an op template in the modal without actually running the pentest).
-
-After you've created an op template, specify it as a parameter to [schedule_op_template.graphql](queries/schedule_op_template.graphql):
+To schedule a pentest using a custom op template, specify it as a parameter to [schedule_op_template.graphql](queries/schedule_op_template.graphql):
 
 ```shell
 ./h3.sh queries/schedule_op_template.graphql '{"op_template_name":"your-op-template-here"}' | jq .
 ```
 
-You can optionally specify an op name:
+To schedule a pentest and optionally assign it a name of your choosing, specify the `op_name` parameter:
 
 ```shell
 ./h3.sh queries/schedule_op_template.graphql '{"op_template_name":"your-op-template-here", "op_name":"your-op-name-here"}' | jq .
 ```
 
-## Download and run NodeZero
+> For internal pentests, additional steps are required before the pentest will begin running, 
+> see the next section about downloading and running NodeZero™ by using the response from `schedule_op_template`.
 
-**NOTE: This part does NOT apply to External Pentesting.**
+## Download and run NodeZero™
 
-After scheduling an internal pentest, you must download and run NodeZero on a Docker Host inside your network.
-This is done using the NodeZero Launch Script.
+**⚠️ The following instructions apply to Internal Pentests, _not_ External Pentests.**
 
-You can retrieve the NodeZero Launch Script URL from the `Pentest` data:
+After scheduling an *internal pentest*, you must download and run NodeZero™ on a Docker Host inside your network.
+This is done by using the NodeZero™ Launch Script on the Docker Host. 
+
+To retrieve the NodeZero™ Launch Script _URL_ for a scheduled pentest:
 
 ```shell
 ./h3.sh queries/pentest.graphql '{"op_id":"your-op-id-here"}' | jq -r .data.pentest.nodezero_script_url
 ```
 
-> Note: `jq -r` strips any surrounding quotes from the output string.
+> `jq -r` strips any surrounding quotes from the output string.
 
-You can also retrieve it directly from the `schedule_op_template` response:
+Alternatively, retrieve it when scheduling a pentest by getting it from the `schedule_op_template` response:
 
 ```shell
 ./h3.sh queries/schedule_op_template.graphql | jq .data.schedule_op_template.op.nodezero_script_url
 ```
 
-To download and launch NodeZero, fetch the NodeZero Launch Script via `curl` and pipe it to `bash` to execute it:
+On the Docker Host, download and run NodeZero™ via the Launch Script:
+
+```shell
+curl "<nodezero-script-url>" | bash
+```
+
+Putting it all together, here's an example of retrieving the NodeZero™ Launch Script URL, 
+downloading (`curl`) the NodeZero™ Launch Script, and executing (`bash`) it on the Docker Host:
 
 ```shell
 nodezero_script_url=`./h3.sh queries/pentest.graphql '{"op_id":"your-op-id-here"}' | jq -r .data.pentest.nodezero_script_url`
 curl "$nodezero_script_url" | bash
 ```
 
-Don't forget to put quotes around the URL, otherwise it might not work properly.
-
+> Don't forget to put quotes around the URL, otherwise it might not work properly.
 
 ## Sample queries
 
 The [queries](queries) directory contains a set of sample GraphQL queries 
-you can use and modify to your needs.
+you can use and modify to your needs.  The queries are documented in the [Horizon3.ai GraphQL API Reference](https://h3-graphql-docsite.horizon3ai.com/).
 
 Examples:
 
@@ -366,11 +391,11 @@ If you want to convert the `pentests` array to a CSV:
 
 You can wire up h3-cli to your job scheduler in order to run continuous, regularly scheduled pentests.
 
-Note that if you're running internal pentests, you must download and run NodeZero 
+Note that if you're running internal pentests, you must download and run NodeZero™ 
 as part of the regularly scheduled job.  This means h3-cli will need to be invoked from the 
-machine where you intend to run NodeZero.
+machine where you intend to run NodeZero™.
 
-Here's an example shell script that (1) schedules the pentest and (2) downloads and runs NodeZero,
+Here's an example shell script that (1) schedules the pentest and (2) downloads and runs NodeZero™,
 all in one go:
 
 ```shell
@@ -386,10 +411,10 @@ scheduled_timestamp_iso=`cat <<<$op | jq -r .scheduled_timestamp_iso`
 echo "Scheduled pentest \"$op_name\" at $scheduled_timestamp_iso."
 
 #
-# 2. download and run NodeZero
+# 2. download and run NodeZero™
 #
 nodezero_script_url=`cat <<<$op | jq -r .nodezero_script_url`
-echo "Download and run NodeZero from $nodezero_script_url ... "
+echo "Download and run NodeZero™ from $nodezero_script_url ... "
 curl "$nodezero_script_url" | bash
 ```
 

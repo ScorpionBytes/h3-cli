@@ -66,7 +66,6 @@ function read_jwt {
     fi
 }
 
-
 # -------------------------------------------------------------------------
 # functions to read the graphql query from a file, clean it, and post it
 # -------------------------------------------------------------------------
@@ -104,25 +103,9 @@ function post_query {
 HERE
 }
 
-
-
 # -------------------------------------------------------------------------
-# uncomment the call below and run hello_world for a quick example. 
+# main function
 # -------------------------------------------------------------------------
-
-# runs simple "hello world" query for testing connectivity
-function hello_world {
-    read_jwt
-    q=`cat <<HERE
-query { 
-    hello
-}
-HERE
-`
-    post_query "$q"
-}
-
-
 
 # read / refresh the jwt.
 # read the graphql query from the file/stdin.
@@ -146,7 +129,7 @@ function main {
 
     # read the vars
     shift
-    v="$*"  # otherwise isn't handling spaces in $2
+    v="$*"  # otherwise doesn't handle spaces in $2
 
     # run the query 
     r=`post_query "$q" "$v"`
@@ -158,8 +141,6 @@ function main {
     echo $r
 }
 
-
-# hello_world
 main $*
 
 

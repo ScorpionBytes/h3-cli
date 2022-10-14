@@ -389,34 +389,9 @@ If you want to convert the `pentests` array to a CSV:
 
 ## Use Case: Regularly scheduled pentests
 
-You can wire up h3-cli to your job scheduler in order to run continuous, regularly scheduled pentests.
+A common use case for h3-cli is running pentests automatically on a regular cadence, for example once a week.
 
-Note that if you're running internal pentests, you must download and run NodeZero™ 
-as part of the regularly scheduled job.  This means h3-cli will need to be invoked from the 
-machine where you intend to run NodeZero™.
-
-Here's an example shell script that (1) schedules the pentest and (2) downloads and runs NodeZero™,
-all in one go:
-
-```shell
-#!/bin/bash
-
-#
-# 1. schedule the pentest 
-#
-res=`./h3.sh queries/schedule_op_template.graphql`
-op=`cat <<<$res | jq .data.schedule_op_template.op`
-op_name=`cat <<<$op | jq -r .op_name`
-scheduled_timestamp_iso=`cat <<<$op | jq -r .scheduled_timestamp_iso`
-echo "Scheduled pentest \"$op_name\" at $scheduled_timestamp_iso."
-
-#
-# 2. download and run NodeZero™
-#
-nodezero_script_url=`cat <<<$op | jq -r .nodezero_script_url`
-echo "Download and run NodeZero™ from $nodezero_script_url ... "
-curl "$nodezero_script_url" | bash
-```
+See [this guide](scheduling-pentests/README.md) for setting up periodic, regularly scheduled pentests using h3-cli.
 
 
 ## Use Case: Monitoring pentests

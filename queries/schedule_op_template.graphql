@@ -13,6 +13,7 @@ fragment OpFragment on Op {
     op_id
     op_name
     op_state
+    op_type
     scheduled_timestamp_iso
     launched_timestamp_iso
     completed_timestamp_iso

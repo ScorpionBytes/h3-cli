@@ -16,6 +16,14 @@ if [ -z "$H3_API_KEY" ]; then
     exit 1
 fi
 
+if [ -z "$H3_CLI_HOME" ]; then
+    H3_CLI_HOME=`dirname $0`
+    if [ -z "$H3_CLI_HOME" ]; then
+        echoerr "H3_CLI_HOME environment variable required"
+        exit 1
+    fi
+fi
+
 if [ -z "$H3_AUTH_URL" ]; then
     H3_AUTH_URL=https://api.horizon3ai.com/v1/auth
 fi
@@ -26,7 +34,7 @@ fi
 
 
 # JWT is stored here
-jwt_file=".h3-cli.jwt"
+jwt_file="$H3_CLI_HOME/.h3-cli.jwt"
 
 # -------------------------------------------------------------------------
 # functions to gen/read/refresh the authentication token (JWT)

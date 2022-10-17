@@ -7,7 +7,24 @@
 # $ export H3_CLI_HOME=/path/to/h3-cli
 #
 
-OP_ID_FILE=$H3_CLI_HOME/.op_id
+OP_ID_FILE=$H3_CLI_HOME/.h3-cli.op_id
+
+
+#
+# writes message to stderr
+# usage: echoerr "the message"
+#
+function echoerr { 
+    echo "[`date`] $@" 1>&2;   
+}
+
+#
+# writes message to stdout
+# usage: echoerr "the message"
+#
+function echoinfo {
+    echo "[`date`] $@" 
+}
 
 #
 # asserts that required env vars have been set.
@@ -15,11 +32,11 @@ OP_ID_FILE=$H3_CLI_HOME/.op_id
 #
 function check_env_vars {
     if [ -z "$H3_CLI_HOME" ]; then 
-        echo "ERROR: H3_CLI_HOME is required" 1>&2; 
+        echoerr "ERROR: H3_CLI_HOME is required"
         exit 1
     fi
     if [ -z "$H3_API_KEY" ]; then 
-        echo "ERROR: H3_API_KEY is required" 1>&2; 
+        echoerr "ERROR: H3_API_KEY is required"
         exit 1
     fi
 }
@@ -32,15 +49,17 @@ function check_env_vars {
 #
 function check_gql_error {
     res=$1
-    error_message=`cat <<<$res | jq -r .errors[].message`
+    # -rx- echoerr "checking gql error on $res"
+    error_message=`cat <<<$res | jq -r .errors[]?.message`
     if [ ! -z "$error_message" ]; then 
-        echo "ERROR: $error_message" 1>&2; 
+        echoerr "ERROR: $error_message" 
         exit 1
     fi
+    # -rx- echoerr "check_gql_error exit"
 }
 
 #
-# retrieve op_id from temp file .op_id 
+# retrieve op_id from temp file 
 # usage: read_op_id_file
 #
 function read_op_id_file {
@@ -49,7 +68,7 @@ function read_op_id_file {
 }
 
 #
-# write op_id to temp file .op_id
+# write op_id to temp file.
 # usage: write_op_id_file $op_id
 # $op_id: the op_id to write
 #
@@ -66,7 +85,7 @@ function write_op_id_file {
 function op_id_to_json {
     op_id=$1
     if [ -z "$op_id" ]; then
-        return 
+        return 0
     fi
     op_id_json=`cat <<HERE
 {"op_id":"$op_id"}
@@ -82,11 +101,13 @@ HERE
 #
 function fetch_pentest {
     op_id=$1
+    # -rx- echoerr "fetch_pentest entry: $op_id"
     if [ -z "$op_id" ]; then
-        return 
+        return 0
     fi
     op_id_json=`op_id_to_json $op_id`
     res=`$H3_CLI_HOME/h3.sh $H3_CLI_HOME/queries/pentest.graphql "$op_id_json"`
+    # -rx- echoerr "fetch_pentest res: $res"
     check_gql_error "$res"      
     pentest=`cat <<<$res | jq .data.pentest`
     echo $pentest
@@ -100,26 +121,28 @@ function fetch_pentest {
 function exit_if_pentest_is_active {
     pentest="$1"
     if [ -z "$pentest" ]; then
-        return 
+        return 0
     fi
     pentest_name=`cat <<<$pentest | jq -r .name`
     pentest_state=`cat <<<$pentest | jq -r .state`
-    if [ "$pentest_state" = "done" -o "$pentest_state" = "ended" ]; then
+    if [ "$pentest_state" = "done" -o "$pentest_state" = "ended" -o "$pentest_state" = "processing" ]; then
         return 0
     fi
-    echo "ERROR: Pentest \"$pentest_name\" is still active; state=$pentest_state" 1>&2; 
+    echoerr "ERROR: Pentest \"$pentest_name\" is still active; state=$pentest_state"
     exit 1
 }
 
 #
 # schedule a pentest and return the Op record
 # usage: schedule_pentest 
+# usage: schedule_pentest '{"op_template_name":"your-op-template-here"}'
 #
 function schedule_pentest {
-    res=`$H3_CLI_HOME/h3.sh $H3_CLI_HOME/queries/schedule_op_template.graphql`
+    json_params="$1"
+    res=`$H3_CLI_HOME/h3.sh $H3_CLI_HOME/queries/schedule_op_template.graphql "$json_params"`
     check_gql_error "$res"
     op=`cat <<<$res | jq .data.schedule_op_template.op`
-    return "$op"
+    echo "$op"
 }
 
 #
@@ -130,7 +153,7 @@ function schedule_pentest {
 function pause_pentest {
     op_id=$1
     if [ -z "$op_id" ]; then
-        return 
+        return 0
     fi
     op_id_json=`op_id_to_json $op_id`
     res=`$H3_CLI_HOME/h3.sh $H3_CLI_HOME/queries/pause_op.graphql "$op_id_json"`
@@ -145,7 +168,7 @@ function pause_pentest {
 function resume_pentest {
     op_id=$1
     if [ -z "$op_id" ]; then
-        return 
+        return 0
     fi
     op_id_json=`op_id_to_json $op_id`
     res=`$H3_CLI_HOME/h3.sh $H3_CLI_HOME/queries/resume_op.graphql "$op_id_json"`
@@ -160,7 +183,7 @@ function resume_pentest {
 function cancel_pentest {
     op_id=$1
     if [ -z "$op_id" ]; then
-        return 
+        return 0
     fi
     op_id_json=`op_id_to_json $op_id`
     res=`$H3_CLI_HOME/h3.sh $H3_CLI_HOME/queries/cancel_op.graphql "$op_id_json"`

@@ -2,6 +2,6 @@
 .*.un~
 .*.jwt
 .idea
-.h3-cli.jwt
+.h3-cli.*
 *.conf
 .env*

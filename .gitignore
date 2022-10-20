@@ -5,3 +5,4 @@
 .h3-cli.*
 *.conf
 .env*
+dri

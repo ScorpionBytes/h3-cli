@@ -387,11 +387,11 @@ If you want to convert the `pentests` array to a CSV:
 
 
 
-## Use Case: Regularly scheduled pentests
+## Use Case: Schedule recurring pentests
 
 A common use case for h3-cli is running pentests automatically on a recurring basis, for example once a week.
 
-See [this guide](recurring-pentests.md) for setting up regularly scheduled pentests using h3-cli.
+See [this guide](recurring-pentests.md) for setting up recurring pentests using h3-cli.
 
 
 ## Use Case: Monitoring pentests

@@ -181,17 +181,17 @@ the newly scheduled pentest.  You can verify the pentest is provisioning by chec
 There are several ways to specify additional parameters when scheduling pentests. For more information see additional examples [here](#scheduling-pentests-with-h3-cli).
 
 **WAIT! YOU'RE NOT DONE!**: For internal pentests (which are the default), additional steps are required before the pentest will begin running.
-See the next section about downloading and running NodeZero™ in order to complete the initiation of your pentest.
+See the next section about downloading and running NodeZero in order to complete the initiation of your pentest.
 
 
 ### 9. Download and run NodeZero™
 
 **⚠️ The following instructions apply to Internal Pentests only, _not_ External Pentests.**
 
-After scheduling an *internal pentest*, you must download and run NodeZero™ on a Docker Host inside your network.
-This is done by running the NodeZero™ Launch Script on the Docker Host. 
+After scheduling an *internal pentest*, you must download and run NodeZero on a Docker Host inside your network.
+This is done by running the NodeZero Launch Script on the Docker Host. 
 
-You can retrieve the NodeZero™ Launch Script _URL_ for a scheduled pentest by passing the `op_id` to [pentest.graphql](queries/pentest.graphql)
+You can retrieve the NodeZero Launch Script _URL_ for a scheduled pentest by passing the `op_id` to [pentest.graphql](queries/pentest.graphql)
 and parsing `nodezero_script_url` from the JSON response, as shown below.  You can retrieve the `op_id` from the JSON response in the previous [step](#8-schedule-a-pentest),
 or by re-listing the pentests in your account and looking for the one most recently scheduled (it will likely be in `provisioning` state).
 
@@ -199,7 +199,7 @@ or by re-listing the pentests in your account and looking for the one most recen
 ./h3.sh queries/pentest.graphql '{"op_id":"your-op-id-here"}' | jq .data.pentest.nodezero_script_url
 ```
 
-Then download the launch script on your Docker Host using `curl` and pipe it to `bash` to run it and launch NodeZero™:
+Then download the launch script on your Docker Host using `curl` and pipe it to `bash` to run it and launch NodeZero:
 
 ```shell
 curl "<nodezero-script-url>" | bash

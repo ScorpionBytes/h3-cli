@@ -1,0 +1,83 @@
+# rows begining w/ # are ignored 
+{"schedule_op_form":{"op_name":"172.16.32.0/24 | DRI VLAN arpwatch Run"           , "op_param_max_scope":"172.16.32.0/24"         , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1008 host (arpwatch) - ryanc00w scan"        , "op_param_max_scope":"10.15.10.24/32"         , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1008 host - VLAN 1008 scan"                  , "op_param_max_scope":"10.10.8.0/21"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1077 host (arpwatch) - VLAN 1077 scan"       , "op_param_max_scope":"192.168.77.0/24"        , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1078 host (arpwatch) - VLAN 1078 scan"       , "op_param_max_scope":"192.168.78.0/24"        , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 11 host (arpwatch) - VLAN 11 scan"           , "op_param_max_scope":"192.168.11.0/24"        , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 11 host (arpwatch) - VLAN 11 scan"           , "op_param_max_scope":"192.168.11.0/24"        , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 12 host (arpwatch) - VLAN 12 scan"           , "op_param_max_scope":"192.168.12.0/24"        , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1200 host (arpwatch) - VLAN 1200 scan"       , "op_param_max_scope":"192.168.200.0/24"       , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1201 host (arpwatch) - VLAN 1201 scan"       , "op_param_max_scope":"192.168.201.0/24"       , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1210 host (arpwatch) - VLAN 1210 scan"       , "op_param_max_scope":"192.168.210.0/24"       , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1211 host (arpwatch) - VLAN 1211 scan"       , "op_param_max_scope":"192.168.211.0/24"       , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1400 host (arpwatch) - VLAN 1400 scan"       , "op_param_max_scope":"10.14.0.0/21"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1408 host (arpwatch) - VLAN 1408 scan"       , "op_param_max_scope":"10.14.8.0/21"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1500 host (arpwatch) - VLAN 1500 scan"       , "op_param_max_scope":"10.15.0.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1502 host (arpwatch) - VLAN 1502 scan"       , "op_param_max_scope":"10.15.2.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1504 host (arpwatch) - VLAN 1504 scan"       , "op_param_max_scope":"10.15.4.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1508 host (arpwatch) - VLAN 1508 scan"       , "op_param_max_scope":"10.15.8.0/24"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1509 host (arpwatch) - VLAN 1509 scan"       , "op_param_max_scope":"10.15.9.0/24"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1510 host (arpwatch) - VLAN 1510 scan"       , "op_param_max_scope":"10.15.10.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1512 host (arpwatch) - VLAN 1512 scan"       , "op_param_max_scope":"10.15.12.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1514 host (arpwatch) - VLAN 1514 scan"       , "op_param_max_scope":"10.15.14.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1516 host (arpwatch) - VLAN 1516 scan"       , "op_param_max_scope":"10.15.16.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1518 host (arpwatch) - VLAN 1518 scan"       , "op_param_max_scope":"10.15.18.0/24"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1520 host (arpwatch) - VLAN 1520 scan"       , "op_param_max_scope":"10.15.20.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1530 host (arpwatch) - VLAN 1530 scan"       , "op_param_max_scope":"10.15.30.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1540 host (arpwatch) - VLAN 1540 scan"       , "op_param_max_scope":"10.15.40.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1550 host (arpwatch) - VLAN 1550 scan"       , "op_param_max_scope":"10.15.50.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1552 host (arpwatch) - VLAN 1552 scan"       , "op_param_max_scope":"10.15.52.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1560 host (arpwatch) - VLAN 1560 scan"       , "op_param_max_scope":"10.15.60.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1570 host (arpwatch) - VLAN 1570 scan"       , "op_param_max_scope":"10.15.70.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1600 host (arpwatch) - VLAN 1600 scan"       , "op_param_max_scope":"10.16.0.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1602 host (arpwatch) - VLAN 1602 scan"       , "op_param_max_scope":"10.16.2.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1604 host (arpwatch) - VLAN 1604 scan"       , "op_param_max_scope":"10.16.4.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1661 host (arpwatch) - VLAN 1661 scan"       , "op_param_max_scope":"172.16.61.0/24"         , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1700 host (arpwatch) - VLAN 1700 scan"       , "op_param_max_scope":"10.17.0.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1710 host (arpwatch) - VLAN 1710 scan"       , "op_param_max_scope":"10.17.10.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1720 host (arpwatch) - VLAN 1720 scan"       , "op_param_max_scope":"10.17.20.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1722 host (arpwatch) - VLAN 1722 scan"       , "op_param_max_scope":"10.17.22.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1730 host (arpwatch) - VLAN 1730 scan"       , "op_param_max_scope":"10.17.30.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1732 host (arpwatch) - VLAN 1732 scan"       , "op_param_max_scope":"10.17.32.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1800 host (arpwatch) - VLAN 1800 scan"       , "op_param_max_scope":"10.18.0.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1802 host (arpwatch) - VLAN 1802 scan"       , "op_param_max_scope":"10.8.2.0/23"            , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 190 Scan - Arpwatch in VLAN 190"             , "op_param_max_scope":"172.16.190.0/24"        , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1900 host (arpwatch) - VLAN 1900 scan"       , "op_param_max_scope":"10.19.0.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1902 host (arpwatch) - VLAN 1902 scan"       , "op_param_max_scope":"10.19.2.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 191 host (arpwatch) - VLAN 191 scan"         , "op_param_max_scope":"172.16.191.0/24"        , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1910 host (arpwatch) - VLAN 1910 scan"       , "op_param_max_scope":"10.19.10.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 1912 host (arpwatch) - VLAN 1912 scan"       , "op_param_max_scope":"10.19.12.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2008 host (arpwatch-lv) - 10.20.8.0 scan"    , "op_param_max_scope":"10.20.8.0/21"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2050 host (arpwatch-lv) - 10.20.50.0 scan"   , "op_param_max_scope":"10.20.50.0/24"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2090 host (arpwatch-lv) - 10.20.90.0 scan"   , "op_param_max_scope":"10.20.90.0/24"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2400 host (arpwatch-lv) - 10.24.0.0 scan"    , "op_param_max_scope":"10.24.0.0/21"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2408 host (arpwatch-lv) - 10.24.8.0 scan"    , "op_param_max_scope":"10.24.8.0/21"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 250 host (arpwatch-LV) - 192.168.250.0 scan" , "op_param_max_scope":"192.168.250.0/24"       , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2500 host (arpwatch-lv) - 10.25.0.0 scan"    , "op_param_max_scope":"10.25.0.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2510 host (arpwatch-lv) - 10.25.10.0 scan"   , "op_param_max_scope":"10.25.10.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2514 host (arpwatch-lv) - 10.25.14..0 scan"  , "op_param_max_scope":"10.25.14.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2516 host (arpwatch-lv) - 10.25.16.0 scan"   , "op_param_max_scope":"10.25.16.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2520 host (arpwatch-lv) - 10.25.20.0 scan"   , "op_param_max_scope":"10.25.20.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2530 host (arpwatch-lv) - 10.25.30.0 scan"   , "op_param_max_scope":"10.25.30.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2540 host (arpwatch-lv) - 10.25.40.0 scan"   , "op_param_max_scope":"10.25.40.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2550 host (arpwatch-lv) - 10.25.50.0 scan"   , "op_param_max_scope":"10.25.50.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2552 host (arpwatch-lv) - 10.25.52.0 scan"   , "op_param_max_scope":"10.25.52.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2560 host (arpwatch-lv) - 10.25.60.0 scan"   , "op_param_max_scope":"10.25.60.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2600 host (arpwatch-lv) - 10.26.0.0 scan"    , "op_param_max_scope":"10.26.0.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2700 host (arpwatch-lv) - 10.27.0.0 scan"    , "op_param_max_scope":"10.27.0.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2702 host (arpwatch-lv) - 10.27.2.0 scan"    , "op_param_max_scope":"10.27.2.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2710 host (arpwatch-lv) - 10.27.10.0 scan"   , "op_param_max_scope":"10.27.10.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2720 host (arpwatch-lv) - 10.27.20.0 scan"   , "op_param_max_scope":"10.27.20.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2730 host (arpwatch-lv) - 10.27.30.0 scan"   , "op_param_max_scope":"10.27.30.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2800 host (arpwatch-lv) - 10.28.0.0 scan"    , "op_param_max_scope":"10.28.0.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2802 host (arpwatch-lv) - 10.28.2.0 scan"    , "op_param_max_scope":"10.28.2.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2900 host (arpwatch-lv) - 10.29.0.0 scan"    , "op_param_max_scope":"10.29.0.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2902 host (arpwatch-lv) - 10.29.2.0 scan"    , "op_param_max_scope":"10.29.2.0/23"           , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 2910 host (arpwatch-lv) - 10.29.10.0 scan"   , "op_param_max_scope":"10.29.10.0/23"          , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 3189 host (arpwatch) - VLAN 3189 scan"       , "op_param_max_scope":"172.16.189.0/24"        , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 61 host (arpwatch) - VLAN 61 scan"           , "op_param_max_scope":"192.168.61.0/24"        , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 62 host (arpwatch) - VLAN 62 scan"           , "op_param_max_scope":"192.168.62.0/24"        , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 70 host (arpwatch) - VLAN 70 scan"           , "op_param_max_scope":"192.168.70.0/24"        , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 80 host (arpwatch) - VLAN 80 scan"           , "op_param_max_scope":"192.168.80.0/24"        , "network_interface": "en0"}}
+{"schedule_op_form":{"op_name":"VLAN 91 host (arpwatch) - VLAN 91 scan"           , "op_param_max_scope":"192.168.91.0/24"        , "network_interface": "en0"}}

@@ -132,6 +132,22 @@ function exit_if_pentest_is_active {
     exit 1
 }
 
+
+function exit_if_pentest_has_launched {
+    pentest="$1"
+    if [ -z "$pentest" ]; then
+        return 0
+    fi
+    pentest_name=`cat <<<$pentest | jq -r .name`
+    pentest_state=`cat <<<$pentest | jq -r .state`
+    if [ "$pentest_state" = "scheduled" -o "$pentest_state" = "preparing" -o "$pentest_state" = "installation_needed" ]; then
+        return 0
+    fi
+    echoerr "ERROR: Pentest \"$pentest_name\" has already launched; state=$pentest_state"
+    exit 1
+}
+
+
 #
 # schedule a pentest and return the Op record
 # usage: schedule_pentest 

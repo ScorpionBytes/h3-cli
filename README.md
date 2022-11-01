@@ -252,22 +252,22 @@ Examples:
 
 A common use case for h3-cli is running pentests automatically on a recurring basis, for example once a week.
 
-See [this guide](recurring-pentests.md) to learn how to set up recurring pentests using h3-cli.
+See [this guide](guides/recurring-pentests.md) to learn how to set up recurring pentests using h3-cli.
 
 
 ### Monitoring pentests
 
-See [this guide](monitor-pentests.md) to learn how to monitor pentests using h3-cli.
+See [this guide](guides/monitor-pentests.md) to learn how to monitor pentests using h3-cli.
 
 
 ### Paginating results
 
-See [this guide](paginate-results.md) to learn how to paginate through large result sets using h3-cli.
+See [this guide](guides/paginate-results.md) to learn how to paginate through large result sets using h3-cli.
 
 
 ### Downloading pentest reports
 
-See [this guide](download-reports.md) to learn how to download pentest reports using h3-cli.
+See [this guide](guides/download-reports.md) to learn how to download pentest reports using h3-cli.
 
 
 

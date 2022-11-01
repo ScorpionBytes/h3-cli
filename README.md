@@ -114,14 +114,15 @@ You should get the response:
 If you are getting an error response, please contact H3 via the chat icon in the Horizon3.ai Portal.
 
 
-### 6. Fetch the list of pentests in your account
+### 6. Query the list of pentests in your account
+
+The command below will return the full list of pentests in your account.  
 
 ```shell
 ./h3.sh queries/pentests.graphql | jq .
 ```
 
-This will return the full list of pentests in your account.  To filter for pentests that match
-a given search term, use the following parameterized query:
+To filter for pentests that match a given search term, use the following parameterized query:
 
 ```shell
 ./h3.sh queries/pentests.graphql '{"search":"sample"}' | jq .
@@ -130,7 +131,7 @@ a given search term, use the following parameterized query:
 Many of the [sample queries](#sample-queries) have optional or required parameters.
 You can specify parameter values by passing them as the second argument to `h3.sh`, in JSON format.
 
-### 7. Fetch a specific pentest from your account
+### 7. Query a specific pentest from your account
 
 To fetch a single pentest from your account, you pass the `op_id` as a parameter to [pentest.graphql](queries/pentest.graphql).
 The `op_id` can be found in the JSON output from the list of pentests in [step #6 above](#6-fetch-the-list-of-pentests-in-your-account).
@@ -175,8 +176,8 @@ To schedule a pentest using the default op template with Intelligent Scope:
 ./h3.sh queries/schedule_op_template.graphql | jq .
 ```
 
-**CONGRATULATIONS!**  You have successfully scheduled your pentest. The JSON response contains the details for 
-the newly scheduled pentest.  You can verify the pentest is provisioning by checking your [Horizon3.ai Portal](https://portal.horizon3ai.com/pentests).
+The JSON response contains the details for the newly scheduled pentest.
+You can verify the pentest is provisioning by checking your [Horizon3.ai Portal](https://portal.horizon3ai.com/pentests).
 
 There are several ways to specify additional parameters when scheduling pentests. For more information see additional examples [here](#scheduling-pentests-with-h3-cli).
 
@@ -207,7 +208,7 @@ curl "<nodezero-script-url>" | bash
 
 > **IMPORTANT!** Don't forget to put quotes around the URL, otherwise it might not work properly.
 
-**CONGRATULATIONS AGAIN!**  You have now successfully scheduled _and launched_ your pentest.  The launch script will first 
+**CONGRATULATIONS!**  You have now successfully scheduled _and launched_ your pentest.  The launch script will first 
 verify that your system is compatible with NodeZero.  After that it will download NodeZero and run it.  When the pentest is
 complete, NodeZero will automatically shut itself down.  
 

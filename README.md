@@ -29,8 +29,6 @@ relevant documentation includes:
 
 The steps below will get you up and running quickly with h3-cli. These instructions were tested on 
 MacOS and Linux machines, and generally should work on any [POSIX-compliant](https://en.wikipedia.org/wiki/POSIX) system with `bash` support.
-All shell commands in this guide should be run from the root directory of this repo.
-
 
 It is assumed you already have an account with Horizon3.ai.  If not, sign up
 at [https://portal.horizon3ai.com/](https://portal.horizon3ai.com/).

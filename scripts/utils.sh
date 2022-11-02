@@ -106,7 +106,7 @@ function fetch_pentest {
         return 0
     fi
     op_id_json=`op_id_to_json $op_id`
-    res=`$H3_CLI_HOME/h3.sh $H3_CLI_HOME/queries/pentest.graphql "$op_id_json"`
+    res=`h3 pentest "$op_id_json"`
     # -rx- echoerr "fetch_pentest res: $res"
     check_gql_error "$res"      
     pentest=`cat <<<$res | jq .data.pentest`
@@ -155,7 +155,7 @@ function exit_if_pentest_has_launched {
 #
 function schedule_pentest {
     json_params="$1"
-    res=`$H3_CLI_HOME/h3.sh $H3_CLI_HOME/queries/schedule_op_template.graphql "$json_params"`
+    res=`h3 schedule_op_template "$json_params"`
     check_gql_error "$res"
     op=`cat <<<$res | jq .data.schedule_op_template.op`
     echo "$op"
@@ -172,7 +172,7 @@ function pause_pentest {
         return 0
     fi
     op_id_json=`op_id_to_json $op_id`
-    res=`$H3_CLI_HOME/h3.sh $H3_CLI_HOME/queries/pause_op.graphql "$op_id_json"`
+    res=`h3 pause_op "$op_id_json"`
     check_gql_error "$res"
 }
 
@@ -187,7 +187,7 @@ function resume_pentest {
         return 0
     fi
     op_id_json=`op_id_to_json $op_id`
-    res=`$H3_CLI_HOME/h3.sh $H3_CLI_HOME/queries/resume_op.graphql "$op_id_json"`
+    res=`h3 resume_op "$op_id_json"`
     check_gql_error "$res"
 }
 
@@ -202,6 +202,6 @@ function cancel_pentest {
         return 0
     fi
     op_id_json=`op_id_to_json $op_id`
-    res=`$H3_CLI_HOME/h3.sh $H3_CLI_HOME/queries/cancel_op.graphql "$op_id_json"`
+    res=`h3 cancel_op "$op_id_json"`
     check_gql_error "$res"
 }

@@ -28,10 +28,11 @@ relevant documentation includes:
 ## Getting started 
 
 The steps below will get you up and running quickly with h3-cli. These instructions were tested on 
-MacOS and Linux machines, and generally should work on any POSIX-compliant system with `bash` support.
+MacOS and Linux machines, and generally should work on any [POSIX-compliant](https://en.wikipedia.org/wiki/POSIX) system with `bash` support.
 All shell commands in this guide should be run from the root directory of this repo.
 
-It is assumed you already have registered an account with Horizon3.ai.  If not, please sign up
+
+It is assumed you already have an account with Horizon3.ai.  If not, sign up
 at [https://portal.horizon3ai.com/](https://portal.horizon3ai.com/).
 
 
@@ -44,18 +45,34 @@ git clone git@gitlab.com:h3upperbounds/data/h3-cli.git
 ```
 
 This will create a new directory, `h3-cli`, and download the contents of this repo to it.  The `h3-cli` directory
-will be created in the directoy where you run the `git` command.  You can create the directory anywhere in the filesystem;
+will be created in the directory where you run the `git` command.  You can install h3-cli anywhere on the filesystem;
 there are no restrictions or dependencies on where it's located.
 
 > If you don't have `git`, you can download the repo as a zip archive from the menu above, and unzip it anywhere in the filesystem.
 
 ### 2. Install dependencies: `jq` and `curl`
 
-h3-cli has dependencies on `jq` and `curl`. `jq` is a sed-like JSON parser. `curl` is a popular CLI tool for fetching URLs. 
-Most systems have `curl` installed by default (you can check by simply trying to run `curl` from the command line).
+h3-cli has dependencies on `jq` and `curl`. `jq` is a sed-like JSON parser. `curl` is a popular CLI tool for posting HTTP requests. 
 
 * Download `jq` from here: [https://stedolan.github.io/jq/](https://stedolan.github.io/jq/)
 * Download `curl` from here: [https://curl.se/download.html](https://curl.se/download.html)
+    * Most systems have `curl` installed by default. You can check by running `curl --version` from the command line.
+
+
+Verify `jq` is installed by running:
+
+```shell
+echo '{"testing":"jq"}' | jq .
+```
+
+The output should be:
+
+```shell
+{
+  "testing": "jq"
+}
+```
+
 
 ### 3. Obtain an API key
 
@@ -66,27 +83,24 @@ can access your H3 account.
 
 ### 4. Set up your shell environment
 
-Set your API key in the `H3_API_KEY` environmenet variable in your shell environment:
+Set the following environment variables in your shell environment:
 
 ```shell
 export H3_API_KEY="your-key-here"
+export H3_CLI_HOME=/path/to/h3-cli
+export PATH=$H3_CLI_HOME/bin:$PATH
 ```
 
-### 5. Run hello_world.graphql to verify connectivity
+> Substitute `/path/to` with the actual path in your filesystem.
 
-First, change into the root directory of this repo.  All shell commands in this guide should be run 
-from the h3-cli root directory.
 
-```shell
-cd /path/to/h3-cli
-```
 
-> Substitute `/path/to` in all examples with the actual path in your filesystem.
+### 5. Run hello_world to verify connectivity
 
 Run the [hello_world.graphql](queries/hello_world.graphql) query to verify connectivity with the API.
 
 ```shell
-./h3.sh queries/hello_world.graphql 
+h3 hello_world
 ```
 
 You should get the response:
@@ -98,7 +112,7 @@ You should get the response:
 All responses from the H3 API are in JSON format. For pretty-printing the JSON response, use `jq`:
 
 ```shell
-./h3.sh queries/hello_world.graphql | jq .
+h3 hello_world | jq .
 ```
 
 You should get the response:
@@ -111,7 +125,8 @@ You should get the response:
 }
 ```
 
-If you are getting an error response, please contact H3 via the chat icon in the Horizon3.ai Portal.
+
+⚠️ If you are getting an error response, please contact H3 via the chat icon in the Horizon3.ai Portal.
 
 
 ### 6. Query the list of pentests in your account
@@ -119,17 +134,17 @@ If you are getting an error response, please contact H3 via the chat icon in the
 The command below will return the full list of pentests in your account.  
 
 ```shell
-./h3.sh queries/pentests.graphql | jq .
+h3 pentests | jq .
 ```
 
 To filter for pentests that match a given search term, use the following parameterized query:
 
 ```shell
-./h3.sh queries/pentests.graphql '{"search":"sample"}' | jq .
+h3 pentests '{"search":"sample"}' | jq .
 ```
 
 Many of the [sample queries](#sample-queries) have optional or required parameters.
-You can specify parameter values by passing them as the second argument to `h3.sh`, in JSON format.
+You can specify parameter values by passing them as the second argument to `h3`, in JSON format.
 
 ### 7. Query a specific pentest from your account
 
@@ -138,16 +153,17 @@ The `op_id` can be found in the JSON output from the list of pentests in [step #
 Use the following command to get the list of `op_id`'s in your account:
 
 ```shell
-./h3.sh queries/pentests.graphql | jq -r '.data.pentests_page.pentests[].op_id'
+h3 pentests | jq -r '.data.pentests_page.pentests[] | {op_id, name, scheduled_at, state}'
 ```
 
-This example uses `jq` to parse the `op_id` field from the list of pentests in the JSON
-response.  For more info on `jq` see our guide [JSON Parsing with `jq`](json-parsing-with-jq.md).
+This example uses `jq` to parse the `op_id` field (and a few other fields) from the list of pentests in the JSON
+response.  For more info on how to use `jq` see our guide [JSON Parsing with `jq`](json-parsing-with-jq.md).
 
 Now substitute `your-op-id-here` in the command below with an `op_id` from your account:
 
 ```shell
-./h3.sh queries/pentest.graphql '{"op_id":"your-op-id-here"}' | jq .
+op_id="your-op-id-here"
+h3 pentest $op_id | jq .
 ```
 
 > The terms "op" and "pentest" are often used interchangeably.
@@ -166,14 +182,12 @@ deployment options, visit our [product documentation](https://portal.horizon3ai.
 
 For experienced users, custom op template(s) may be created via the [Horizon3.ai Portal](https://portal.horizon3ai.com/).
 To create a custom op template, walk through the _Run a Pentest_ modal until you see the 
-option to customize the pentest configuration.
-
-> A custom op template may be created without actually running the pentest. 
+option to customize the pentest configuration. The op template can be created without actually running the pentest. 
 
 To schedule a pentest using the default op template with Intelligent Scope:
 
 ```shell
-./h3.sh queries/schedule_op_template.graphql | jq .
+h3 schedule_op_template | jq .
 ```
 
 The JSON response contains the details for the newly scheduled pentest.
@@ -185,32 +199,34 @@ There are several ways to specify additional parameters when scheduling pentests
 See the next section about downloading and running NodeZero in order to complete the initiation of your pentest.
 
 
-### 9. Download and run NodeZero™
+### 9. Run NodeZero™
 
 **⚠️ The following instructions apply to Internal Pentests only, _not_ External Pentests.**
 
-After scheduling an *internal pentest*, you must download and run NodeZero on a Docker Host inside your network.
-This is done by running the NodeZero Launch Script on the Docker Host. 
+After scheduling an *internal pentest*, you then have to run our NodeZero container on a Docker Host inside your network.
+This is done by running the NodeZero Launch Script on your Docker Host. 
 
-You can retrieve the NodeZero Launch Script _URL_ for a scheduled pentest by passing the `op_id` to [pentest.graphql](queries/pentest.graphql)
-and parsing `nodezero_script_url` from the JSON response, as shown below.  You can retrieve the `op_id` from the JSON response in the previous [step](#8-schedule-a-pentest),
+You can retrieve the NodeZero Launch Script's _URL_ for a pentest by parsing the `nodezero_script_url` field from the pentest's 
+JSON response, as shown in the commands below. 
+
+You'll first need the `op_id` for the pentest, which you can retrieve from the output of the previous [step](#8-schedule-a-pentest),
 or by re-listing the pentests in your account and looking for the one most recently scheduled (it will likely be in `provisioning` state).
 
-```shell
-./h3.sh queries/pentest.graphql '{"op_id":"your-op-id-here"}' | jq .data.pentest.nodezero_script_url
-```
-
-Then download the launch script on your Docker Host using `curl` and pipe it to `bash` to run it and launch NodeZero:
+The following commands will parse the `nodezero_script_url` from the pentest response, download it via `curl`,
+and run it by piping to `bash`.  The NodeZero Launch Script itself will then download our NodeZero container and run it in Docker.  
 
 ```shell
-curl "<nodezero-script-url>" | bash
+op_id="your-op-id-here"
+nodezero_script_url=`h3 pentest $op_id | jq -r .data.pentest.nodezero_script_url`
+curl "$nodezero_script_url" | bash
 ```
 
-> **IMPORTANT!** Don't forget to put quotes around the URL, otherwise it might not work properly.
+> Don't forget to put quotes around the URL, otherwise it could be misinterpreted by the terminal and result in an error.
 
-**CONGRATULATIONS!**  You have now successfully scheduled _and launched_ your pentest.  The launch script will first 
-verify that your system is compatible with NodeZero.  After that it will download NodeZero and run it.  When the pentest is
-complete, NodeZero will automatically shut itself down.  
+**YOUR PENTEST HAS BEEN LAUNCHED!**  Assuming the commands above ran successfully, then you have 
+successfully scheduled and launched your pentest.  You should see output from the NodeZero Launch Script being logged
+to the console.  The script will first verify your system is compatible with NodeZero before downloading and running it.
+When the pentest is complete, NodeZero will automatically shut itself down.  
 
 NodeZero is a Docker container.  You can view it using `docker ps`.  The container name will be of the form `n0-xxxx`.
 
@@ -231,18 +247,19 @@ you can use and modify to your needs.  The queries are documented in the [Horizo
 Examples:
 
 ```shell
-./h3.sh queries/pentests.graphql | jq .
-./h3.sh queries/pentest.graphql '{"op_id":"your-op-id-here"}' | jq .
-./h3.sh queries/action_logs.graphql '{"op_id":"your-op-id-here"}' | jq .
-./h3.sh queries/hosts_csv.graphql '{"op_id":"your-op-id-here"}' | jq -r .data.hosts_csv[]
-./h3.sh queries/hosts_csv_url.graphql '{"op_id":"your-op-id-here"}' | jq -r .data.hosts_csv_url
-./h3.sh queries/weaknesses_csv.graphql '{"op_id":"your-op-id-here"}' | jq -r .data.weaknesses_csv[]
-./h3.sh queries/weaknesses_csv_url.graphql '{"op_id":"your-op-id-here"}' | jq -r .data.weaknesses_csv_url
-./h3.sh queries/pentest_reports_zip_url.graphql '{"op_id":"your-op-id-here"}' | jq -r .data.pentest_reports_zip_url
-./h3.sh queries/schedule_op_template.graphql '{"op_template_name":"your-op-template-here"}' | jq .
-./h3.sh queries/pause_op.graphql '{"op_id":"your-op-id-here"}' | jq .
-./h3.sh queries/resume_op.graphql '{"op_id":"your-op-id-here"}' | jq .
-./h3.sh queries/cancel_op.graphql '{"op_id":"your-op-id-here"}' | jq .
+h3 pentests | jq .
+
+op_id="your-op-id-here" 
+h3 pentest $op_id | jq .
+h3 action_logs $op_id | jq .
+h3 hosts_csv $op_id | jq -r .data.hosts_csv[]
+h3 hosts_csv_url $op_id | jq -r .data.hosts_csv_url
+h3 weaknesses_csv $op_id | jq -r .data.weaknesses_csv[]
+h3 weaknesses_csv_url $op_id | jq -r .data.weaknesses_csv_url
+h3 pentest_reports_zip_url $op_id | jq -r .data.pentest_reports_zip_url
+h3 pause_op $op_id | jq .
+h3 resume_op $op_id | jq .
+h3 cancel_op $op_id | jq .
 ```
 
 
@@ -283,7 +300,7 @@ seamlessly and automatically re-authenticate and re-establish a session.
 If you wish to force h3-cli to re-authenticate, use the `--re-auth` option.
 
 ```shell
-./h3.sh --re-auth queries/schedule_op_template.graphql | jq .
+h3 --re-auth pentests | jq .
 ```
 
 This can be useful if you're switching from one `H3_API_KEY` to another and 
@@ -301,7 +318,7 @@ errors occur for some fields.
 For example, if you try to read a non-existent `op_id`: 
 
 ```shell
-./h3.sh queries/pentest.graphql '{"op_id":"12341234-1234-1234-1234-123412341234"}' | jq -r '.errors[].message'
+h3 pentest "12341234-1234-1234-1234-123412341234" | jq -r '.errors[].message'
 ```
 
 Output:
@@ -310,10 +327,10 @@ Output:
 [403] op is not available
 ```
 
-You can view the general structure of error responses using the [to_struct.jq](to_struct.jq) filter.
+You can view the general structure of error responses using the [to_struct.jq](filters/to_struct.jq) filter.
 
 ```shell
-./h3.sh queries/pentest.graphql '{"op_id":"12341234-1234-1234-1234-123412341234"}' | jq -rf to_struct.jq
+h3 pentest "12341234-1234-1234-1234-123412341234" | jq -rf $H3_CLI_HOME/filters/to_struct.jq
 ```
 
 Output:
@@ -344,25 +361,25 @@ For the simplest way to schedule a pentest (using the default op template and _I
 To schedule a pentest using the default op template:
 
 ```shell
-./h3.sh queries/schedule_op_template.graphql | jq .
+h3 schedule_op_template | jq .
 ```
 
 To schedule a pentest using a custom op template, specify it as a parameter to [schedule_op_template.graphql](queries/schedule_op_template.graphql):
 
 ```shell
-./h3.sh queries/schedule_op_template.graphql '{"op_template_name":"your-op-template-here"}' | jq .
+h3 schedule_op_template '{"op_template_name":"your-op-template-here"}' | jq .
 ```
 
 To schedule a pentest using the default op template but assign it a name of your choosing, use the optional `op_name` parameter: 
 
 ```shell
-./h3.sh queries/schedule_op_template.graphql '{"op_name":"your-op-name-here"}' | jq .
+h3 schedule_op_template '{"op_name":"your-op-name-here"}' | jq .
 ```
 
 To schedule a pentest using the default op template but specify its name and scope, use the optional `schedule_op_form` parameter:
 
 ```shell
-./h3.sh queries/schedule_op_template.graphql '{"op_name":"your-op-name-here", "schedule_op_form":{"op_param_max_scope": "192.168.0.0/24"}}' | jq .
+h3 schedule_op_template '{"op_name":"your-op-name-here", "schedule_op_form":{"op_param_max_scope": "192.168.0.0/24"}}' | jq .
 ```
 
 

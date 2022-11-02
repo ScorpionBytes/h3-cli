@@ -10,7 +10,7 @@ to accept `page_num` and `page_size` as parameters.  These parameters are passed
 to `page_input` within the query file.
 
 ```shell
-./h3.sh queries/action_logs.graphql '{"op_id":"your-op-id-here", "page_num":1, "page_size":100}' | jq .
+h3 action_logs '{"op_id":"your-op-id-here", "page_num":1, "page_size":100}' | jq .
 ```
 
 Here's an example shell script that paginates thru the full result set.
@@ -44,7 +44,7 @@ page_size=100
 # 
 while [ 1 ]; do
     json_params=`build_json_params $op_id $page_num $page_size`
-    res=`./h3.sh queries/action_logs.graphql "$json_params"`
+    res=`h3 action_logs "$json_params"`
     len=`cat <<<$res | jq '.data.action_logs_page.action_logs | length'`
     echo "Read $len records on page $page_num"
     if [ -z "$len" -o $len -eq 0 ]; then

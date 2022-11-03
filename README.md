@@ -124,7 +124,7 @@ You should get the response:
 ```
 
 
-⚠️ If you are getting an error response, please contact H3 via the chat icon in the Horizon3.ai Portal.
+⚠️ If you are getting an error response, please contact H3 via the chat icon in the [Horizon3.ai Portal](https://portal.horizon3ai.com/).
 
 
 ### 6. Query the list of pentests in your account
@@ -143,6 +143,8 @@ h3 pentests '{"search":"sample"}' | jq .
 
 Many of the [sample queries](#sample-queries) have optional or required parameters.
 You can specify parameter values by passing them as the second argument to `h3`, in JSON format.
+If you only need to pass an `op_id`, you can pass it directly without wrapping it in JSON (see 
+example in the next step).
 
 ### 7. Query a specific pentest from your account
 
@@ -155,7 +157,7 @@ h3 pentests | jq -r '.data.pentests_page.pentests[] | {op_id, name, scheduled_at
 ```
 
 This example uses `jq` to parse the `op_id` field (and a few other fields) from the list of pentests in the JSON
-response.  For more info on how to use `jq` see our guide [JSON Parsing with `jq`](json-parsing-with-jq.md).
+response.  For more info on how to use `jq` see our guide [JSON Parsing with `jq`](guides/json-parsing-with-jq.md).
 
 Now substitute `your-op-id-here` in the command below with an `op_id` from your account:
 
@@ -231,7 +233,7 @@ NodeZero is a Docker container.  You can view it using `docker ps`.  The contain
 ### 10. Going further 
 
 This completes the [Getting Started](#getting-started) section of this guide.  In this section we installed h3-cli, configured your 
-environment, listed the pentests in your account, scheduled a pentest, and finally launched NodeZero, all using h3-cli. 
+environment, listed the pentests in your account, scheduled a pentest, and launched NodeZero, all using h3-cli. 
 
 Check out the [sample queries](#sample-queries) and [use cases](#use-cases) below to further explore the capabilities
 provided by h3-cli.

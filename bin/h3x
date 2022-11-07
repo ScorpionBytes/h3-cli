@@ -43,19 +43,7 @@ function echolog {
 }
 
 
-function pentest {
-    res=`h3-gql pentest $*` 
-    rc=$?
-    if [ $rc -eq 0 ]; then
-        cat <<<$res | jq .data.pentest
-    else
-        echo $res
-    fi 
-    return $rc
-}
-
-
-function help {
+function cmd_help {
     cat <<HERE
 
 h3-cli: A command-line utility for the Horizon3 API.
@@ -68,6 +56,30 @@ h3 latest-pentest
 
 HERE
     return 1
+}
+
+
+function cmd_pentest {
+    res=`h3-gql pentest $*` 
+    rc=$?
+    if [ $rc -eq 0 ]; then
+        cat <<<$res | jq .data.pentest
+    else
+        echo $res
+    fi 
+    return $rc
+}
+
+
+function cmd_whoami {
+    res=`h3-gql whoami` 
+    rc=$?
+    if [ $rc -eq 0 ]; then
+        cat <<<$res | jq .data.session_user_account
+    else
+        echo $res
+    fi 
+    return $rc
 }
 
 
@@ -87,13 +99,16 @@ shift
 # eval "$bin_dir/h3-$cmd ${@@Q}"
 
 if [ "$cmd" = "help" ]; then
-    help $*
+    cmd_help $*
+
+elif [ "$cmd" = "whoami" ]; then
+    cmd_whoami
 
 elif [ "$cmd" = "gql" ]; then
     h3-gql $*
 
 elif [ "$cmd" = "pentest" ]; then
-    pentest $*
+    cmd_pentest $*
 
 elif [ "$cmd" = "latest-pentest" ]; then
     h3-gql latest_pentest $* | jq .data.pentests_page.pentests[]

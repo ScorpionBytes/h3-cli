@@ -62,6 +62,7 @@ h3 latest-pentest
 h3 create-pentest 
 h3 launch-nodezero
 h3 run-pentest 
+h3 run-pentests
 h3 pause-pentest 
 h3 resume-pentest 
 h3 cancel-pentest 
@@ -157,6 +158,9 @@ elif [ "$cmd" = "create-pentest" -o "$cmd" = "create_pentest" ]; then
 
 elif [ "$cmd" = "run-pentest" -o "$cmd" = "run_pentest" ]; then
     h3-run-pentest $*
+
+elif [ "$cmd" = "run-pentests" -o "$cmd" = "run_pentests" ]; then
+    h3-run-pentests $*
 
 elif [ "$cmd" = "cancel-pentest" -o "$cmd" = "cancel_pentest" ]; then
     h3-cancel-pentest $*

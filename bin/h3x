@@ -60,9 +60,11 @@ h3 pentests
 h3 pentest {op_id}
 h3 latest-pentest 
 h3 create-pentest 
-h3 run-pentest 
-h3 cancel-pentest 
 h3 launch-nodezero
+h3 run-pentest 
+h3 pause-pentest 
+h3 resume-pentest 
+h3 cancel-pentest 
 
 HERE
     return 1
@@ -79,6 +81,18 @@ function cmd_pentest {
     rc=$?
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq .data.pentest
+    else
+        echo $res
+    fi 
+    return $rc
+}
+
+
+function cmd_pentests {
+    res=`h3-gql pentests $*` 
+    rc=$?
+    if [ $rc -eq 0 ]; then
+        cat <<<$res | jq '.data.pentests_page.pentests[] | {op_id, name, state, scheduled_at, completed_at, etl_completed_at, hosts_count, impacts_count, weaknesses_count, credentials_count}'
     else
         echo $res
     fi 
@@ -130,7 +144,7 @@ elif [ "$cmd" = "gql" ]; then
     h3-gql $*
 
 elif [ "$cmd" = "pentests" ]; then
-    h3-gql pentests $*
+    cmd_pentests $*
 
 elif [ "$cmd" = "pentest" ]; then
     cmd_pentest $*
@@ -144,19 +158,17 @@ elif [ "$cmd" = "create-pentest" -o "$cmd" = "create_pentest" ]; then
 elif [ "$cmd" = "run-pentest" -o "$cmd" = "run_pentest" ]; then
     h3-run-pentest $*
 
-elif [ "$cmd" = "pause-pentest" ]; then
-    op_id=`h3-gql latest_pentest $* | jq -r .data.pentests_page.pentests[].op_id`
-    h3-gql pause_op $op_id
-
-elif [ "$cmd" = "resume-pentest" ]; then
-    op_id=`h3-gql latest_pentest $* | jq -r .data.pentests_page.pentests[].op_id`
-    h3-gql resume_op $op_id
-
-elif [ "$cmd" = "cancel-pentest" ]; then
+elif [ "$cmd" = "cancel-pentest" -o "$cmd" = "cancel_pentest" ]; then
     h3-cancel-pentest $*
 
 elif [ "$cmd" = "launch-nodezero" ]; then
     h3-launch-nodezero $*
+
+elif [ "$cmd" = "pause-pentest" ]; then
+    h3-pause-pentest $*
+
+elif [ "$cmd" = "resume-pentest" ]; then
+    h3-resume-pentest $*
 
 else 
     echoerr "ERROR: unrecognized command $cmd"

@@ -25,6 +25,9 @@
 # h3 accounts
 # 
 #
+# For verbose tracing: export H3_CLI_VERBOSE=1
+# To disable verbose tracing: export H3_CLI_VERBOSE=
+#
 
 
 # writes message to stderr
@@ -50,6 +53,8 @@ h3-cli: A command-line utility for the Horizon3 API.
 
 Usage:
 
+h3 whoami
+h3 auth [force]
 h3 gql {graphql-file}
 h3 pentest {op_id}
 h3 latest-pentest 
@@ -103,6 +108,9 @@ if [ "$cmd" = "help" ]; then
 
 elif [ "$cmd" = "whoami" ]; then
     cmd_whoami
+
+elif [ "$cmd" = "auth" ]; then
+    h3-auth $*
 
 elif [ "$cmd" = "gql" ]; then
     h3-gql $*

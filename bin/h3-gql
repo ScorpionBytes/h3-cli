@@ -7,115 +7,17 @@
 #
 
 
-# writes message to stderr
-# usage: echoerr "the message"
-function echoerr { 
-    echo "[`date`] $@" 1>&2;   
-}
- 
-
-# writes message to stderr 
-# usage: echolog "the message"
-function echolog { 
-    if [ -n "$H3_CLI_VERBOSE" ]; then
-        echo "[`date`] $@" 1>&2;   
-    fi
-}
-
-
-# where profiles/creds are stored
-if [ -z "$H3_CLI_PROFILES_DIR" ]; then
-    H3_CLI_PROFILES_DIR="$HOME/.h3"
-fi
-if [ ! -e "$H3_CLI_PROFILES_DIR" ]; then
-    echoerr "ERROR: h3 profile directory H3_CLI_PROFILES_DIR=$H3_CLI_PROFILES_DIR does not exist. Please create and define a profile. See README for more info."
-    exit 1
-fi
-
-# check env
-if [ -z "$H3_API_KEY" ]; then
-    # check profile
-    if [ -z "$H3_CLI_PROFILE" ]; then
-        H3_CLI_PROFILE="default"
-    fi
-    profile="$H3_CLI_PROFILES_DIR/$H3_CLI_PROFILE.env"
-    if [ -e "$profile" ]; then
-        echolog "reading profile $profile ..."
-        source $profile
-    fi
-    if [ -z "$H3_API_KEY" ]; then
-        echoerr "H3_API_KEY environment variable required.  Must be exported to shell or defined in $profile"
-        exit 1
-    fi
-fi
-
-
-if [ -z "$H3_CLI_HOME" ]; then
-    echoerr "H3_CLI_HOME environment variable required"
-    exit 1
-fi
-
-if [ -z "$H3_AUTH_URL" ]; then
-    H3_AUTH_URL=https://api.horizon3ai.com/v1/auth
-fi
-
-if [ -z "$H3_GQL_URL" ]; then
-    H3_GQL_URL=https://api.horizon3ai.com/v1/graphql
-fi
-
-if [ -z "$H3_CLI_GQL_PATH" ]; then
-    H3_CLI_GQL_PATH=".:$H3_CLI_HOME/queries"
-fi
-
-# JWT is stored here
-jwt_file="$H3_CLI_PROFILES_DIR/jwt"
-
-
-# -------------------------------------------------------------------------
-# functions to gen/read/refresh the authentication token (JWT)
-# -------------------------------------------------------------------------
-
-# @returns json response: {"token":"..."}
-function gen_jwt {
-    curl -s -S -k \
-      -X POST $H3_AUTH_URL \
-      -H 'Content-Type: application/json' \
-      -d @- <<HERE 
-{
-    "key": "$H3_API_KEY"
-}
-HERE
-}
+source h3-env
 
 
 function refresh_jwt {
-    echolog "re-authenticating to H3_AUTH_URL=$H3_AUTH_URL ..."
-    H3_API_JWT=`gen_jwt | jq -r .token`
-    echolog H3_API_JWT=$H3_API_JWT
-    echo $H3_API_JWT > $jwt_file
+    H3_API_JWT=`h3-auth force`
 }
 
 
-# 1. check env var 
-# 2. read it from the file
-# 3. refresh it
-# sets H3_API_JWT in the environment
 function read_jwt {
-    if [ -z "$H3_API_JWT" ]; then
-        if [ -f $jwt_file ]; then
-            H3_API_JWT=`cat $jwt_file`
-            H3_API_JWT=`echo $H3_API_JWT`    # gets rid of newlines 
-        fi 
-    fi
-    if [ -z "$H3_API_JWT" ]; then
-        refresh_jwt
-    fi
+    H3_API_JWT=`h3-auth`
 }
-
-
-# -------------------------------------------------------------------------
-# functions to read the graphql query from a file, clean it, and post it
-# -------------------------------------------------------------------------
 
 
 # $1: the graphql query file basename

@@ -17,26 +17,42 @@ function echoerr {
 # writes message to stderr 
 # usage: echolog "the message"
 function echolog { 
-    if [ "$verbose" = "x" ]; then
+    if [ -n "$H3_CLI_VERBOSE" ]; then
         echo "[`date`] $@" 1>&2;   
     fi
 }
 
 
-echoerr "DEPRECATED - use h3x"
-
-# check env
-if [ -z "$H3_API_KEY" ]; then
-    echoerr "H3_API_KEY environment variable required"
+# where profiles/creds are stored
+if [ -z "$H3_CLI_PROFILES_DIR" ]; then
+    H3_CLI_PROFILES_DIR="$HOME/.h3"
+fi
+if [ ! -e "$H3_CLI_PROFILES_DIR" ]; then
+    echoerr "ERROR: h3 profile directory H3_CLI_PROFILES_DIR=$H3_CLI_PROFILES_DIR does not exist. Please create and define a profile. See README for more info."
     exit 1
 fi
 
-if [ -z "$H3_CLI_HOME" ]; then
-    # -rx- H3_CLI_HOME=`dirname $0`
-    if [ -z "$H3_CLI_HOME" ]; then
-        echoerr "H3_CLI_HOME environment variable required"
+# check env
+if [ -z "$H3_API_KEY" ]; then
+    # check profile
+    if [ -z "$H3_CLI_PROFILE" ]; then
+        H3_CLI_PROFILE="default"
+    fi
+    profile="$H3_CLI_PROFILES_DIR/$H3_CLI_PROFILE.env"
+    if [ -e "$profile" ]; then
+        echolog "reading profile $profile ..."
+        source $profile
+    fi
+    if [ -z "$H3_API_KEY" ]; then
+        echoerr "H3_API_KEY environment variable required.  Must be exported to shell or defined in $profile"
         exit 1
     fi
+fi
+
+
+if [ -z "$H3_CLI_HOME" ]; then
+    echoerr "H3_CLI_HOME environment variable required"
+    exit 1
 fi
 
 if [ -z "$H3_AUTH_URL" ]; then
@@ -47,12 +63,12 @@ if [ -z "$H3_GQL_URL" ]; then
     H3_GQL_URL=https://api.horizon3ai.com/v1/graphql
 fi
 
-if [ -z "$H3_CLI_QUERY_PATH" ]; then
-    H3_CLI_QUERY_PATH=".:$H3_CLI_HOME/queries"
+if [ -z "$H3_CLI_GQL_PATH" ]; then
+    H3_CLI_GQL_PATH=".:$H3_CLI_HOME/queries"
 fi
 
 # JWT is stored here
-jwt_file="$H3_CLI_HOME/.h3-cli.jwt"
+jwt_file="$H3_CLI_PROFILES_DIR/jwt"
 
 
 # -------------------------------------------------------------------------
@@ -103,9 +119,9 @@ function read_jwt {
 
 
 # $1: the graphql query file basename
-# finds the graphql query file on the path (H3_CLI_QUERY_PATH)
+# finds the graphql query file on the path (H3_CLI_GQL_PATH)
 function find_query_file {
-    echolog "searching for $f ..."
+    echolog "searching for GQL file $f ..."
     if [[ $f == *"/"* ]]; then
         if [ -e "$f" ]; then
             echo $f 
@@ -116,7 +132,7 @@ function find_query_file {
     fi
     prev_IFS=$IFS 
     IFS=:
-    dirs=($H3_CLI_QUERY_PATH)
+    dirs=($H3_CLI_GQL_PATH)
     IFS=$prev_IFS
     # the find command searches all subdirs as well, which isn't what we want 
     # (and can take a while)
@@ -131,12 +147,12 @@ function find_query_file {
             return
         fi
     done
-    echoerr "ERROR: file not found; searching for $f in H3_CLI_QUERY_PATH=$H3_CLI_QUERY_PATH"
+    echoerr "ERROR: file not found; searching for $f in H3_CLI_GQL_PATH=$H3_CLI_GQL_PATH"
     exit 1
 }
 
 
-# finds the graphql query file on the path (H3_CLI_QUERY_PATH)
+# finds the graphql query file on the path (H3_CLI_GQL_PATH)
 function read_query {
     f=$1
     ff=`find_query_file $1`
@@ -156,7 +172,7 @@ function escape_quotes {
 
 # @returns gql response (json)
 function post_query {
-    echolog "posting query ..."
+    echolog "posting GQL request ..."
     q=`escape_quotes "$1"`
     v="$2"
     # echolog $q
@@ -209,12 +225,6 @@ function parse_args {
 # catch auth failures, refresh jwt, retry
 # print out the response
 function main {
-    # check re-auth
-    if [ "$1" = "--re-auth" ]; then 
-        echo "" > $jwt_file
-        shift
-    fi
-
     # read the query
     read_jwt
     q=`read_query $*`
@@ -225,8 +235,7 @@ function main {
 
     # read the vars
     shift
-    # -rx- v="$*"  # otherwise doesn't handle spaces in $2
-    v=`parse_args $*`  # otherwise doesn't handle spaces in $2
+    v=`parse_args $*`  # use $* otherwise doesn't handle spaces in $2
 
     # run the query 
     r=`post_query "$q" "$v"`
@@ -236,6 +245,13 @@ function main {
         r=`post_query "$q" "$v"`
     fi
     echo $r
+
+    # check errors
+    error_message=`cat <<<$r | jq -r .errors[]?.message`
+    if [ ! -z "$error_message" ]; then 
+        exit 1
+    fi
+    exit 0
 }
 
 main $*

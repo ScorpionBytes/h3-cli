@@ -1,0 +1,123 @@
+#!/bin/bash
+#
+# usage:
+#
+# h3 gql {query}
+# h3 pentests ls
+# h3 pentests rm
+# h3 pentests cancel
+# h3 pentests pause
+# h3 pentests resume
+# h3 pentests latest
+# h3 pentests run ?
+#   - h3 run-pentest
+# h3 pentests launch-nodezero
+# h3 nodezero launch  
+#   - h3 launch-nodezero
+# 
+# h3 asset-groups ? 
+#
+# h3 whoami
+# h3 switch-account
+# h3 auth
+#
+# h3 users
+# h3 accounts
+# 
+#
+
+
+# writes message to stderr
+# usage: echoerr "the message"
+function echoerr { 
+    echo "[`date`] $@" 1>&2;   
+}
+ 
+
+# writes message to stderr 
+# usage: echolog "the message"
+function echolog { 
+    if [ "$verbose" = "x" ]; then
+        echo "[`date`] $@" 1>&2;   
+    fi
+}
+
+
+function pentest {
+    res=`h3-gql pentest $*` 
+    rc=$?
+    if [ $rc -eq 0 ]; then
+        cat <<<$res | jq .data.pentest
+    else
+        echo $res
+    fi 
+    return $rc
+}
+
+
+function help {
+    cat <<HERE
+
+h3-cli: A command-line utility for the Horizon3 API.
+
+Usage:
+
+h3 gql {graphql-file}
+h3 pentest {op_id}
+h3 latest-pentest 
+
+HERE
+    return 1
+}
+
+
+# -----------
+# big cmd switch 
+# -----------
+cmd=$1
+shift
+
+# -rx- NOGO: eval loses the spaces in args
+# bin_dir=$H3_CLI_HOME/bin
+# if [ ! -e "$bin_dir/h3-$cmd" ]; then
+#     echoerr "ERROR: unrecognized command $cmd"
+#     exit 1
+# fi
+# # eval "$bin_dir/h3-$cmd $*"
+# eval "$bin_dir/h3-$cmd ${@@Q}"
+
+if [ "$cmd" = "help" ]; then
+    help $*
+
+elif [ "$cmd" = "gql" ]; then
+    h3-gql $*
+
+elif [ "$cmd" = "pentest" ]; then
+    pentest $*
+
+elif [ "$cmd" = "latest-pentest" ]; then
+    h3-gql latest_pentest $* | jq .data.pentests_page.pentests[]
+
+elif [ "$cmd" = "run-pentest" ]; then
+    h3-run-pentest $*
+
+elif [ "$cmd" = "pause" ]; then
+    op_id=`h3-gql latest_pentest $* | jq -r .data.pentests_page.pentests[].op_id`
+    h3-gql pause_op $op_id
+
+elif [ "$cmd" = "resume" ]; then
+    op_id=`h3-gql latest_pentest $* | jq -r .data.pentests_page.pentests[].op_id`
+    h3-gql resume_op $op_id
+
+elif [ "$cmd" = "cancel" ]; then
+    op_id=`h3-gql latest_pentest $* | jq -r .data.pentests_page.pentests[].op_id`
+    h3-gql cancel_op $op_id
+
+elif [ "$cmd" = "launch-nodezero" ]; then
+    h3-launch-nodezero $*
+
+else 
+    echoerr "ERROR: unrecognized command $cmd"
+    exit 1
+fi
+

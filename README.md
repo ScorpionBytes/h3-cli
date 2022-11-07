@@ -40,11 +40,14 @@ First, install this repo on your machine using the following `git` command withi
 
 ```shell
 git clone git@gitlab.com:h3upperbounds/data/h3-cli.git
+chmod -R a+x h3-cli/bin
 ```
 
 This will create a new directory, `h3-cli`, and download the contents of this repo to it.  The `h3-cli` directory
 will be created in the directory where you run the `git` command.  You can install h3-cli anywhere on the filesystem;
 there are no restrictions or dependencies on where it's located.
+
+The `chmod` command ensures h3-cli is executable.
 
 > If you don't have `git`, you can download the repo as a zip archive from the menu above, and unzip it anywhere in the filesystem.
 
@@ -79,7 +82,9 @@ Obtain an API key from the Portal under the User -> Settings menu: [https://port
 An API key is required to access the H3 API.  Keep your API key safe and secure, as anyone with your API key
 can access your H3 account.  
 
-### 4. Set up your shell environment
+### 4a. Set up your shell environment
+
+**DEPRECATED:** do step 4b instead.
 
 Set the following environment variables in your shell environment:
 
@@ -91,6 +96,25 @@ export PATH=$H3_CLI_HOME/bin:$PATH
 
 > Substitute `/path/to` with the actual path in your filesystem.
 
+
+### 4b. Set up your h3-cli profile
+
+Run the following commands to create your h3-cli profile.  This is where you store your API key.
+Your profile is stored in your `$HOME` directory and is `chmod 600` so no other users can read it.
+
+```shell
+mkdir $HOME/.h3
+chmod 600 $HOME/.h3
+echo "H3_API_KEY=your-api-key-here" > $HOME/.h3/default.env
+```
+
+Add the following to the bottom of your `$HOME/.bash_profile` (or `.bashrc` or `.profile`).  
+
+```shell
+# H3-CLI
+export H3_CLI_HOME=/easy/h3/h3-cli
+export PATH="$H3_CLI_HOME/bin:$PATH"
+```
 
 
 ### 5. Run hello_world to verify connectivity

@@ -56,8 +56,13 @@ Usage:
 h3 whoami
 h3 auth [force]
 h3 gql {graphql-file}
+h3 pentests
 h3 pentest {op_id}
 h3 latest-pentest 
+h3 create-pentest 
+h3 run-pentest 
+h3 cancel-pentest 
+h3 launch-nodezero
 
 HERE
     return 1
@@ -65,6 +70,11 @@ HERE
 
 
 function cmd_pentest {
+    if [ -z "$*" ]; then 
+        h3x latest_pentest
+        rc=$?
+        return $rc
+    fi
     res=`h3-gql pentest $*` 
     rc=$?
     if [ $rc -eq 0 ]; then
@@ -88,20 +98,24 @@ function cmd_whoami {
 }
 
 
+function cmd_create_pentest {
+    res=`h3-gql schedule_op_template $*`
+    rc=$?
+    if [ $rc -eq 0 ]; then
+        cat <<<$res | jq .data.schedule_op_template.op
+    else
+        echo $res
+    fi 
+    return $rc
+}
+
+
 # -----------
 # big cmd switch 
 # -----------
 cmd=$1
 shift
 
-# -rx- NOGO: eval loses the spaces in args
-# bin_dir=$H3_CLI_HOME/bin
-# if [ ! -e "$bin_dir/h3-$cmd" ]; then
-#     echoerr "ERROR: unrecognized command $cmd"
-#     exit 1
-# fi
-# # eval "$bin_dir/h3-$cmd $*"
-# eval "$bin_dir/h3-$cmd ${@@Q}"
 
 if [ "$cmd" = "help" ]; then
     cmd_help $*
@@ -115,26 +129,31 @@ elif [ "$cmd" = "auth" ]; then
 elif [ "$cmd" = "gql" ]; then
     h3-gql $*
 
+elif [ "$cmd" = "pentests" ]; then
+    h3-gql pentests $*
+
 elif [ "$cmd" = "pentest" ]; then
     cmd_pentest $*
 
-elif [ "$cmd" = "latest-pentest" ]; then
+elif [ "$cmd" = "latest-pentest" -o "$cmd" = "latest_pentest" ]; then
     h3-gql latest_pentest $* | jq .data.pentests_page.pentests[]
 
-elif [ "$cmd" = "run-pentest" ]; then
+elif [ "$cmd" = "create-pentest" -o "$cmd" = "create_pentest" ]; then
+    cmd_create_pentest $*
+
+elif [ "$cmd" = "run-pentest" -o "$cmd" = "run_pentest" ]; then
     h3-run-pentest $*
 
-elif [ "$cmd" = "pause" ]; then
+elif [ "$cmd" = "pause-pentest" ]; then
     op_id=`h3-gql latest_pentest $* | jq -r .data.pentests_page.pentests[].op_id`
     h3-gql pause_op $op_id
 
-elif [ "$cmd" = "resume" ]; then
+elif [ "$cmd" = "resume-pentest" ]; then
     op_id=`h3-gql latest_pentest $* | jq -r .data.pentests_page.pentests[].op_id`
     h3-gql resume_op $op_id
 
-elif [ "$cmd" = "cancel" ]; then
-    op_id=`h3-gql latest_pentest $* | jq -r .data.pentests_page.pentests[].op_id`
-    h3-gql cancel_op $op_id
+elif [ "$cmd" = "cancel-pentest" ]; then
+    h3-cancel-pentest $*
 
 elif [ "$cmd" = "launch-nodezero" ]; then
     h3-launch-nodezero $*

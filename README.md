@@ -25,7 +25,7 @@ relevant documentation includes:
 - [Horizon3.ai GraphQL API Reference](https://h3-graphql-docsite.horizon3ai.com/)
 - [Learn about GraphQL](https://graphql.org/)
 
-## Getting started 
+## Installation and initial setup
 
 The steps below will get you up and running quickly with h3-cli. These instructions were tested on 
 MacOS and Linux machines, and generally should work on any [POSIX-compliant](https://en.wikipedia.org/wiki/POSIX) system with `bash` support.
@@ -47,18 +47,16 @@ This will create a new directory, `h3-cli`, and download the contents of this re
 will be created in the directory where you run the `git` command.  You can install h3-cli anywhere on the filesystem;
 there are no restrictions or dependencies on where it's located.
 
-The `chmod` command ensures h3-cli is executable.
+The `chmod` command ensures that the scripts under `h3-cli/bin` are executable.
 
 > If you don't have `git`, you can download the repo as a zip archive from the menu above, and unzip it anywhere in the filesystem.
 
-### 2. Install dependencies: `jq` and `curl`
+### 2. Install dependency: `jq` 
 
-h3-cli has dependencies on `jq` and `curl`. `jq` is a sed-like JSON parser. `curl` is a popular CLI tool for posting HTTP requests. 
+h3-cli has a dependency on `jq`.  `jq` is a sed-like JSON parser.  All responses from the Horizon3 API are in JSON format.
+h3-cli uses `jq` to parse and pretty-print JSON responses.
 
-* Download `jq` from here: [https://stedolan.github.io/jq/](https://stedolan.github.io/jq/)
-* Download `curl` from here: [https://curl.se/download.html](https://curl.se/download.html)
-    * Most systems have `curl` installed by default. You can check by running `curl --version` from the command line.
-
+Download and install `jq` from here: [https://stedolan.github.io/jq/](https://stedolan.github.io/jq/)
 
 Verify `jq` is installed by running:
 
@@ -74,33 +72,20 @@ The output should be:
 }
 ```
 
+If you see a `Permission Denied` error, you may have to set `jq` to be executable using `chmod a+x jq`
+
 
 ### 3. Obtain an API key
 
 Obtain an API key from the Portal under the User -> Settings menu: [https://portal.horizon3ai.com/settings/api](https://portal.horizon3ai.com/settings/api).
 
-An API key is required to access the H3 API.  Keep your API key safe and secure, as anyone with your API key
+An API key is required to access the H3 API.  Keep your API key secure, as anyone with your API key
 can access your H3 account.  
 
-### 4a. Set up your shell environment
 
-**DEPRECATED:** do step 4b instead.
+### 4. Set up your h3-cli profile
 
-Set the following environment variables in your shell environment:
-
-```shell
-export H3_API_KEY="your-key-here"
-export H3_CLI_HOME=/path/to/h3-cli
-export PATH=$H3_CLI_HOME/bin:$PATH
-```
-
-> Substitute `/path/to` with the actual path in your filesystem.
-
-
-### 4b. Set up your h3-cli profile
-
-Run the following commands to create your h3-cli profile.  This is where you store your API key.
-Your profile is stored in your `$HOME` directory and is `chmod 600` so no other users can read it.
+Run the following commands to create your h3-cli profile.  
 
 ```shell
 mkdir $HOME/.h3
@@ -108,7 +93,14 @@ chmod 600 $HOME/.h3
 echo "H3_API_KEY=your-api-key-here" > $HOME/.h3/default.env
 ```
 
-Add the following to the bottom of your `$HOME/.bash_profile` (or `.bashrc` or `.profile`).  
+Substitute `your-api-key-here` with your actual API key.
+The commands above create your h3-cli profile under the `$HOME/.h3` directory
+and restrict permissions on the directory so that no other users (besides yourself) can read it.
+
+
+### 5. Add h3-cli to the command `PATH`
+
+Add the following to the bottom of your `$HOME/.bash_profile` (or `$HOME/.bashrc` or `$HOME/.profile`, whichever is present on your system).
 
 ```shell
 # H3-CLI
@@ -116,8 +108,14 @@ export H3_CLI_HOME=/easy/h3/h3-cli
 export PATH="$H3_CLI_HOME/bin:$PATH"
 ```
 
+The `H3_CLI_HOME` environment variable is used by h3-cli to locate itself.  The `PATH` environment
+variable is a list of directories (separated by `:`) that contain executable programs.  By adding
+h3-cli to the `PATH`, you will be able to invoke h3-cli by simply typing `h3` at the command prompt.
 
-### 5. Run hello_world to verify connectivity
+
+## Getting started with h3-cli
+
+### 1. Verify connectivity with the API
 
 Run the [hello_world.graphql](queries/hello_world.graphql) query to verify connectivity with the API.
 
@@ -125,19 +123,7 @@ Run the [hello_world.graphql](queries/hello_world.graphql) query to verify conne
 h3 hello_world
 ```
 
-You should get the response:
-
-```shell
-{"data":{"hello":"world!"}}
-```
-
-All responses from the H3 API are in JSON format. For pretty-printing the JSON response, use `jq`:
-
-```shell
-h3 hello_world | jq .
-```
-
-You should get the response:
+You should see the response:
 
 ```shell
 {
@@ -147,53 +133,44 @@ You should get the response:
 }
 ```
 
-
 ⚠️ If you are getting an error response, please contact H3 via the chat icon in the [Horizon3.ai Portal](https://portal.horizon3ai.com/).
 
 
-### 6. Query the list of pentests in your account
+### 2. Query the list of pentests in your account
 
-The command below will return the full list of pentests in your account.  
-
-```shell
-h3 pentests | jq .
-```
-
-To filter for pentests that match a given search term, use the following parameterized query:
+The command below will return the list of pentests in your account, most recent first.
 
 ```shell
-h3 pentests '{"search":"sample"}' | jq .
+h3 pentests 
 ```
 
-Many of the [sample queries](#sample-queries) have optional or required parameters.
-You can specify parameter values by passing them as the second argument to `h3`, in JSON format.
-If you only need to pass an `op_id`, you can pass it directly without wrapping it in JSON (see 
-example in the next step).
-
-### 7. Query a specific pentest from your account
-
-To fetch a single pentest from your account, you pass the `op_id` as a parameter to [pentest.graphql](queries/pentest.graphql).
-The `op_id` can be found in the JSON output from the list of pentests in [step #6 above](#6-fetch-the-list-of-pentests-in-your-account).
-Use the following command to get the list of `op_id`'s in your account:
+To filter for pentests that match a given search term, pass the search term as a parameter:
 
 ```shell
-h3 pentests | jq -r '.data.pentests_page.pentests[] | {op_id, name, scheduled_at, state}'
+h3 pentests sample
 ```
 
-This example uses `jq` to parse the `op_id` field (and a few other fields) from the list of pentests in the JSON
-response.  For more info on how to use `jq` see our guide [JSON Parsing with `jq`](guides/json-parsing-with-jq.md).
+### 3. Query a specific pentest from your account
 
-Now substitute `your-op-id-here` in the command below with an `op_id` from your account:
+To query the most recent pentest in your account:
 
 ```shell
-op_id="your-op-id-here"
-h3 pentest $op_id | jq .
+h3 pentest
 ```
+
+To query any pentest in your account, pass the `op_id` of the pentest as a parameter:
+
+```shell
+h3 pentest {op_id}
+```
+
+h3-cli will often use the most recent pentest as the default,
+unless an `op_id` is passed as a parameter.
 
 > The terms "op" and "pentest" are often used interchangeably.
 
 
-### 8. Schedule a pentest
+### 4. Schedule a pentest
 
 Scheduling a pentest requires specifying an _op template_.  An op template specifies a full pentest configuration,
 which includes scope, attack parameters, and other (optional) configuration.
@@ -211,11 +188,12 @@ option to customize the pentest configuration. The op template can be created wi
 To schedule a pentest using the default op template with Intelligent Scope:
 
 ```shell
-h3 schedule_op_template | jq .
+h3 schedule-pentest
 ```
 
 The JSON response contains the details for the newly scheduled pentest.
-You can verify the pentest is provisioning by checking your [Horizon3.ai Portal](https://portal.horizon3ai.com/pentests).
+You can verify the pentest is provisioning by checking your [Horizon3.ai Portal](https://portal.horizon3ai.com/pentests),
+or by running `h3 pentest`.  
 
 There are several ways to specify additional parameters when scheduling pentests. For more information see additional examples [here](#scheduling-pentests-with-h3-cli).
 
@@ -223,68 +201,39 @@ There are several ways to specify additional parameters when scheduling pentests
 See the next section about downloading and running NodeZero in order to complete the initiation of your pentest.
 
 
-### 9. Run NodeZero™
+### 5. Run NodeZero™
 
 **⚠️ The following instructions apply to Internal Pentests only, _not_ External Pentests.**
 
 After scheduling an *internal pentest*, you then have to run our NodeZero container on a Docker Host inside your network.
-This is done by running the NodeZero Launch Script on your Docker Host. 
+This is done by running the NodeZero Launch Script on your Docker Host.  
 
-You can retrieve the NodeZero Launch Script's _URL_ for a pentest by parsing the `nodezero_script_url` field from the pentest's 
-JSON response, as shown in the commands below. 
-
-You'll first need the `op_id` for the pentest, which you can retrieve from the output of the previous [step](#8-schedule-a-pentest),
-or by re-listing the pentests in your account and looking for the one most recently scheduled (it will likely be in `provisioning` state).
-
-The following commands will parse the `nodezero_script_url` from the pentest response, download it via `curl`,
-and run it by piping to `bash`.  The NodeZero Launch Script itself will then download our NodeZero container and run it in Docker.  
+To run the NodeZero Launch Script for your most recently scheduled pentest:
 
 ```shell
-op_id="your-op-id-here"
-nodezero_script_url=`h3 pentest $op_id | jq -r .data.pentest.nodezero_script_url`
-curl "$nodezero_script_url" | bash
+h3 launch-nodezero
 ```
 
-> Don't forget to put quotes around the URL, otherwise it could be misinterpreted by the terminal and result in an error.
-
-**YOUR PENTEST HAS BEEN LAUNCHED!**  Assuming the commands above ran successfully, then you have 
+**YOUR PENTEST HAS BEEN LAUNCHED!**  Assuming all commands ran without error, then you have 
 successfully scheduled and launched your pentest.  You should see output from the NodeZero Launch Script being logged
 to the console.  The script will first verify your system is compatible with NodeZero before downloading and running it.
 When the pentest is complete, NodeZero will automatically shut itself down.  
 
 NodeZero is a Docker container.  You can view it using `docker ps`.  The container name will be of the form `n0-xxxx`.
 
-### 10. Going further 
 
-This completes the [Getting Started](#getting-started) section of this guide.  In this section we installed h3-cli, configured your 
-environment, listed the pentests in your account, scheduled a pentest, and launched NodeZero, all using h3-cli. 
+## Going further 
 
-Check out the [sample queries](#sample-queries) and [use cases](#use-cases) below to further explore the capabilities
-provided by h3-cli.
+In the above sections, we installed and configured h3-cli, verified connectivity with the API, listed the pentests in your account, 
+scheduled a pentest, and launched NodeZero, all using h3-cli. 
 
-
-## Sample queries
-
-The [queries](queries) directory contains a set of sample GraphQL queries 
-you can use and modify to your needs.  The queries are documented in the [Horizon3.ai GraphQL API Reference](https://h3-graphql-docsite.horizon3ai.com/).
-
-Examples:
+To see the full list of h3-cli commands and options, run:
 
 ```shell
-h3 pentests | jq .
-
-op_id="your-op-id-here" 
-h3 pentest $op_id | jq .
-h3 action_logs $op_id | jq .
-h3 hosts_csv $op_id | jq -r .data.hosts_csv[]
-h3 hosts_csv_url $op_id | jq -r .data.hosts_csv_url
-h3 weaknesses_csv $op_id | jq -r .data.weaknesses_csv[]
-h3 weaknesses_csv_url $op_id | jq -r .data.weaknesses_csv_url
-h3 pentest_reports_zip_url $op_id | jq -r .data.pentest_reports_zip_url
-h3 pause_op $op_id | jq .
-h3 resume_op $op_id | jq .
-h3 cancel_op $op_id | jq .
+h3 help
 ```
+
+You can also check out the [use cases](#use-cases) below to further explore the capabilities provided by h3-cli.
 
 
 ## Use cases
@@ -315,95 +264,48 @@ See [this guide](guides/download-reports.md) to learn how to download pentest re
 ## Authentication
 
 h3-cli uses your `H3_API_KEY` to authenticate to the Horizon3.ai API
-and establish a session.  The session token (a JWT) is stored in `.h3-cli.jwt`.
+and establish a session.  The session token (a JWT) is stored in `$HOME/.h3/jwt`.
 The session expires after 1 hour, at which point h3-cli will
 seamlessly and automatically re-authenticate and re-establish a session.
 
-#### Forcing re-authentication
+### Forcing re-authentication
 
-If you wish to force h3-cli to re-authenticate, use the `--re-auth` option.
+If you wish to force h3-cli to re-authenticate, use the `auth` command:
 
 ```shell
-h3 --re-auth pentests | jq .
+h3 auth
 ```
 
 This can be useful if you're switching from one `H3_API_KEY` to another and 
-want to force authentcation against the new `H3_API_KEY` (rather than using 
-the old key cached in `.h3-cli.jwt`).
-
-
-## Handling API errors
-
-Errors are returned in the GraphQL response under the `errors` field.  The 
-field is a list that includes all errors that occurred during the request.  Note that
-GraphQL will attempt to resolve as much of the query as possible, even if
-errors occur for some fields.  
-
-For example, if you try to read a non-existent `op_id`: 
-
-```shell
-h3 pentest "12341234-1234-1234-1234-123412341234" | jq -r '.errors[].message'
-```
-
-Output:
-
-```shell
-[403] op is not available
-```
-
-You can view the general structure of error responses using the [to_struct.jq](filters/to_struct.jq) filter.
-
-```shell
-h3 pentest "12341234-1234-1234-1234-123412341234" | jq -rf $H3_CLI_HOME/filters/to_struct.jq
-```
-
-Output:
-
-```shell
-.
-.data
-.data.pentest
-.errors
-.errors[]
-.errors[].locations
-.errors[].locations[]
-.errors[].locations[].column
-.errors[].locations[].line
-.errors[].message
-.errors[].path
-.errors[].path[]
-.errors[].statusCode
-```
+want to force authentcation against the new `H3_API_KEY`.
 
 
 ## Scheduling pentests with h3-cli
 
 This section contains additional examples for scheduling pentests using h3-cli.
 
-For the simplest way to schedule a pentest (using the default op template and _Intelligent Scope_), see [step #8](#8-schedule-a-pentest) in this guide.
-
-To schedule a pentest using the default op template:
+The simplest way to schedule a pentest is to use the default op template and _Intelligent Scope_:
 
 ```shell
-h3 schedule_op_template | jq .
+h3 schedule-pentest
 ```
 
 To schedule a pentest using a custom op template, specify it as a parameter to [schedule_op_template.graphql](queries/schedule_op_template.graphql):
 
 ```shell
-h3 schedule_op_template '{"op_template_name":"your-op-template-here"}' | jq .
+h3 schedule-pentest '{"op_template_name":"your-op-template-here"}' 
 ```
 
 To schedule a pentest using the default op template but assign it a name of your choosing, use the optional `op_name` parameter: 
 
 ```shell
-h3 schedule_op_template '{"op_name":"your-op-name-here"}' | jq .
+h3 schedule-pentest '{"op_name":"your-op-name-here"}' 
 ```
 
 To schedule a pentest using the default op template but specify its name and scope, use the optional `schedule_op_form` parameter:
 
 ```shell
-h3 schedule_op_template '{"op_name":"your-op-name-here", "schedule_op_form":{"op_param_max_scope": "192.168.0.0/24"}}' | jq .
+h3 schedule-pentest '{"op_name":"your-op-name-here", "schedule_op_form":{"op_param_max_scope": "192.168.0.0/24"}}' 
 ```
 
 

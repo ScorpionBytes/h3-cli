@@ -23,7 +23,8 @@ function echolog {
 }
 
 
-echoerr "DEPRECATED - use h3x"
+echoerr "ERROR: DEPRECATED - use h3x"
+exit 1
 
 # check env
 if [ -z "$H3_API_KEY" ]; then

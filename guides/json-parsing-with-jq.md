@@ -14,26 +14,26 @@ Copy + paste the following commands into your terminal to get an idea of what `j
 For example, to parse just the `op_id` field from the response:
 
 ```shell
-h3 pentests | jq -r '.data.pentests_page.pentests[].op_id'
+h3 gql pentests | jq -r '.data.pentests_page.pentests[].op_id'
 ```
 
 To parse just the `name` field from the response:
 
 ```shell
-h3 pentests | jq -r '.data.pentests_page.pentests[].name'
+h3 gql pentests | jq -r '.data.pentests_page.pentests[].name'
 ```
 
 To parse a set of fields from the response:
 
 ```shell
-h3 pentests \
+h3 gql pentests \
     | jq -r '.data.pentests_page.pentests[] | {op_id, name, scheduled_at, state}'
 ```
 
 To parse a set of fields from the response and convert them from JSON to CSV format:
 
 ```shell
-h3 pentests \
+h3 gql pentests \
     | jq -r '.data.pentests_page.pentests[] | {op_id, name, scheduled_at, state}' \
     | jq -rsf $H3_CLI_HOME/filters/to_csv.jq
 ```
@@ -45,7 +45,7 @@ h3 pentests \
 It's sometimes useful to view the structure of the JSON response payload:
 
 ```shell
-h3 pentests | jq -rf $H3_CLI_HOME/filters/to_struct.jq 
+h3 gql pentests | jq -rf $H3_CLI_HOME/filters/to_struct.jq 
 ```
 
 Output:
@@ -101,7 +101,7 @@ Output:
 If you want to select only the `pentests` array from the response:
 
 ```shell
-h3 pentests | jq '.data.pentests_page.pentests'
+h3 gql pentests | jq '.data.pentests_page.pentests'
 ```
 
 This behaves more like a traditional REST API, where responses are often structured as a flat array of JSON objects.
@@ -110,7 +110,7 @@ You can also drop the surrounding array brackets `[]` from the response
 and convert the output to a stream of JSON objects by adding `[]` to the filter:
 
 ```shell
-h3 pentests | jq '.data.pentests_page.pentests[]'
+h3 gql pentests | jq '.data.pentests_page.pentests[]'
 ```
 
 You can then select a single field from the stream of JSON objects by adding it to the filter.
@@ -118,7 +118,7 @@ For example if you want just the list of op_ids:
 
 
 ```shell
-h3 pentests | jq -r '.data.pentests_page.pentests[].op_id'
+h3 gql pentests | jq -r '.data.pentests_page.pentests[].op_id'
 ```
 
 
@@ -128,7 +128,7 @@ h3 pentests | jq -r '.data.pentests_page.pentests[].op_id'
 If you want to select a subset of fields from the JSON objects in the `pentests` array:
 
 ```shell
-h3 pentests | jq '.data.pentests_page.pentests[] | {op_id, name, state, scheduled_at}'
+h3 gql pentests | jq '.data.pentests_page.pentests[] | {op_id, name, state, scheduled_at}'
 ```
 
 
@@ -137,7 +137,7 @@ h3 pentests | jq '.data.pentests_page.pentests[] | {op_id, name, state, schedule
 If you want to convert the `pentests` array to a CSV:
 
 ```shell
-h3 pentests | jq '.data.pentests_page.pentests[]' | jq -rsf $H3_CLI_HOME/filters/to_csv.jq
+h3 gql pentests | jq '.data.pentests_page.pentests[]' | jq -rsf $H3_CLI_HOME/filters/to_csv.jq
 ```
 
 > Note: the [to_csv.jq](filters/to_csv.jq) filter will automatically convert lists and objects to JSON-encoded strings in the CSV.

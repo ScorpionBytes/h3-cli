@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# usage:
+# usage: 
 #
 # h3 gql {query}
 # h3 pentests ls
@@ -26,7 +26,6 @@
 # 
 #
 # For verbose tracing: export H3_CLI_VERBOSE=1
-# To disable verbose tracing: export H3_CLI_VERBOSE=
 #
 
 
@@ -53,11 +52,10 @@ h3-cli: A command-line utility for the Horizon3 API.
 
 Usage:
 
+h3 hello-world
 h3 whoami
-h3 auth [force]
-h3 gql {graphql-file}
-h3 pentests
-h3 pentest {op_id}
+h3 pentests [{search}]
+h3 pentest [{op_id}]
 h3 latest-pentest 
 h3 create-pentest 
 h3 launch-nodezero
@@ -66,6 +64,12 @@ h3 run-pentests
 h3 pause-pentest 
 h3 resume-pentest 
 h3 cancel-pentest 
+h3 auth [force]
+h3 gql {graphql-file}
+
+
+For verbose tracing: 
+export H3_CLI_VERBOSE=1
 
 HERE
     return 1
@@ -90,7 +94,11 @@ function cmd_pentest {
 
 
 function cmd_pentests {
-    res=`h3-gql pentests $*` 
+    json_params=`cat <<HERE
+{"search":"$*"}
+HERE
+`
+    res=`h3-gql pentests $json_params` 
     rc=$?
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq '.data.pentests_page.pentests[] | {op_id, name, state, scheduled_at, completed_at, etl_completed_at, hosts_count, impacts_count, weaknesses_count, credentials_count}'
@@ -135,6 +143,9 @@ shift
 if [ "$cmd" = "help" ]; then
     cmd_help $*
 
+elif [ "$cmd" = "hello-world" -o "$cmd" = "hello_world" ]; then
+    h3-gql hello_world | jq .
+
 elif [ "$cmd" = "whoami" ]; then
     cmd_whoami
 
@@ -156,6 +167,9 @@ elif [ "$cmd" = "latest-pentest" -o "$cmd" = "latest_pentest" ]; then
 elif [ "$cmd" = "create-pentest" -o "$cmd" = "create_pentest" ]; then
     cmd_create_pentest $*
 
+elif [ "$cmd" = "schedule-pentest" -o "$cmd" = "schedule_pentest" ]; then
+    cmd_create_pentest $*
+
 elif [ "$cmd" = "run-pentest" -o "$cmd" = "run_pentest" ]; then
     h3-run-pentest $*
 
@@ -175,7 +189,7 @@ elif [ "$cmd" = "resume-pentest" ]; then
     h3-resume-pentest $*
 
 else 
-    echoerr "ERROR: unrecognized command $cmd"
+    echoerr "ERROR: unrecognized command: \"$cmd\".  Run \"h3 help\" for usage info."
     exit 1
 fi
 

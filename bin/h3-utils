@@ -11,7 +11,7 @@ function echoerr {
 # writes message to stderr 
 # usage: echolog "the message"
 function echolog { 
-    if [ -n "$H3_CLI_VERBOSE" ]; then
+    if [ "$H3_CLI_VERBOSE" = "1" ]; then
         echo "[`date`] $@" 1>&2;   
     fi
 }

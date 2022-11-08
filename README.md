@@ -104,9 +104,11 @@ Add the following to the bottom of your `$HOME/.bash_profile` (or `$HOME/.bashrc
 
 ```shell
 # H3-CLI
-export H3_CLI_HOME=/easy/h3/h3-cli
+export H3_CLI_HOME=/path/to/h3-cli
 export PATH="$H3_CLI_HOME/bin:$PATH"
 ```
+
+> Substitute `/path/to` with the actual path to h3-cli on your filesystem.
 
 The `H3_CLI_HOME` environment variable is used by h3-cli to locate itself.  The `PATH` environment
 variable is a list of directories (separated by `:`) that contain executable programs.  By adding

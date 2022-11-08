@@ -4,7 +4,7 @@
 #
 # Simple shell script for downloading and launching NodeZero.
 #
-# If op_id is not provided, h3x latest-pentest will be used.
+# If op_id is not provided, h3 latest-pentest will be used.
 #
 # NodeZero will continue running the pentest in the background (as a Docker container) after this script exits
 # (in other words, the script does not wait for NodeZero to finish).
@@ -32,7 +32,7 @@ function exit_if_pentest_has_launched {
 
 # 1. 
 # read pentest and check if it has already launched 
-pentest=`h3x pentest $*`
+pentest=`h3 pentest $*`
 rc=$?
 if [ $rc -ne 0 ]; then
     echo $pentest

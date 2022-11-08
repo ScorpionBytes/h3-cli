@@ -53,7 +53,11 @@ if [ -z "$H3_GQL_URL" ]; then
     H3_GQL_URL=https://api.horizon3ai.com/v1/graphql
 fi
 
+# allow users to define H3_CLI_GQL_PATH
+# always append H3_CLI_HOME/queries
 if [ -z "$H3_CLI_GQL_PATH" ]; then
-    H3_CLI_GQL_PATH=".:$H3_CLI_HOME/queries"
+    H3_CLI_GQL_PATH="$H3_CLI_HOME/queries"
+else
+    H3_CLI_GQL_PATH="$H3_CLI_GQL_PATH:$H3_CLI_HOME/queries"
 fi
 

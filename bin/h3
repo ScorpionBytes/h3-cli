@@ -140,7 +140,7 @@ cmd=$1
 shift
 
 
-if [ "$cmd" = "help" ]; then
+if [ -z "$cmd" -o "$cmd" = "help" ]; then
     cmd_help $*
 
 elif [ "$cmd" = "hello-world" -o "$cmd" = "hello_world" ]; then

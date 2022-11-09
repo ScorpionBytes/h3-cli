@@ -19,7 +19,7 @@ of your environment or kicking off a pentest as part of a continuous integration
 ## Installation and initial setup
 
 The steps below will get you up and running quickly with h3-cli. These instructions were tested on 
-MacOS and Linux machines, and generally should work on any [POSIX-compliant](https://en.wikipedia.org/wiki/POSIX) system with `bash` support.
+MacOS and Linux machines, and generally should work on any [POSIX-compliant](https://en.wikipedia.org/wiki/POSIX) system with bash support.
 
 If you plan to run _internal_ pentests using h3-cli, you should install h3-cli on the same Docker Host
 where you launch NodeZero.
@@ -30,7 +30,7 @@ at [https://portal.horizon3ai.com/](https://portal.horizon3ai.com/).
 
 ### 1. Install this git repo
 
-First, install this repo on your machine using the following `git` command within a shell/terminal.  
+First, install this repo on your machine using the following git command within a shell/terminal.  
 
 ```shell
 git clone git@gitlab.com:h3upperbounds/data/h3-cli.git
@@ -38,28 +38,27 @@ chmod -R a+x h3-cli/bin
 ```
 
 This will create a new directory, `h3-cli`, and download the contents of this repo to it.  The `h3-cli` directory
-will be created in the directory where you run the `git` command.  You can install h3-cli anywhere on the filesystem;
-there are no restrictions on where it's located.
+will be created in the directory where you run the git command.  You can install h3-cli anywhere on the filesystem.
 
 The `chmod` command ensures that the scripts under `h3-cli/bin` are set to executable mode.
 
-> If you don't have `git`, you can download the repo as a zip archive from the menu above, and unzip it anywhere in the filesystem.
+If you don't have git, you can download the repo as a zip archive from the menu above, and unzip it anywhere in the filesystem.
 
 
-### 2. Install dependency: `jq` 
+### 2. Install dependency: jq 
 
-h3-cli has a dependency on `jq`.  `jq` is a sed-like JSON parser.  All responses from the Horizon3 API are in JSON format.
-h3-cli uses `jq` to parse and pretty-print JSON responses.
+h3-cli has a dependency on **jq**.  jq is a command-line tool for parsing JSON data.  All responses from the Horizon3 API are in JSON format.
+h3-cli uses jq to parse and pretty-print JSON responses.
 
-First check if you already have `jq` installed by trying to run it from the command prompt:
+First check if you already have jq installed by trying to run it from the command prompt:
 
 ```shell
 jq
 ```
 
-If not already installed, download and install `jq` from here: [https://stedolan.github.io/jq/download/](https://stedolan.github.io/jq/download/)
+If not already installed, download and install jq from here: [https://stedolan.github.io/jq/download/](https://stedolan.github.io/jq/download/)
 
-Verify `jq` is installed by running:
+Verify jq is installed by running:
 
 ```shell
 echo '{"testing":"jq"}' | jq .
@@ -73,7 +72,7 @@ The output should be:
 }
 ```
 
-If you see a `Permission Denied` error, you may have to set `jq` to be executable using `chmod a+x jq`
+If you see a `Permission Denied` error, you may have to set jq to be executable using `chmod a+x jq`
 
 
 ### 3. Obtain an API key
@@ -103,7 +102,6 @@ Add the following to the bottom of your `$HOME/.bash_profile` (or `$HOME/.bashrc
 Substitute `/path/to` with the actual path to the h3-cli directory on your filesystem.
 
 ```shell
-# H3-CLI
 export H3_CLI_HOME=/path/to/h3-cli
 export PATH="$H3_CLI_HOME/bin:$PATH"
 ```
@@ -113,16 +111,16 @@ The `PATH` environment variable is a list of directories (separated by `:`) that
 h3-cli to the `PATH`, you will be able to invoke h3-cli by simply typing `h3` at the command prompt.
 
 After updating the file, re-login or restart your terminal session to pick up the profile changes,
-then verify you can invoke `h3` by running it from the command prompt:
+then verify you can invoke h3 by running it from the command prompt:
 
 ```shell
 h3
 ```
 
-If everything's installed correctly, you should see the h3 help text.
+If everything's installed correctly, you should see the h3-cli help text.
 
 
-## Getting started with h3-cli
+## Getting started 
 
 ### 1. Verify connectivity with the API
 
@@ -210,7 +208,7 @@ There are several ways to specify additional parameters when scheduling pentests
 See the next section about downloading and running NodeZero in order to complete the initiation of your pentest.
 
 
-### 5. Run NodeZero™
+### 5. Run NodeZero
 
 **⚠️ The following instructions apply to _internal_ pentests only, not _external_ pentests.**
 

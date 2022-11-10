@@ -50,13 +50,13 @@ If you don't have git, you can download the repo as a zip archive from the menu 
 h3-cli has a dependency on **jq**.  jq is a command-line tool for parsing JSON data.  All responses from the Horizon3 API are in JSON format.
 h3-cli uses jq to parse and pretty-print JSON responses.
 
-First check if you already have jq installed by trying to run it from the command prompt:
+Install `jq` by executing the `h3-install-jq` utility script in the `/bin` directory:
 
 ```shell
-jq
+bin/h3-install-jq
 ```
 
-If not already installed, download and install jq from here: [https://stedolan.github.io/jq/download/](https://stedolan.github.io/jq/download/)
+NOTE: You may need to input your account's password due to the `sudo chmod ...` command that needs to be executed in that utility.
 
 Verify jq is installed by running:
 

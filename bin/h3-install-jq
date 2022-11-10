@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Make certain yq's binaries are executable.
+sudo chmod -R +x ./bin/jqb
+
+CURRENT_OS=$(uname -s)
+JQ_BINARY=jq-osx-x86
+
+if [[ "${CURRENT_OS}" == *"Linux"* ]] 
+then
+  JQ_BINARY=jq-linux32
+  echo "JQ_BINARY: ${JQ_BINARY}"
+fi
+
+# Make the symlink to the correct jq executable binary and place it in h3-cli's bin/ directory.
+ln -sf $(pwd)/bin/jqb/${JQ_BINARY} $(pwd)/bin/jq
+

@@ -28,89 +28,48 @@ It is assumed you already have an account with Horizon3.ai.  If not, sign up
 at [https://portal.horizon3ai.com/](https://portal.horizon3ai.com/).
 
 
-### 1. Install this git repo
-
-First, install this repo on your machine using the following git command within a shell/terminal.  
-
-```shell
-git clone git@gitlab.com:h3upperbounds/data/h3-cli.git
-chmod -R a+x h3-cli/bin
-```
-
-This will create a new directory, `h3-cli`, and download the contents of this repo to it.  The `h3-cli` directory
-will be created in the directory where you run the git command.  You can install h3-cli anywhere on the filesystem.
-
-The `chmod` command ensures that the scripts under `h3-cli/bin` are set to executable mode.
-
-If you don't have git, you can download the repo as a zip archive from the menu above, and unzip it anywhere in the filesystem.
-
-
-### 2. Install dependency: jq 
-
-h3-cli has a dependency on **jq**.  jq is a command-line tool for parsing JSON data.  All responses from the Horizon3 API are in JSON format.
-h3-cli uses jq to parse and pretty-print JSON responses.
-
-Install `jq` by executing the `h3-install-jq` utility script in the `/bin` directory:
-
-```shell
-bin/h3-install-jq
-```
-
-NOTE: You may need to input your account's password due to the `sudo chmod ...` command that needs to be executed in that utility.
-
-Verify jq is installed by running:
-
-```shell
-echo '{"testing":"jq"}' | jq .
-```
-
-The output should be:
-
-```shell
-{
-  "testing": "jq"
-}
-```
-
-If you see a `Permission Denied` error, you may have to set jq to be executable using `chmod a+x jq`
-
-
-### 3. Obtain an API key
+### 1. Obtain an API key
 
 An API key is required to access the H3 API.  Obtain one from the Portal under the User -> Settings menu: [https://portal.horizon3ai.com/settings/api](https://portal.horizon3ai.com/settings/api).
 
 Keep your API key secure, as anyone with your API key can access your H3 account.  
 
 
-### 4. Set up your h3-cli profile
+### 2. Install this git repo
 
-Run the following commands to create your h3-cli profile.  Substitute `your-api-key-here` with your actual API key.
-
-```shell
-mkdir $HOME/.h3
-chmod 600 $HOME/.h3
-echo "H3_API_KEY=your-api-key-here" > $HOME/.h3/default.env
-```
-
-This will create your h3-cli profile under the `$HOME/.h3` directory
-and restrict permissions on the directory so that no other users (besides yourself) can read it.
-
-
-### 5. Add h3-cli to the command `PATH`
-
-Add the following to the bottom of your `$HOME/.bash_profile` (or `$HOME/.bashrc` or `$HOME/.profile`, whichever is present on your system).
-Substitute `/path/to` with the actual path to the h3-cli directory on your filesystem.
+First, install this repo on your machine using the following git command within a shell/terminal.  
 
 ```shell
-export H3_CLI_HOME=/path/to/h3-cli
-export PATH="$H3_CLI_HOME/bin:$PATH"
+git clone git@gitlab.com:h3upperbounds/data/h3-cli.git
 ```
 
-The `H3_CLI_HOME` environment variable is used by h3-cli to locate itself and its supporting files.
-The `PATH` environment variable is a list of directories (separated by `:`) that contain executable programs.  By adding
-h3-cli to the `PATH`, you will be able to invoke h3-cli by simply typing `h3` at the command prompt.
+This will create a new directory, `h3-cli`, and download the contents of the repo to it.  The `h3-cli` directory
+will be created in the directory where you run the git command.  You can install h3-cli anywhere on the filesystem.
 
-After updating the file, re-login or restart your terminal session to pick up the profile changes,
+If you don't have git, you can download the repo as a zip archive from the menu above, and unzip it anywhere in the filesystem.
+
+
+### 3. Run h3-cli install script
+
+Run the following commands to install and configure h3-cli.  Substitute `your-api-key-here` with your actual API key.
+
+```shell
+cd h3-cli
+chmod a+x ./install.sh 
+./install.sh your-api-key-here
+```
+
+The install script will install dependencies (jq) and create your h3-cli profile under the `$HOME/.h3` directory.
+Your API key is stored in your h3-cli profile.  The profile permissions are restricted so that no other
+users (besides yourself) can read it.
+
+The install script will ask you to edit your shell profile (`~/.bash_profile` or `~/.bash_login` or `~/.profile`, depending
+on your operating system) to set the following environment variables:
+
+* `H3_CLI_HOME`: this environment variable is used by h3-cli to locate itself and its supporting files.
+* `PATH`: this environment variable specifies the directories to be searched to find a shell command.
+
+After updating your shell profile, re-login or restart your shell session to pick up the profile changes,
 then verify you can invoke h3 by running it from the command prompt:
 
 ```shell
@@ -270,7 +229,7 @@ The simplest way to schedule a pentest is to use the default op template and _In
 h3 schedule-pentest
 ```
 
-To schedule a pentest AND launch NodeZero (if it's an _internal_ pentest):
+To schedule a pentest AND launch NodeZero (if it's an _internal_ pentest; for external pentests it skips this step):
 
 ```shell
 h3 run-pentest

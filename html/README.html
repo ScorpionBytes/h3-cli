@@ -111,13 +111,7 @@
                                                         cases</a></li>
                                                         <li><a
                                                         href="#authentication"
-                                                        id="toc-authentication">Authentication</a>
-                                                        <ul>
-                                                        <li><a
-                                                        href="#forcing-re-authentication"
-                                                        id="toc-forcing-re-authentication">Forcing
-                                                        re-authentication</a></li>
-                                                        </ul></li>
+                                                        id="toc-authentication">Authentication</a></li>
                                                         <li><a
                                                         href="#scheduling-and-running-pentests-with-h3-cli"
                                                         id="toc-scheduling-and-running-pentests-with-h3-cli">Scheduling
@@ -127,8 +121,21 @@
                                                         <li><a
                                                         href="#powered-by-graphql"
                                                         id="toc-powered-by-graphql">Powered
-                                                        by
-                                                        GraphQL</a></li>
+                                                        by GraphQL</a>
+                                                        <ul>
+                                                        <li><a
+                                                        href="#advanced-writing-your-own-graphql-queries"
+                                                        id="toc-advanced-writing-your-own-graphql-queries">Advanced:
+                                                        Writing your own
+                                                        GraphQL
+                                                        queries</a></li>
+                                                        <li><a
+                                                        href="#advanced-parameterized-graphql-queries"
+                                                        id="toc-advanced-parameterized-graphql-queries">Advanced:
+                                                        Parameterized
+                                                        GraphQL
+                                                        queries</a></li>
+                                                        </ul></li>
                                                         </ul>
                             
                         </div>
@@ -180,21 +187,20 @@ the contents of the repo to it. The <code>h3-cli</code> directory will
 be created in the directory where you run the git command. You can
 install h3-cli anywhere on the filesystem.</p>
 <p>If you don’t have git, you can download the repo as a zip archive
-from the menu above, and unzip it anywhere in the filesystem.</p>
+from the menu above, and unzip it anywhere on the filesystem.</p>
 <h3 id="run-h3-cli-install-script">3. Run h3-cli install script</h3>
 <p>Run the following commands to install and configure h3-cli.
 Substitute <code>your-api-key-here</code> with your actual API key.</p>
 <pre class="shell"><code>cd h3-cli
-chmod a+x ./install.sh 
-./install.sh your-api-key-here</code></pre>
+bash install.sh your-api-key-here</code></pre>
 <p>The install script will install dependencies (jq) and create your
 h3-cli profile under the <code>$HOME/.h3</code> directory. Your API key
 is stored in your h3-cli profile. The profile permissions are restricted
 so that no other users (besides yourself) can read it.</p>
 <p>The install script will ask you to edit your shell profile
-(<code>~/.bash_profile</code> or <code>~/.bash_login</code> or
-<code>~/.profile</code>, depending on your operating system) to set the
-following environment variables:</p>
+(<code>$HOME/.bash_profile</code> or <code>$HOME/.bash_login</code> or
+<code>$HOME/.profile</code>, depending on your operating system) to set
+the following environment variables:</p>
 <ul>
 <li><code>H3_CLI_HOME</code>: this environment variable is used by
 h3-cli to locate itself and its supporting files.</li>
@@ -309,17 +315,26 @@ paginate through large result sets using h3-cli.</p>
 href="guides/download-reports.html">this guide</a> to learn how to
 download pentest reports using h3-cli.</p>
 <h2 id="authentication">Authentication</h2>
-<p>h3-cli uses your <code>H3_API_KEY</code> to authenticate to the
-Horizon3.ai API and establish a session. The session token (a JWT) is
-stored in <code>$HOME/.h3/jwt</code>. The session expires after 1 hour,
-at which point h3-cli will seamlessly and automatically re-authenticate
-and re-establish a session.</p>
-<h3 id="forcing-re-authentication">Forcing re-authentication</h3>
-<p>If you wish to force h3-cli to re-authenticate, use the
-<code>auth</code> command:</p>
+<p>Authentication happens seamlessly and automatically when you invoke
+the <code>h3</code> command. There’s nothing explicit you need to do to
+authenticate. This section documents the underlying mechanics.</p>
+<p>h3-cli reads your <code>H3_API_KEY</code> from your h3-cli profile
+(under <code>$HOME/.h3</code>) to authenticate to the Horizon3.ai API
+and establishes a (temporary) session. The session token (a JWT) is
+stored in <code>$HOME/.h3/jwt</code>. The session token expires after 1
+hour, at which point h3-cli will automatically re-authenticate and
+re-establish a session.</p>
+<p>You can explicitly authenticate using the following command:</p>
 <pre class="shell"><code>h3 auth</code></pre>
+<p>The above command will output the session token (and also write it to
+<code>$HOME/.h3/jwt</code>). If you already have an established
+(non-expired) session token, <code>h3 auth</code> will continue to use
+that session token rather than re-authenticate.</p>
+<p>If you want to <em>force</em> h3-cli to re-authenticate, use the
+<code>force</code> option:</p>
+<pre class="shell"><code>h3 auth force</code></pre>
 <p>This can be useful if you’re switching from one
-<code>H3_API_KEY</code> to another and want to force authentcation
+<code>H3_API_KEY</code> to another and want to force authentication
 against the new <code>H3_API_KEY</code>.</p>
 <h2 id="scheduling-and-running-pentests-with-h3-cli">Scheduling and
 running pentests with h3-cli</h2>
@@ -349,7 +364,53 @@ document, relevant documentation includes:</p>
 <li><a href="https://h3-graphql-docsite.horizon3ai.com/">Horizon3.ai
 GraphQL API Reference</a></li>
 <li><a href="https://graphql.org/">Learn about GraphQL</a></li>
-</ul>                    
+</ul>
+<h3 id="advanced-writing-your-own-graphql-queries">Advanced: Writing
+your own GraphQL queries</h3>
+<p>h3-cli provides a simple mechanism to run your own GraphQL queries.
+First you define the GraphQL query in a file (typically with a
+<code>.graphql</code> extension, although that is not required). Then
+pass the file to <code>h3 gql</code>:</p>
+<pre class="shell"><code>h3 gql {your-query-file}</code></pre>
+<p>For example, define the following in a file named
+<code>my_session.graphql</code>:</p>
+<pre><code>query {
+    session_user_account {
+        email
+        name
+        company_name
+    }
+}</code></pre>
+<p>Then run:</p>
+<pre class="shell"><code>h3 gql ./my_session.graphql</code></pre>
+<p>You should see the raw JSON response from the GraphQL server. You can
+pretty-print the JSON response using jq:</p>
+<pre class="shell"><code>h3 gql ./my_session.graphql | jq .</code></pre>
+<p><strong>Important!</strong> You must specify the path to the graphql
+file (full or relative, ie. <code>./my_session.graphql</code> instead of
+just <code>my_session.graphql</code>), otherwise you risk colliding with
+graphql files that h3-cli uses internally.</p>
+<h3 id="advanced-parameterized-graphql-queries">Advanced: Parameterized
+GraphQL queries</h3>
+<p>GraphQL queries can also define parameters, which are passed to
+<code>h3 gql</code> as a JSON object.</p>
+<p>For example, define the following in a file named
+<code>my_pentest.graphql</code>:</p>
+<pre><code>query q($op_id: String!) {
+    pentest(op_id:$op_id) {
+        op_id
+        name
+        state
+    }
+}</code></pre>
+<p>In this example, <code>$op_id</code> is a parameter that must be
+provided in order to run the query. The parameter is passed to the query
+within a JSON object:</p>
+<pre class="shell"><code>h3 gql ./my_pentest.graphql &#39;{&quot;op_id&quot;:&quot;your-op-id-here&quot;}&#39; | jq .</code></pre>
+<blockquote>
+<p>Substitute <code>your-op-id-here</code> with an actual
+<code>op_id</code>.</p>
+</blockquote>                    
                 </div>
             </div>
             <script src="https://vjs.zencdn.net/5.4.4/video.js"></script>

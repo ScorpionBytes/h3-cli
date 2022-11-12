@@ -49,7 +49,7 @@ will be created in the directory where you run the git command.  You can install
 If you don't have git, you can download the repo as a zip archive from the menu above, and unzip it anywhere on the filesystem.
 
 
-### 3. Run h3-cli install script
+### 3. Run the h3-cli install script
 
 Run the following commands to install and configure h3-cli.  Substitute `your-api-key-here` with your actual API key.
 
@@ -85,7 +85,7 @@ If everything's installed correctly, you should see the h3-cli help text.
 Run the following command to verify connectivity with the API.
 
 ```shell
-h3 hello_world
+h3 hello-world
 ```
 
 You should see the response:
@@ -126,7 +126,7 @@ h3 pentest
 To query any pentest in your account, pass the `op_id` of the pentest as a parameter:
 
 ```shell
-h3 pentest {op_id}
+h3 pentest your-op-id-here
 ```
 
 Several h3-cli commands will use the most recent pentest as the default,
@@ -150,7 +150,7 @@ For experienced users, custom op template(s) may be created via the [Horizon3.ai
 To create a custom op template, walk through the _Run a Pentest_ modal until you see the 
 option to customize the pentest configuration. The op template can be created without actually running the pentest. 
 
-To schedule a pentest using the default op template with Intelligent Scope:
+To schedule a pentest using the default op template and Intelligent Scope:
 
 ```shell
 h3 schedule-pentest
@@ -240,7 +240,7 @@ The simplest way to schedule a pentest is to use the default op template and _In
 h3 schedule-pentest
 ```
 
-To schedule a pentest AND launch NodeZero (if it's an _internal_ pentest; for external pentests it skips this step):
+To schedule a pentest AND launch NodeZero (if it's an _internal_ pentest; for external pentests it skips the launch step):
 
 ```shell
 h3 run-pentest

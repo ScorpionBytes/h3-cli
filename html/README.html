@@ -62,9 +62,9 @@
                                                         Install this git
                                                         repo</a></li>
                                                         <li><a
-                                                        href="#run-h3-cli-install-script"
-                                                        id="toc-run-h3-cli-install-script">3.
-                                                        Run h3-cli
+                                                        href="#run-the-h3-cli-install-script"
+                                                        id="toc-run-the-h3-cli-install-script">3.
+                                                        Run the h3-cli
                                                         install
                                                         script</a></li>
                                                         </ul></li>
@@ -188,7 +188,8 @@ be created in the directory where you run the git command. You can
 install h3-cli anywhere on the filesystem.</p>
 <p>If you don’t have git, you can download the repo as a zip archive
 from the menu above, and unzip it anywhere on the filesystem.</p>
-<h3 id="run-h3-cli-install-script">3. Run h3-cli install script</h3>
+<h3 id="run-the-h3-cli-install-script">3. Run the h3-cli install
+script</h3>
 <p>Run the following commands to install and configure h3-cli.
 Substitute <code>your-api-key-here</code> with your actual API key.</p>
 <pre class="shell"><code>cd h3-cli
@@ -217,7 +218,7 @@ text.</p>
 <h3 id="verify-connectivity-with-the-api">1. Verify connectivity with
 the API</h3>
 <p>Run the following command to verify connectivity with the API.</p>
-<pre class="shell"><code>h3 hello_world</code></pre>
+<pre class="shell"><code>h3 hello-world</code></pre>
 <p>You should see the response:</p>
 <pre class="shell"><code>{
   &quot;data&quot;: {
@@ -241,7 +242,7 @@ pentest from your account</h3>
 <pre class="shell"><code>h3 pentest</code></pre>
 <p>To query any pentest in your account, pass the <code>op_id</code> of
 the pentest as a parameter:</p>
-<pre class="shell"><code>h3 pentest {op_id}</code></pre>
+<pre class="shell"><code>h3 pentest your-op-id-here</code></pre>
 <p>Several h3-cli commands will use the most recent pentest as the
 default, unless an <code>op_id</code> is passed as a parameter.</p>
 <blockquote>
@@ -266,7 +267,7 @@ documentation</a>.</p>
 create a custom op template, walk through the <em>Run a Pentest</em>
 modal until you see the option to customize the pentest configuration.
 The op template can be created without actually running the pentest.</p>
-<p>To schedule a pentest using the default op template with Intelligent
+<p>To schedule a pentest using the default op template and Intelligent
 Scope:</p>
 <pre class="shell"><code>h3 schedule-pentest</code></pre>
 <p>The JSON response contains the details for the newly scheduled
@@ -344,7 +345,7 @@ pentests using h3-cli.</p>
 template and <em>Intelligent Scope</em>:</p>
 <pre class="shell"><code>h3 schedule-pentest</code></pre>
 <p>To schedule a pentest AND launch NodeZero (if it’s an
-<em>internal</em> pentest; for external pentests it skips this
+<em>internal</em> pentest; for external pentests it skips the launch
 step):</p>
 <pre class="shell"><code>h3 run-pentest</code></pre>
 <p>To run a pentest using a custom op template, specify it as a

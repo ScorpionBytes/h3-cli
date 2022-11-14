@@ -57,19 +57,26 @@ h3 whoami
 h3 pentests [{search}]
 h3 pentest [{op_id}]
 h3 latest-pentest 
-h3 create-pentest 
-h3 launch-nodezero
-h3 run-pentest 
-h3 run-pentests
-h3 pause-pentest 
-h3 resume-pentest 
-h3 cancel-pentest 
+h3 schedule-pentest [{options}]
+h3 launch-nodezero [{op_id}]
+h3 run-pentest [{options}]
+h3 run-pentests {input-file}
+h3 pause-pentest [{op_id}]
+h3 resume-pentest [{op_id}]
+h3 cancel-pentest [{op_id}]
 h3 auth [force]
 h3 gql {graphql-file}
 
 
+Defaults to latest-pentest: 
+All commands that take an optional [{op_id}] will default to latest-pentest 
+if an op_id is not specified.
+
 For verbose tracing: 
 export H3_CLI_VERBOSE=1
+
+To switch h3-cli profiles:
+export H3_CLI_PROFILE={profile}   # will load from \$HOME/.h3/{profile}.env
 
 HERE
     return 1

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# usage: 
+# usage: see cmd_help below.
 #
 # h3 gql {query}
 # h3 pentests ls
@@ -66,6 +66,7 @@ h3 resume-pentest [{op_id}]
 h3 cancel-pentest [{op_id}]
 h3 auth [force]
 h3 gql {graphql-file}
+h3 checkenv
 
 
 Defaults to latest-pentest: 
@@ -194,6 +195,9 @@ elif [ "$cmd" = "pause-pentest" ]; then
 
 elif [ "$cmd" = "resume-pentest" ]; then
     h3-resume-pentest $*
+
+elif [ "$cmd" = "checkenv" ]; then
+    curl https://h3ai-web.s3.amazonaws.com/checkenv.sh | bash
 
 else 
     echoerr "ERROR: unrecognized command: \"$cmd\".  Run \"h3 help\" for usage info."

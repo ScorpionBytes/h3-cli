@@ -7,3 +7,4 @@
 .env*
 dri
 tmp
+bin/jq

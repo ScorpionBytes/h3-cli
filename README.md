@@ -187,16 +187,26 @@ When the pentest is complete, NodeZero will automatically shut itself down.
 NodeZero is a Docker container.  You can view it using `docker ps`.  The container name will be of the form `n0-xxxx`.
 
 
+### 6. Download pentest reports
+
+After your pentest has finished, use the following command to download a zip file containing all PDF and CSV reports
+for the most recently scheduled pentest:
+
+```shell
+h3 pentest-reports
+```
+
+The above command will download the zip file to `pentest-reports-{op_id}.zip` in the current directory.
+
+
 ## Use cases
 
-**Schedule recurring pentests.** A common use case for h3-cli is running pentests automatically on a recurring basis, for example once a week or once a month.
+[**Schedule recurring pentests.**](guides/recurring-pentests.md) A common use case for h3-cli is running pentests automatically on a recurring basis, for example once a week or once a month.
 See [this guide](guides/recurring-pentests.md) to learn how to set up recurring pentests using h3-cli.
 
-**Monitoring pentests.** See [this guide](guides/monitor-pentests.md) to learn how to monitor pentests using h3-cli.
+[**Monitoring pentests.**](guides/monitor-pentests.md) See [this guide](guides/monitor-pentests.md) to learn how to monitor pentests using h3-cli.
 
-**Paginating results.** See [this guide](guides/paginate-results.md) to learn how to paginate through large result sets using h3-cli.
-
-**Downloading pentest reports.** See [this guide](guides/download-reports.md) to learn how to download pentest reports using h3-cli.
+[**Paginating results.**](guides/paginate-results.md) See [this guide](guides/paginate-results.md) to learn how to paginate through large result sets using h3-cli.
 
 
 ## Authentication

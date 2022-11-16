@@ -104,6 +104,11 @@
                                                         id="toc-run-nodezero">5.
                                                         Run
                                                         NodeZero</a></li>
+                                                        <li><a
+                                                        href="#download-pentest-reports"
+                                                        id="toc-download-pentest-reports">6.
+                                                        Download pentest
+                                                        reports</a></li>
                                                         </ul></li>
                                                         <li><a
                                                         href="#use-cases"
@@ -300,21 +305,26 @@ down.</p>
 <p>NodeZero is a Docker container. You can view it using
 <code>docker ps</code>. The container name will be of the form
 <code>n0-xxxx</code>.</p>
+<h3 id="download-pentest-reports">6. Download pentest reports</h3>
+<p>After your pentest has finished, use the following command to
+download a zip file containing all PDF and CSV reports for the most
+recently scheduled pentest:</p>
+<pre class="shell"><code>h3 pentest-reports</code></pre>
+<p>The above command will download the zip file to
+<code>pentest-reports-{op_id}.zip</code> in the current directory.</p>
 <h2 id="use-cases">Use cases</h2>
-<p><strong>Schedule recurring pentests.</strong> A common use case for
-h3-cli is running pentests automatically on a recurring basis, for
-example once a week or once a month. See <a
-href="guides/recurring-pentests.html">this guide</a> to learn how to set
-up recurring pentests using h3-cli.</p>
-<p><strong>Monitoring pentests.</strong> See <a
-href="guides/monitor-pentests.html">this guide</a> to learn how to monitor
-pentests using h3-cli.</p>
-<p><strong>Paginating results.</strong> See <a
-href="guides/paginate-results.html">this guide</a> to learn how to
-paginate through large result sets using h3-cli.</p>
-<p><strong>Downloading pentest reports.</strong> See <a
-href="guides/download-reports.html">this guide</a> to learn how to
-download pentest reports using h3-cli.</p>
+<p><a href="guides/recurring-pentests.html"><strong>Schedule recurring
+pentests.</strong></a> A common use case for h3-cli is running pentests
+automatically on a recurring basis, for example once a week or once a
+month. See <a href="guides/recurring-pentests.html">this guide</a> to
+learn how to set up recurring pentests using h3-cli.</p>
+<p><a href="guides/monitor-pentests.html"><strong>Monitoring
+pentests.</strong></a> See <a href="guides/monitor-pentests.html">this
+guide</a> to learn how to monitor pentests using h3-cli.</p>
+<p><a href="guides/paginate-results.html"><strong>Paginating
+results.</strong></a> See <a href="guides/paginate-results.html">this
+guide</a> to learn how to paginate through large result sets using
+h3-cli.</p>
 <h2 id="authentication">Authentication</h2>
 <p>Authentication happens seamlessly and automatically when you invoke
 the <code>h3</code> command. There’s nothing explicit you need to do to

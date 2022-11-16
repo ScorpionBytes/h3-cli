@@ -52,28 +52,29 @@ h3-cli: A command-line utility for the Horizon3 API.
 
 Usage:
 
-h3 hello-world
-h3 whoami
-h3 pentests [{search}]
-h3 pentest [{op_id}]
-h3 latest-pentest 
-h3 schedule-pentest [{options}]
-h3 launch-nodezero [{op_id}]
-h3 run-pentest [{options}]
-h3 run-pentests {input-file}
-h3 pause-pentest [{op_id}]
-h3 resume-pentest [{op_id}]
-h3 cancel-pentest [{op_id}]
-h3 auth [force]
-h3 gql {graphql-file}
-h3 checkenv
+h3 hello-world                  # Tests basic connectivity with the Horizon3 API.
+h3 whoami                       # Returns information about the user account attached to the API key.
+h3 pentests [{search}]          # The list of pentests in the account, optionally filtered by {search}.
+h3 pentest [{op_id}]            # The pentest for the given {op_id}, or latest-pentest by default.
+h3 latest-pentest               # Returns the most recently scheduled pentest in the account.
+h3 schedule-pentest [{options}] # Schedule a pentest using the given optional {options}
+h3 launch-nodezero [{op_id}]    # Download and run NodeZero for the given {op_id, or latest-pentest by default.
+h3 run-pentest [{options}]      # Combines schedule-pentest and launch-nodezero.
+h3 run-pentests {input-file}    # Reads {options} line-by-line from the given {input-file} and runs each pentest sequentially.
+h3 pause-pentest [{op_id}]      # Pauses the given {op_id}, or latest-pentest by default.
+h3 resume-pentest [{op_id}]     # Resumes the given {op_id}, or latest-pentest by default.
+h3 cancel-pentest [{op_id}]     # Ends the given {op_id}, or latest-pentest by default.
+h3 pentest-reports [{op_id}]    # Downloads pentest-reports-{op_id}.zip for the given {op_id}, or latest-pentest by default.
+h3 auth [force]                 # Authenticate to the API.
+h3 gql {graphql-file}           # Run the GraphQL request in the given {graphql-file}.
+h3 checkenv                     # Run the checkenv script to check for NodeZero compatibility.
 
 
 Defaults to latest-pentest: 
 All commands that take an optional [{op_id}] will default to latest-pentest 
 if an op_id is not specified.
 
-For verbose tracing: 
+For verbose logging: 
 export H3_CLI_VERBOSE=1
 
 To switch h3-cli profiles:
@@ -187,14 +188,17 @@ elif [ "$cmd" = "run-pentests" -o "$cmd" = "run_pentests" ]; then
 elif [ "$cmd" = "cancel-pentest" -o "$cmd" = "cancel_pentest" ]; then
     h3-cancel-pentest $*
 
-elif [ "$cmd" = "launch-nodezero" ]; then
+elif [ "$cmd" = "launch-nodezero" -o "$cmd" = "launch_nodezero" ]; then
     h3-launch-nodezero $*
 
-elif [ "$cmd" = "pause-pentest" ]; then
+elif [ "$cmd" = "pause-pentest" -o "$cmd" = "pause_pentest" ]; then
     h3-pause-pentest $*
 
-elif [ "$cmd" = "resume-pentest" ]; then
+elif [ "$cmd" = "resume-pentest" -o "$cmd" = "resume_pentest" ]; then
     h3-resume-pentest $*
+
+elif [ "$cmd" = "pentest-reports" -o "$cmd" = "pentest_reports" ]; then
+    h3-pentest-reports $*
 
 elif [ "$cmd" = "checkenv" ]; then
     curl https://h3ai-web.s3.amazonaws.com/checkenv.sh | bash

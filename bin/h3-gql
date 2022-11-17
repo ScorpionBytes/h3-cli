@@ -141,19 +141,28 @@ function main {
 
     # run the query 
     r=`post_query "$q" "$v"`
+    rc=$?
+    # echolog "post_query response: $?: $r"
     if [ "$r" = '{"message":"The incoming token has expired"}' -o "$r" = '{"Message":"Access Denied"}' -o "$r" = '{"message":"Unauthorized"}' ]
     then 
         refresh_jwt
         r=`post_query "$q" "$v"`
     fi
+
     echo $r
 
+    if [ "$r" = "Request body is not a valid JSON" ]; then
+        exit 1
+    fi
+
     # check errors
+    # echolog "checking for errors"
     error_message=`cat <<<$r | jq -r .errors[]?.message`
     if [ ! -z "$error_message" ]; then 
         exit 1
     fi
-    exit 0
+
+    exit $rc
 }
 
 main $*

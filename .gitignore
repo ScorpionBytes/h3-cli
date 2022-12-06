@@ -8,3 +8,4 @@
 dri
 tmp
 bin/jq
+bin/yq

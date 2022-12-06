@@ -5,6 +5,7 @@
 # usage: ./install.sh {h3-api-key}
 #
 # 1. install jq
+# 1b. install yq
 # 2. chmod h3-cli/bin
 # 3. create ~/.h3 profile
 # 4. update ~/.bash_profile
@@ -21,22 +22,62 @@ function echoerr {
 # mac M1:   Darwin MacBook-Pro.local 20.1.0 Darwin Kernel Version 20.1.0: Sat Oct 31 00:07:10 PDT 2020; root:xnu-7195.50.7~2/RELEASE_ARM64_T8101 arm64
 # mac x86:  Darwin Roberts-MacBook-Pro-3.local 20.6.0 Darwin Kernel Version 20.6.0: Tue Apr 19 21:04:45 PDT 2022; root:xnu-7195.141.29~1/RELEASE_X86_64 x86_64
 # linux:    Linux dev.linuxize.com 4.19.0-6-amd64 #1 SMP Debian 4.19.67-2+deb10u1 (2019-09-20) x86_64 GNU/Linux
-function pick_jq_url {
-    u=`uname -a`
+function get_system_type {
+    u=`uname -s`
+    m=`uname -m`
     if [[ "$u" == *"Linux"* ]]; then
-        if [[ "$u" == *"64"* ]]; then
-            echo "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64"
+        if [[ "$m" == *"64"* ]]; then
+            echo "LINUX_64"
             return 0
         else
-            echo "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux32"
+            echo "LINUX_32"
             return 0
         fi
     fi
-    if [[ "$u" == *"64"* ]]; then
+    if [[ "$m" == *"64"* ]]; then
+        echo "MACOS_64"
+        return 0
+    else 
+        echo "MACOS_32"
+        return 0
+    fi
+}
+
+ 
+function pick_jq_url {
+    system_type=`get_system_type`
+    u=`uname -a`
+    if [ "$system_type" = "LINUX_64" ]; then
+        echo "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64"
+        return 0
+    elif [ "$system_type" = "LINUX_32" ]; then
+        echo "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux32"
+        return 0
+    elif [ "$system_type" = "MACOS_64" ]; then
         echo "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64"
         return 0
     else 
         echo "https://github.com/stedolan/jq/releases/download/jq-1.4/jq-osx-x86"
+        return 0
+    fi
+}
+
+
+# TODO: improve system identification
+function pick_yq_url {
+    system_type=`get_system_type`
+    u=`uname -a`
+    if [ "$system_type" = "LINUX_64" ]; then
+        echo "https://github.com/mikefarah/yq/releases/download/v4.30.4/yq_linux_amd64"
+        return 0
+    elif [ "$system_type" = "LINUX_32" ]; then
+        echo "https://github.com/mikefarah/yq/releases/download/v4.30.4/yq_linux_amd64"
+        return 0
+    elif [ "$system_type" = "MACOS_64" ]; then
+        echo "https://github.com/mikefarah/yq/releases/download/v4.30.4/yq_darwin_amd64"
+        return 0
+    else 
+        echo "https://github.com/mikefarah/yq/releases/download/v4.30.4/yq_darwin_amd64"
         return 0
     fi
 }
@@ -88,6 +129,28 @@ if [ $? -ne 0 ]; then
 fi
 echo "[.] DONE"
 
+# 1b. install yq
+echo "[.] checking if yq is already installed ..."
+yqv=`jy --version 2>&1`
+if [ $? -ne 0 ]; then
+    yq_url=`pick_yq_url`
+    echo "[.] installing yq from $yq_url ... "
+    curl -s -L $yq_url -o $H3_CLI_HOME/bin/yq
+    chmod -R a+x $H3_CLI_HOME/bin
+   
+    # verify
+    echo "[.] verifying $H3_CLI_HOME/bin/yq ... "
+    yqv=`$H3_CLI_HOME/bin/yq --version`
+    if [ $? -ne 0 ]; then
+        rm -f $H3_CLI_HOME/bin/yq   # cleanup
+        echo "[!] ACTION REQUIRED: failed to install yq"
+        echo "[!] Please install yq from https://github.com/mikefarah/yq/#install"
+        echo "[!] After installing yq, re-run this install script"
+        exit 1
+    fi
+fi
+echo "[.] DONE"
+
 
 # 2. create .h3 profile
 echo 
@@ -122,6 +185,7 @@ cat <<HERE
 
 export H3_CLI_HOME=$H3_CLI_HOME
 export PATH="\$H3_CLI_HOME/bin:\$PATH"
+
 HERE
 
 

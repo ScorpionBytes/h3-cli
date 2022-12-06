@@ -35,13 +35,20 @@ if [ -z "$H3_API_KEY" ]; then
         source $profile
     fi
     if [ -z "$H3_API_KEY" ]; then
-        echoerr "H3_API_KEY environment variable required.  Must be exported to shell or defined in $profile"
+        echoerr "H3_API_KEY environment variable required.  Must be exported to the shell or defined in $profile"
         exit 1
     fi
 fi
 
 if [ -z "$H3_CLI_HOME" ]; then
-    echoerr "H3_CLI_HOME environment variable required"
+    H3_CLI_HOME=`dirname $(dirname $(which h3))`
+    if [ -z "$H3_CLI_HOME" ]; then
+        echoerr "H3_CLI_HOME environment variable required.  Must be set to the full path of the h3-cli directory."
+        exit 1
+    fi
+fi
+if [ ! -e "$H3_CLI_HOME" ]; then 
+    echoerr "H3_CLI_HOME environment variable does not refer to an existing directory ($H3_CLI_HOME).  Must be set to the full path of the h3-cli directory."
     exit 1
 fi
 
@@ -55,9 +62,14 @@ fi
 
 # allow users to define H3_CLI_GQL_PATH
 # always PRE-pend H3_CLI_HOME/queries
+prepend_gql_path="$H3_CLI_HOME/queries"
+if [ -e "$H3_CLI_HOME/queries-admin" ]; then
+    prepend_gql_path="$H3_CLI_HOME/queries-admin:$prepend_gql_path"
+fi
+
 if [ -z "$H3_CLI_GQL_PATH" ]; then
-    H3_CLI_GQL_PATH="$H3_CLI_HOME/queries"
+    H3_CLI_GQL_PATH=$prepend_gql_path
 else
-    H3_CLI_GQL_PATH="$H3_CLI_HOME/queries:$H3_CLI_GQL_PATH"
+    H3_CLI_GQL_PATH="$prepend_gql_path:$H3_CLI_GQL_PATH"
 fi
 

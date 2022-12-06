@@ -118,6 +118,23 @@ HERE
 }
 
 
+function cmd_client_accounts {
+    json_params=`cat <<HERE
+{"search":"$*"}
+HERE
+`
+    res=`h3-gql client_accounts $json_params` 
+    rc=$?
+    if [ $rc -eq 0 ]; then
+        cat <<<$res | jq '.data.client_accounts_page.client_accounts[]'
+    else
+        echo $res
+    fi 
+    return $rc
+}
+
+
+
 function cmd_whoami {
     res=`h3-gql whoami` 
     rc=$?
@@ -219,6 +236,10 @@ elif [ "$cmd" = "pentest-reports" -o "$cmd" = "pentest_reports" ]; then
 
 elif [ "$cmd" = "checkenv" ]; then
     curl https://h3ai-web.s3.amazonaws.com/checkenv.sh | bash
+
+elif [ "$cmd" = "accounts" -o "$cmd" = "client-accounts" -o "$cmd" = "client_accounts"  ]; then
+    cmd_client_accounts $*
+
 
 else 
     echoerr "ERROR: unrecognized command: \"$cmd\".  Run \"h3 help\" for usage info."

@@ -68,6 +68,9 @@ h3 pentest-reports [{op_id}]    # Downloads pentest-reports-{op_id}.zip for the 
 h3 auth [force]                 # Authenticate to the API.
 h3 gql {graphql-file}           # Run the GraphQL request in the given {graphql-file}.
 h3 checkenv                     # Run the checkenv script to check for NodeZero compatibility.
+h3 accounts [{search}]          # List of client accounts this user has access to, optionally filtered by {search}.
+h3 users                        # List of users with access to the current client account.
+h3 op-templates [{op-type}]     # Pentest templates for the current client account.  op-type can be either "NodeZero" (default) or "ExternalAttack".
 
 
 Defaults to latest-pentest: 
@@ -133,6 +136,33 @@ HERE
     return $rc
 }
 
+
+function cmd_user_accounts {
+    res=`h3-gql user_accounts $json_params` 
+    rc=$?
+    if [ $rc -eq 0 ]; then
+        cat <<<$res | jq '.data.user_accounts[]'
+    else
+        echo $res
+    fi 
+    return $rc
+}
+
+
+function cmd_op_templates {
+    json_params=`cat <<HERE
+{"op_type":"$*"}
+HERE
+`
+    res=`h3-gql op_templates $json_params` 
+    rc=$?
+    if [ $rc -eq 0 ]; then
+        cat <<<$res | jq '.data.op_templates[]'
+    else
+        echo $res
+    fi 
+    return $rc
+}
 
 
 function cmd_whoami {
@@ -240,6 +270,11 @@ elif [ "$cmd" = "checkenv" ]; then
 elif [ "$cmd" = "accounts" -o "$cmd" = "client-accounts" -o "$cmd" = "client_accounts"  ]; then
     cmd_client_accounts $*
 
+elif [ "$cmd" = "users" -o "$cmd" = "user-accounts" -o "$cmd" = "user_accounts"  ]; then
+    cmd_user_accounts $*
+
+elif [ "$cmd" = "op-templates" -o "$cmd" = "op_templates" ]; then
+    cmd_op_templates $*
 
 else 
     echoerr "ERROR: unrecognized command: \"$cmd\".  Run \"h3 help\" for usage info."

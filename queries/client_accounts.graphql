@@ -29,7 +29,6 @@ fragment ClientAccountScalarFragment on ClientAccount {
     uuid
     parent_uuid
     company_name: CompanyName
-    access_level
     session_user_role_id
     row_created_at
 }

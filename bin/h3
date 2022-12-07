@@ -2,29 +2,6 @@
 #
 # usage: see cmd_help below.
 #
-# h3 gql {query}
-# h3 pentests ls
-# h3 pentests rm
-# h3 pentests cancel
-# h3 pentests pause
-# h3 pentests resume
-# h3 pentests latest
-# h3 pentests run ?
-#   - h3 run-pentest
-# h3 pentests launch-nodezero
-# h3 nodezero launch  
-#   - h3 launch-nodezero
-# 
-# h3 asset-groups ? 
-#
-# h3 whoami
-# h3 switch-account
-# h3 auth
-#
-# h3 users
-# h3 accounts
-# 
-#
 # For verbose tracing: export H3_CLI_VERBOSE=1
 #
 
@@ -71,6 +48,9 @@ h3 checkenv                     # Run the checkenv script to check for NodeZero 
 h3 accounts [{search}]          # List of client accounts this user has access to, optionally filtered by {search}.
 h3 users                        # List of users with access to the current client account.
 h3 op-templates [{op-type}]     # Pentest templates for the current client account.  op-type can be either "NodeZero" (default) or "ExternalAttack".
+h3 op-template {uuid}           # Pentest template with the given uuid.
+h3 asset-groups [{search}]      # List of asset groups in the account, optionally filtered by {search}.
+h3 asset-group {uuid}           # The asset group with the given uuid.
 
 
 Defaults to latest-pentest: 
@@ -121,6 +101,39 @@ HERE
 }
 
 
+function cmd_asset_groups {
+    json_params=`cat <<HERE
+{"search":"$*"}
+HERE
+`
+    res=`h3-gql asset_groups $json_params` 
+    rc=$?
+    if [ $rc -eq 0 ]; then
+        cat <<<$res | jq '.data.asset_groups_page.asset_groups[]'
+    else
+        echo $res
+    fi 
+    return $rc
+}
+
+
+function cmd_asset_group {
+    json_params=`cat <<HERE
+{"uuid":"$*"}
+HERE
+`
+    res=`h3-gql asset_group $json_params` 
+    rc=$?
+    if [ $rc -eq 0 ]; then
+        cat <<<$res | jq '.data.asset_group'
+    else
+        echo $res
+    fi 
+    return $rc
+}
+
+
+
 function cmd_client_accounts {
     json_params=`cat <<HERE
 {"search":"$*"}
@@ -158,6 +171,22 @@ HERE
     rc=$?
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq '.data.op_templates[]'
+    else
+        echo $res
+    fi 
+    return $rc
+}
+
+
+function cmd_op_template {
+    json_params=`cat <<HERE
+{"uuid":"$*"}
+HERE
+`
+    res=`h3-gql op_template $json_params` 
+    rc=$?
+    if [ $rc -eq 0 ]; then
+        cat <<<$res | jq '.data.op_template'
     else
         echo $res
     fi 
@@ -275,6 +304,15 @@ elif [ "$cmd" = "users" -o "$cmd" = "user-accounts" -o "$cmd" = "user_accounts" 
 
 elif [ "$cmd" = "op-templates" -o "$cmd" = "op_templates" ]; then
     cmd_op_templates $*
+
+elif [ "$cmd" = "op-template" -o "$cmd" = "op_template" ]; then
+    cmd_op_template $*
+
+elif [ "$cmd" = "asset-groups" -o "$cmd" = "asset_groups" ]; then
+    cmd_asset_groups $*
+
+elif [ "$cmd" = "asset-group" -o "$cmd" = "asset_group" ]; then
+    cmd_asset_group $*
 
 else 
     echoerr "ERROR: unrecognized command: \"$cmd\".  Run \"h3 help\" for usage info."

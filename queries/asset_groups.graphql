@@ -1,4 +1,4 @@
-query q($search: String = "", $page_num: Int = 1, $page_size: Int = 20) {
+query q($search: String = "", $page_num: Int = 1, $page_size: Int = 100) {
     asset_groups_count(
         page_input:{
             text_search:$search
@@ -29,21 +29,12 @@ fragment AssetGroupFragment on AssetGroup {
             git_accounts {
                 name 
                 source 
-                type
             }
             aws_account_ids
         }
     }
-    user_account_name
-    client_account_company_name
     last_ead_etl_completed_at
     created_at
     updated_at
-    op_series_uuid
     assets_count
-    pentestable_assets_count
-    external_domain_xops_count
-    pentestable_external_domain_xops_count
-    in_scope_host_tab_xops_count
-    pentestable_host_tab_xops_count
 }

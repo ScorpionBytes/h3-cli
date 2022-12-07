@@ -63,6 +63,9 @@ export H3_CLI_VERBOSE=1
 To switch h3-cli profiles:
 export H3_CLI_PROFILE={profile}   # will load from \$HOME/.h3/{profile}.env
 
+Visit the H3 GraphQL API docsite for more details: 
+https://h3-graphql-docsite.horizon3ai.com/
+
 HERE
     return 1
 }

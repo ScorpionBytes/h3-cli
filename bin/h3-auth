@@ -16,6 +16,10 @@ jwt_file="$H3_CLI_PROFILES_DIR/jwt"
 
 # @returns json response: {"token":"..."}
 function gen_jwt {
+    if [ "$H3_AUTH_URL" = "sandbox" ]; then
+        echo '{"token":"sandbox"}'
+        return 0
+    fi
     curl -s -S -k \
       -X POST $H3_AUTH_URL \
       -H 'Content-Type: application/json' \

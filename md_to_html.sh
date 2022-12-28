@@ -2,6 +2,9 @@
 #
 # convert markdown to html
 #
+# PRE-REQ: 
+# install pandoc templates from here: https://github.com/ryangrose/easy-pandoc-templates
+#
 # usage: 
 #   $ ./md_to_html.sh
 #

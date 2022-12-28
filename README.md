@@ -176,7 +176,7 @@ This is done by running the NodeZero Launch Script on your Docker Host.
 To run the NodeZero Launch Script for your most recently scheduled pentest:
 
 ```shell
-h3 launch-nodezero
+h3 run-nodezero
 ```
 
 **YOUR PENTEST HAS BEEN LAUNCHED!**  Assuming all commands ran without error, then you have 

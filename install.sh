@@ -130,26 +130,26 @@ fi
 echo "[.] DONE"
 
 # 1b. install yq
-echo "[.] checking if yq is already installed ..."
-yqv=`jy --version 2>&1`
-if [ $? -ne 0 ]; then
-    yq_url=`pick_yq_url`
-    echo "[.] installing yq from $yq_url ... "
-    curl -s -L $yq_url -o $H3_CLI_HOME/bin/yq
-    chmod -R a+x $H3_CLI_HOME/bin
-   
-    # verify
-    echo "[.] verifying $H3_CLI_HOME/bin/yq ... "
-    yqv=`$H3_CLI_HOME/bin/yq --version`
-    if [ $? -ne 0 ]; then
-        rm -f $H3_CLI_HOME/bin/yq   # cleanup
-        echo "[!] ACTION REQUIRED: failed to install yq"
-        echo "[!] Please install yq from https://github.com/mikefarah/yq/#install"
-        echo "[!] After installing yq, re-run this install script"
-        exit 1
-    fi
-fi
-echo "[.] DONE"
+# echo "[.] checking if yq is already installed ..."
+# yqv=`jy --version 2>&1`
+# if [ $? -ne 0 ]; then
+#     yq_url=`pick_yq_url`
+#     echo "[.] installing yq from $yq_url ... "
+#     curl -s -L $yq_url -o $H3_CLI_HOME/bin/yq
+#     chmod -R a+x $H3_CLI_HOME/bin
+#    
+#     # verify
+#     echo "[.] verifying $H3_CLI_HOME/bin/yq ... "
+#     yqv=`$H3_CLI_HOME/bin/yq --version`
+#     if [ $? -ne 0 ]; then
+#         rm -f $H3_CLI_HOME/bin/yq   # cleanup
+#         echo "[!] ACTION REQUIRED: failed to install yq"
+#         echo "[!] Please install yq from https://github.com/mikefarah/yq/#install"
+#         echo "[!] After installing yq, re-run this install script"
+#         exit 1
+#     fi
+# fi
+# echo "[.] DONE"
 
 
 # 2. create .h3 profile

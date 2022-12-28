@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# usage: h3-launch-nodezero {op_id}
+# usage: h3-run-nodezero {op_id}
 #
 # Simple shell script for downloading and launching NodeZero.
 #

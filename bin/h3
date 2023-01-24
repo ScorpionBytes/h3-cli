@@ -51,11 +51,6 @@ h3 op-templates [{op-type}]         # Pentest templates for the current client a
 h3 op-template {uuid}               # Pentest template with the given uuid.
 h3 asset-groups [{search}]          # List of asset groups in the account, optionally filtered by {search}.
 h3 asset-group {uuid}               # The asset group with the given uuid.
-h3 start-agent {name} {log-file}    # Runs the agent as a background daemon and assigns it the given {name}.  The agent logs to {log-file}.
-h3 hello-agent {name}               # Sends a hello-world command to the agent with the assigned {name}.
-h3 stop-agent                       # Stops the agent running on the local machine.
-h3 ps-agent                         # Shows the running agent process.
-h3 agents                           # List of agents in the current client account.
 
 
 Defaults to latest-pentest: 

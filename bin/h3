@@ -45,12 +45,16 @@ h3 pentest-reports [{op_id}]        # Downloads pentest-reports-{op_id}.zip for 
 h3 auth [force]                     # Authenticate to the API.
 h3 gql {graphql-file}               # Run the GraphQL request in the given {graphql-file}.
 h3 checkenv                         # Run the checkenv script to check for NodeZero compatibility.
-h3 accounts [{search}]              # List of client accounts this user has access to, optionally filtered by {search}.
+h3 clients [{search}]               # List of client accounts this user has access to, optionally filtered by {search}.
 h3 users                            # List of users with access to the current client account.
 h3 op-templates [{op-type}]         # Pentest templates for the current client account.  op-type can be either "NodeZero" (default) or "ExternalAttack".
 h3 op-template {uuid}               # Pentest template with the given uuid.
 h3 asset-groups [{search}]          # List of asset groups in the account, optionally filtered by {search}.
 h3 asset-group {uuid}               # The asset group with the given uuid.
+h3 profiles                         # List the H3-CLI profiles (API keys) available in the ~/.h3 directory.
+h3 profile                          # Show the current H3-CLI profile.
+. h3 profile {name}                 # Set the current H3-CLI profile to the profile with the given name.
+h3 add-profile {name} {api-key}     # Create a new H3-CLI profile with the given name and API key.
 
 
 Defaults to latest-pentest: 
@@ -234,6 +238,41 @@ function cmd_env {
 }
 
 
+function cmd_profiles {
+    source h3-env
+    for x in `ls $H3_CLI_PROFILES_DIR/*.env`; do 
+        basename $x | sed 's/[.]env$//'
+    done
+}
+
+
+function cmd_profile {
+    set_profile=$1
+    if [ -n "$set_profile" ]; then 
+        export H3_CLI_PROFILE=$set_profile
+        jwt=`h3-auth force`
+    fi
+    source h3-env
+    echo $H3_CLI_PROFILE
+}
+
+
+function cmd_add_profile {
+    profile_name=$1
+    api_key=$2
+    if [ ! -e "$HOME/.h3/$profile_name.env" ]; then 
+        echoerr "Creating h3-cli profile under $HOME/.h3 ..."
+        mkdir -p $HOME/.h3
+        cat <<HERE > $HOME/.h3/$profile_name.env
+H3_API_KEY=$api_key
+HERE
+        chmod -R 700 $HOME/.h3
+    else 
+        echoerr "ERROR: h3-cli profile already exists under $HOME/.h3/$profile_name.env"
+    fi
+}
+
+
 function ps_agent {
     ps -ef | grep h3-start-agent | grep -v grep
 }
@@ -304,6 +343,15 @@ elif [ "$cmd" = "auth" ]; then
 elif [ "$cmd" = "env" ]; then
     cmd_env $*
 
+elif [ "$cmd" = "profiles" ]; then
+    cmd_profiles $*
+
+elif [ "$cmd" = "profile" ]; then
+    cmd_profile $*
+
+elif [ "$cmd" = "add-profile" ]; then
+    cmd_add_profile $*
+
 elif [ "$cmd" = "gql" ]; then
     h3-gql $*
 
@@ -346,7 +394,7 @@ elif [ "$cmd" = "pentest-reports" -o "$cmd" = "pentest_reports" ]; then
 elif [ "$cmd" = "checkenv" ]; then
     curl https://h3ai-web.s3.amazonaws.com/checkenv.sh | bash
 
-elif [ "$cmd" = "accounts" -o "$cmd" = "client-accounts" -o "$cmd" = "client_accounts"  ]; then
+elif [ "$cmd" = "clients" -o "$cmd" = "accounts" -o "$cmd" = "client-accounts" -o "$cmd" = "client_accounts"  ]; then
     cmd_client_accounts $*
 
 elif [ "$cmd" = "users" -o "$cmd" = "user-accounts" -o "$cmd" = "user_accounts"  ]; then

@@ -1,0 +1,21 @@
+query {
+    schedules {
+        ...ScheduleFragment
+    }
+}
+ 
+fragment ScheduleFragment on Schedule {
+    name
+    created_at
+    last_updated_at
+    scheduled_actions {
+        ...ScheduledActionFragment
+    }
+}
+
+fragment ScheduledActionFragment on ScheduledAction {
+    cron_expression
+    cron_description
+    action
+    params
+}

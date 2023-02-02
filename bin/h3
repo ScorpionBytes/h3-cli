@@ -51,6 +51,20 @@ h3 op-templates [{op-type}]         # Pentest templates for the current client a
 h3 op-template {uuid}               # Pentest template with the given uuid.
 h3 asset-groups [{search}]          # List of asset groups in the account, optionally filtered by {search}.
 h3 asset-group {uuid}               # The asset group with the given uuid.
+h3 agents                           # List of agents in the current client account.
+h3 start-agent {name} {log-file}    # Runs an agent as a background daemon and assigns it the given {name}.  The agent logs to {log-file}.
+h3 hello-agent {name}               # Sends a hello-world command to the agent with the assigned {name}.
+h3 stop-agent                       # Stops the agent running on the local machine.
+h3 ps-agent                         # Shows the running agent process.
+h3 schedule                         # List of schedule objects and associated scheduled actions in the account.
+h3 schedule-action {schedule-name} {cron-expression} {action} [{params}]
+                                    # Create/update the given scheduled action.
+                                    # cron-expression format: min hour day month dow
+                                    # dow = day-of-week: 0: sun, 1: mon, 2: tue, 3: wed, 4: thur, 5: fri, 6: sat
+                                    
+
+Managing h3-cli profiles:
+
 h3 profiles                         # List the H3-CLI profiles (API keys) available in the ~/.h3 directory.
 h3 profile                          # Show the current H3-CLI profile.
 . h3 profile {name}                 # Set the current H3-CLI profile to the profile with the given name.
@@ -58,14 +72,10 @@ h3 add-profile {name} {api-key}     # Create a new H3-CLI profile with the given
 
 
 Defaults to latest-pentest: 
-All commands that take an optional [{op_id}] will default to latest-pentest 
-if an op_id is not specified.
+All commands that take an optional [{op_id}] will default to latest-pentest if an op_id is not specified.
 
 For verbose logging: 
 export H3_CLI_VERBOSE=1
-
-To switch h3-cli profiles:
-export H3_CLI_PROFILE={profile}   # will load from \$HOME/.h3/{profile}.env
 
 Visit the H3 GraphQL API docsite for more details: 
 https://h3-graphql-docsite.horizon3ai.com/
@@ -413,7 +423,7 @@ elif [ "$cmd" = "asset-group" -o "$cmd" = "asset_group" ]; then
     cmd_asset_group $*
 
 elif [ "$cmd" = "start-agent" -o "$cmd" = "start_agent" ]; then
-    cmd_start_agent $*
+    cmd_start_agent "$@"
 
 elif [ "$cmd" = "stop-agent" -o "$cmd" = "stop_agent" ]; then
     pkill_agent
@@ -427,6 +437,11 @@ elif [ "$cmd" = "hello-agent" -o "$cmd" = "hello_agent" ]; then
 elif [ "$cmd" = "agents" ]; then
     h3-gql agents | jq .data.agents[]
 
+elif [ "$cmd" = "schedule-action" ]; then
+    h3-schedule-action "$@"
+
+elif [ "$cmd" = "schedules" -o "$cmd" = "schedule" ]; then
+    h3-gql schedules | jq '.data.schedules[]'
 
 else 
     echoerr "ERROR: unrecognized command: \"$cmd\".  Run \"h3 help\" for usage info."

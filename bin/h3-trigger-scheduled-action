@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Simple shell script for scheduling an action.
+# Simple shell script for triggering a scheduled action (for testing purposes).
 # 
-# usage: h3-schedule-action {schedule-name} {cron-expression} {action} [{params}]
+# usage: h3-trigger-scheduled-action {schedule-name} {action} 
 #
 
 # 0.
@@ -12,27 +12,16 @@ source h3-env
 # 1.
 # parse args
 schedule_name=$1
-cron_expression=$2
-action=$3
-params=$4
+action=$2
 
 if [ -z "$schedule_name" ]; then 
     echoerr "ERROR: schedule-name is required"
     exit 1
 fi
 
-if [ -z "$cron_expression" ]; then 
-    echoerr "ERROR: cron-expression is required"
-    exit 1
-fi
-
 if [ -z "$action" ]; then 
     echoerr "ERROR: action is required"
     exit 1
-fi
-
-if [ -z "$params" ]; then 
-    params="{}"
 fi
 
 
@@ -42,21 +31,17 @@ v=`cat <<HERE
 {
     "input": {
         "schedule_name": "$schedule_name",
-        "cron_expression": "$cron_expression",
-        "action": "$action",
-        "params": $params
+        "action": "$action"
     }
 }
 HERE
 `
 
-echolog "v=$v"
 v1=`escape_splat "$v"`
-echolog "v1=$v1"
 
 # 3.
 # invoke h3-gql
-res=`h3-gql create_scheduled_action "$v1"`
+res=`h3-gql trigger_scheduled_action "$v1"`
 rc=$?
 if [ $rc -eq 0 ]; then
     cat <<<$res | jq .

@@ -1,6 +1,8 @@
-query {
-    schedules {
-        ...ScheduleFragment
+mutation q($schedule_name:String!) {
+    enable_schedule(schedule_name:$schedule_name) {
+        schedule {
+            ...ScheduleFragment
+        }
     }
 }
  

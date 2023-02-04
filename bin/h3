@@ -34,8 +34,8 @@ h3 whoami                           # Returns information about the user account
 h3 pentests [{search}]              # The list of pentests in the account, optionally filtered by {search}.
 h3 pentest [{op_id}]                # The pentest for the given {op_id}, or latest-pentest by default.
 h3 latest-pentest                   # Returns the most recently scheduled pentest in the account.
-h3 schedule-pentest [{options}]     # Schedule a pentest using the given optional {options}
-h3 run-nodezero [{op_id}]           # Download and run NodeZero for the given {op_id, or latest-pentest by default.
+h3 schedule-pentest [{options}]     # Schedule a pentest using the given optional {options}.  Does NOT also run NodeZero.
+h3 run-nodezero [{op_id}]           # Download and run NodeZero for the given {op_id}, or latest-pentest by default.
 h3 run-pentest [{options}]          # Combines schedule-pentest and run-nodezero.
 h3 run-pentests {input-file}        # Reads {options} line-by-line from the given {input-file} and runs each pentest sequentially.
 h3 pause-pentest [{op_id}]          # Pauses the given {op_id}, or latest-pentest by default.
@@ -56,12 +56,17 @@ h3 start-agent {name} {log-file}    # Runs an agent as a background daemon and a
 h3 hello-agent {name}               # Sends a hello-world command to the agent with the assigned {name}.
 h3 stop-agent                       # Stops the agent running on the local machine.
 h3 ps-agent                         # Shows the running agent process.
-h3 schedule                         # List of schedule objects and associated scheduled actions in the account.
-h3 schedule-action {schedule-name} {cron-expression} {action} [{params}]
-                                    # Create/update the given scheduled action.
-                                    # cron-expression format: min hour day month dow
-                                    # dow = day-of-week: 0: sun, 1: mon, 2: tue, 3: wed, 4: thur, 5: fri, 6: sat
-                                    
+h3 schedules                        # The list of Schedule objects in the account and their associated actions.
+h3 create-scheduled-action {schedule-name} {cron-expression} {action} [{params}]
+                                    # Create or update the given scheduled action.  Supports hourly resolution for the cron-expression.
+                                    # cron-expression format: 'min hour day month dow'
+                                    # cron-expression reference: https://crontab.guru/
+h3 delete-scheduled-action {schedule-name} {action}
+                                    # Delete the given scheduled action.
+h3 trigger-scheduled-action {schedule-name} {action}
+                                    # Trigger the given scheduled action now (for testting purposes).
+h3 enable-schedule {schedule-name}  # Enable the given schedule.
+h3 disable-schedule {schedule-name} # Disable the given schedule.
 
 Managing h3-cli profiles:
 
@@ -437,11 +442,23 @@ elif [ "$cmd" = "hello-agent" -o "$cmd" = "hello_agent" ]; then
 elif [ "$cmd" = "agents" ]; then
     h3-gql agents | jq .data.agents[]
 
-elif [ "$cmd" = "schedule-action" ]; then
-    h3-schedule-action "$@"
+elif [ "$cmd" = "create-scheduled-action" ]; then
+    h3-create-scheduled-action "$@"
+
+elif [ "$cmd" = "delete-scheduled-action" ]; then
+    h3-delete-scheduled-action "$@"
+
+elif [ "$cmd" = "trigger-scheduled-action" ]; then
+    h3-trigger-scheduled-action "$@"
 
 elif [ "$cmd" = "schedules" -o "$cmd" = "schedule" ]; then
     h3-gql schedules | jq '.data.schedules[]'
+
+elif [ "$cmd" = "enable-schedule" ]; then
+    h3-enable-schedule "$@"
+
+elif [ "$cmd" = "disable-schedule" ]; then
+    h3-disable-schedule "$@"
 
 else 
     echoerr "ERROR: unrecognized command: \"$cmd\".  Run \"h3 help\" for usage info."

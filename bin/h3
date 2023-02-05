@@ -70,11 +70,11 @@ h3 disable-schedule {schedule-name} # Disable the given schedule.
 
 Managing h3-cli profiles:
 
-h3 profiles                         # List the H3-CLI profiles (API keys) available in the ~/.h3 directory.
-h3 profile                          # Show the current H3-CLI profile.
-. h3 profile {name}                 # Set the current H3-CLI profile to the profile with the given name.
-h3 save-profile {name} {api-key}    # Create or updates an H3-CLI profile with the given name and API key.
-                                    # H3-CLI profiles are stored under the ~/.h3 directory.
+h3 profiles                         # List the h3-cli profiles (API keys) available in the ~/.h3 directory.
+h3 profile                          # Show the current h3-cli profile.
+. h3 profile {name}                 # Set the current h3-cli profile to the profile with the given name.
+h3 save-profile {name} {api-key}    # Create or updates an h3-cli profile with the given name and API key.
+                                    # h3-cli profiles are stored under the ~/.h3 directory.
 
 
 Defaults to latest-pentest: 
@@ -285,11 +285,9 @@ H3_API_KEY=$api_key
 HERE
         chmod -R 700 $HOME/.h3
     else 
-        tmp_profile_file="${profile_file}__tmp__"
+        mv "$profile_file" "$profile_file.bak"
         echoerr "Updating h3-cli profile $profile_name under $HOME/.h3 ..."
-        # sed -i usage is inconsistent between macos and linux.  so this is easier.
-        cat "$profile_file" | sed "s/H3_API_KEY=.*/H3_API_KEY=$api_key/" > "$tmp_profile_file"
-        mv "$tmp_profile_file" "$profile_file"
+        cat "$profile_file.bak" | sed "s/H3_API_KEY=.*/H3_API_KEY=$api_key/" > "$profile_file"
     fi
 }
 

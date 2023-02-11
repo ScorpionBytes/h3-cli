@@ -20,5 +20,6 @@ fragment ScheduledActionFragment on ScheduledAction {
     cron_expression
     cron_description
     last_triggered_at
+    last_triggered_time_ago
     last_triggered_error
 }

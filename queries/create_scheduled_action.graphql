@@ -8,8 +8,8 @@ mutation q($input:CreateScheduledActionInput!) {
  
 fragment ScheduledActionFragment on ScheduledAction {
     schedule_name
-    cron_expression
-    cron_description
     action
     params
+    cron_expression
+    cron_description
 }

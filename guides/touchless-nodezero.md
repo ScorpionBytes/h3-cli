@@ -1,18 +1,19 @@
 
 ## h3-cli: Touchless NodeZero deployment using the h3-cli agent
 
-When scheduling an _internal_ pentest, the process requires that you deploy NodeZero on your Docker Host.
-This is done by running the NodeZero Launch Command curl script that is presented in the final step
-of the pentest scheduling modal in Portal.
+You can now deploy NodeZero automatically on your Docker Host using the h3-cli agent.
 
-In order to launch NodeZero automatically, without having to manually copy+paste+run the curl script, you 
-first must spin up an h3-cli agent process on the Docker Host. 
+All _internal_ pentests require that you deploy NodeZero on your Docker Host.
+This is normally done by copy+pasting the NodeZero Launch Command curl script 
+and manually running it on your machine.
 
-The h3-cli agent is a long-lived daemon process that periodically polls the H3 API and automatically launches
-NodeZero on the local machine when a new pentest has been created and assigned to that agent.
+In order to launch NodeZero automatically, you must first spin up an h3-cli agent process 
+on the Docker Host.  The h3-cli agent is a long-lived daemon process that periodically polls 
+the H3 API and launches NodeZero automatically on the local machine when a new pentest is created 
+and assigned to that agent.
 
-**NOTE:** If you are running _external_ pentests, NodeZero is deployed to the H3 cloud and the h3-cli agent
-is not required.
+**NOTE:** If you are running _external_ pentests, NodeZero is deployed automatically to the H3 cloud
+and the h3-cli agent is not required.
 
 
 ### 1. Spin up an agent (_internal_ pentests only)

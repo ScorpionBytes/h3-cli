@@ -63,7 +63,7 @@ while [ 1 ]; do
     # parse the command
     agent_command=`cat <<<$res | jq -r .data.next_agent_command`
     echoerr "[agent: $agent_name] Received agent command: $agent_command"
-    if [ "$agent_command" = "null" ]; then
+    if [ "$agent_command" = "null" -o -z "$agent_command" ]; then
         sleepy "$agent_name"
         continue 
     fi

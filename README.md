@@ -201,12 +201,19 @@ The above command will download the zip file to `pentest-reports-{op_id}.zip` in
 
 ## Use cases
 
-[**Schedule recurring pentests.**](guides/recurring-pentests.md) A common use case for h3-cli is running pentests automatically on a recurring basis, for example once a week or once a month.
-See [this guide](guides/recurring-pentests.md) to learn how to set up recurring pentests using h3-cli.
+[**Touchless NodeZero Deployment.**](guides/touchless-nodezero.md) Deploy NodeZero on your Docker Host in a "touchless" way,
+without having to manually copy+paste the NodeZero Launch Command curl script.  See [this guide](guides/touchless-nodezero.md) 
+to learn how to to deploy NodeZero automatically using the h3-cli agent.
 
-[**Monitoring pentests.**](guides/monitor-pentests.md) See [this guide](guides/monitor-pentests.md) to learn how to monitor pentests using h3-cli.
+[**Schedule recurring pentests.**](guides/recurring-pentests.md) A common use case for h3-cli is running pentests automatically 
+on a recurring basis, for example once a week or once a month. See [this guide](guides/recurring-pentests.md) to learn how to set 
+up recurring pentests using h3-cli.
 
-[**Paginating results.**](guides/paginate-results.md) See [this guide](guides/paginate-results.md) to learn how to paginate through large result sets using h3-cli.
+[**Monitoring pentests.**](guides/monitor-pentests.md) See [this guide](guides/monitor-pentests.md) to learn how to monitor pentests 
+using h3-cli.
+
+[**Paginating results.**](guides/paginate-results.md) See [this guide](guides/paginate-results.md) to learn how to paginate through 
+large result sets using h3-cli.
 
 
 ## Authentication

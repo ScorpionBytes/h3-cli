@@ -201,9 +201,9 @@ The above command will download the zip file to `pentest-reports-{op_id}.zip` in
 
 ## Use cases
 
-[**Touchless NodeZero Deployment.**](guides/touchless-nodezero.md) Deploy NodeZero on your Docker Host in a "touchless" way,
-without having to manually copy+paste the NodeZero Launch Command curl script.  See [this guide](guides/touchless-nodezero.md) 
-to learn how to to deploy NodeZero automatically using the h3-cli agent.
+[**Touchless NodeZero deployment.**](guides/touchless-nodezero.md) Deploy NodeZero on your Docker Host in a "touchless" way,
+without having to manually copy+paste the NodeZero Launch Script.  See [this guide](guides/touchless-nodezero.md) 
+to learn how to deploy NodeZero automatically using the h3-cli agent.
 
 [**Schedule recurring pentests.**](guides/recurring-pentests.md) A common use case for h3-cli is running pentests automatically 
 on a recurring basis, for example once a week or once a month. See [this guide](guides/recurring-pentests.md) to learn how to set 

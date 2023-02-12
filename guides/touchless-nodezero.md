@@ -4,14 +4,14 @@
 You can now deploy NodeZero automatically on your Docker Host using the h3-cli agent.
 
 All _internal_ pentests require that you deploy NodeZero on a Docker Host inside your network.
-This is normally done by manually copy+pasting the NodeZero Launch Command curl script 
+This is normally done by manually copy+pasting the NodeZero Launch Script
 and running it on your machine.
 
 To launch NodeZero automatically, you first spin up an agent process on your Docker Host, using the h3-cli.
 The h3-cli agent is a long-lived daemon process that periodically polls the H3 API and launches NodeZero 
-automatically on the local machine when a new pentest is created and assigned to that agent.
+automatically on the local machine whenever a new pentest is created and assigned to that agent.
 
-**NOTE:** If you are running _external_ pentests, NodeZero is deployed automatically to the H3 cloud
+> If you are running _external_ pentests, NodeZero is deployed automatically to the H3 cloud
 and the h3-cli agent is not required.
 
 
@@ -68,19 +68,21 @@ To create a pentest and assign it to an agent, use the `agent_name` parameter:
 h3 schedule-pentest '{"agent_name": "my-agent", "op_name": "Scheduled via CLI and launched by agent"}'
 ```
 
-Note in this case we're using `h3 schedule-pentest` as opposed to `h3 run-pentest`, because `run-pentest`
+In a minute or so you should see the agent kick off the NodeZero Launch Script for the newly
+created pentest.
+
+> Note in this case we're using `h3 schedule-pentest` as opposed to `h3 run-pentest`, because `run-pentest`
 would automatically download and run NodeZero itself, whereas `schedule-pentest` only
 creates the pentest, thereby letting the agent be the one to download and run NodeZero.
 
-In a minute or so you should see the agent kick off the NodeZero Launch Script for the newly
-created pentest. You can monitor the agent process by tailing the log:
+You can monitor the agent process by tailing the log:
 
 ```shell
 tail -f /tmp/my-agent.log
 ```
 
 The NodeZero Launch Script will download and run the NodeZero Docker container
-on the local machine, just as if you had copy+pasted the `curl` command from the Web Portal.
+on the local machine, just as if you had copy+pasted the `curl` command from the Portal.
 
 You can view the newly created pentest via:
 

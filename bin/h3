@@ -27,13 +27,15 @@ function cmd_help {
 
 h3-cli: A command-line utility for the Horizon3 API.
 
-Usage:
+--------------
+General usage: 
 
 h3 hello-world                      # Tests basic connectivity with the Horizon3 API.
 h3 whoami                           # Returns information about the user account attached to the API key.
 h3 pentests [{search}]              # The list of pentests in the account, optionally filtered by {search}.
 h3 pentest [{op_id}]                # The pentest for the given {op_id}, or latest-pentest by default.
 h3 latest-pentest                   # Returns the most recently scheduled pentest in the account.
+h3 pentest-reports [{op_id}]        # Downloads pentest-reports-{op_id}.zip for the given {op_id}, or latest-pentest by default.
 h3 schedule-pentest [{options}]     # Schedule a pentest using the given optional {options}.  Does NOT also run NodeZero.
 h3 run-nodezero [{op_id}]           # Download and run NodeZero for the given {op_id}, or latest-pentest by default.
 h3 run-pentest [{options}]          # Combines schedule-pentest and run-nodezero.
@@ -41,21 +43,30 @@ h3 run-pentests {input-file}        # Reads {options} line-by-line from the give
 h3 pause-pentest [{op_id}]          # Pauses the given {op_id}, or latest-pentest by default.
 h3 resume-pentest [{op_id}]         # Resumes the given {op_id}, or latest-pentest by default.
 h3 cancel-pentest [{op_id}]         # Ends the given {op_id}, or latest-pentest by default.
-h3 pentest-reports [{op_id}]        # Downloads pentest-reports-{op_id}.zip for the given {op_id}, or latest-pentest by default.
-h3 auth [force]                     # Authenticate to the API.
-h3 gql {graphql-file}               # Run the GraphQL request in the given {graphql-file}.
-h3 checkenv                         # Run the checkenv script to check for NodeZero compatibility.
 h3 clients [{search}]               # List of client accounts this user has access to, optionally filtered by {search}.
 h3 users                            # List of users with access to the current client account.
 h3 op-templates [{op-type}]         # Pentest templates for the current client account.  op-type can be either "NodeZero" (default) or "ExternalAttack".
 h3 op-template {uuid}               # Pentest template with the given uuid.
 h3 asset-groups [{search}]          # List of asset groups in the account, optionally filtered by {search}.
 h3 asset-group {uuid}               # The asset group with the given uuid.
+h3 auth [force]                     # Authenticate to the API.
+h3 gql {graphql-file}               # Run the GraphQL request in the given {graphql-file}.
+h3 checkenv                         # Run the checkenv script to check for NodeZero compatibility.
+
+
+-------
+Agents:
+
 h3 agents                           # List of agents in the current client account.
 h3 start-agent {name} {log-file}    # Runs an agent as a background daemon and assigns it the given {name}.  The agent logs to {log-file}.
 h3 hello-agent {name}               # Sends a hello-world command to the agent with the assigned {name}.
 h3 stop-agent                       # Stops the agent running on the local machine.
 h3 ps-agent                         # Shows the running agent process.
+
+
+------------------
+Scheduled actions:
+
 h3 schedules                        # The list of Schedule objects in the account and their associated actions.
 h3 create-scheduled-action {schedule-name} {cron-expression} {action} [{params}]
                                     # Create or update the given scheduled action.  Supports hourly resolution for the cron-expression.
@@ -68,6 +79,8 @@ h3 trigger-scheduled-action {schedule-name} {action}
 h3 enable-schedule {schedule-name}  # Enable the given schedule.
 h3 disable-schedule {schedule-name} # Disable the given schedule.
 
+
+-------------------------
 Managing h3-cli profiles:
 
 h3 profiles                         # List the h3-cli profiles (API keys) available in the ~/.h3 directory.
@@ -76,6 +89,8 @@ h3 profile                          # Show the current h3-cli profile.
 h3 save-profile {name} {api-key}    # Create or updates an h3-cli profile with the given name and API key.
                                     # h3-cli profiles are stored under the ~/.h3 directory.
 
+------------
+Other notes:
 
 Defaults to latest-pentest: 
 All commands that take an optional [{op_id}] will default to latest-pentest if an op_id is not specified.

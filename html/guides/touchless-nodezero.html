@@ -84,16 +84,17 @@ Touchless NodeZero deployment using the h3-cli agent</h2>
 the h3-cli agent.</p>
 <p>All <em>internal</em> pentests require that you deploy NodeZero on a
 Docker Host inside your network. This is normally done by manually
-copy+pasting the NodeZero Launch Command curl script and running it on
-your machine.</p>
+copy+pasting the NodeZero Launch Script and running it on your
+machine.</p>
 <p>To launch NodeZero automatically, you first spin up an agent process
 on your Docker Host, using the h3-cli. The h3-cli agent is a long-lived
 daemon process that periodically polls the H3 API and launches NodeZero
-automatically on the local machine when a new pentest is created and
+automatically on the local machine whenever a new pentest is created and
 assigned to that agent.</p>
-<p><strong>NOTE:</strong> If you are running <em>external</em> pentests,
-NodeZero is deployed automatically to the H3 cloud and the h3-cli agent
-is not required.</p>
+<blockquote>
+<p>If you are running <em>external</em> pentests, NodeZero is deployed
+automatically to the H3 cloud and the h3-cli agent is not required.</p>
+</blockquote>
 <h3 id="spin-up-an-agent-internal-pentests-only">1. Spin up an agent
 (<em>internal</em> pentests only)</h3>
 <p>The command below will spin up an agent named <code>my-agent</code>
@@ -129,18 +130,20 @@ pentest and assign it to the agent</h3>
 <p>To create a pentest and assign it to an agent, use the
 <code>agent_name</code> parameter:</p>
 <pre class="shell"><code>h3 schedule-pentest &#39;{&quot;agent_name&quot;: &quot;my-agent&quot;, &quot;op_name&quot;: &quot;Scheduled via CLI and launched by agent&quot;}&#39;</code></pre>
+<p>In a minute or so you should see the agent kick off the NodeZero
+Launch Script for the newly created pentest.</p>
+<blockquote>
 <p>Note in this case we’re using <code>h3 schedule-pentest</code> as
 opposed to <code>h3 run-pentest</code>, because <code>run-pentest</code>
 would automatically download and run NodeZero itself, whereas
 <code>schedule-pentest</code> only creates the pentest, thereby letting
 the agent be the one to download and run NodeZero.</p>
-<p>In a minute or so you should see the agent kick off the NodeZero
-Launch Script for the newly created pentest. You can monitor the agent
-process by tailing the log:</p>
+</blockquote>
+<p>You can monitor the agent process by tailing the log:</p>
 <pre class="shell"><code>tail -f /tmp/my-agent.log</code></pre>
 <p>The NodeZero Launch Script will download and run the NodeZero Docker
 container on the local machine, just as if you had copy+pasted the
-<code>curl</code> command from the Web Portal.</p>
+<code>curl</code> command from the Portal.</p>
 <p>You can view the newly created pentest via:</p>
 <pre class="shell"><code>h3 pentest </code></pre>
 <h3 id="useful-agent-commands">3. Useful agent commands</h3>

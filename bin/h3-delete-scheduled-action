@@ -44,7 +44,7 @@ v1=`escape_splat "$v"`
 res=`h3-gql delete_scheduled_action "$v1"`
 rc=$?
 if [ $rc -eq 0 ]; then
-    cat <<<$res | jq .
+    cat <<<$res | jq .data.delete_scheduled_action
 else
     echo $res
     exit $rc

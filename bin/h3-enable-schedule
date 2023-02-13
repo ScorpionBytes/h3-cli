@@ -34,7 +34,7 @@ v1=`escape_splat "$v"`
 res=`h3-gql enable_schedule "$v1"`
 rc=$?
 if [ $rc -eq 0 ]; then
-    cat <<<$res | jq .
+    cat <<<$res | jq .data.enable_schedule
 else
     echo $res
     exit $rc

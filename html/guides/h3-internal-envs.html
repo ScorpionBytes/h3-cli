@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html  dir="ltr">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title></title>
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon-precomposed" href="images/apple-touch-icon.png">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.26.4/css/uikit.gradient.css">
+
+        <!-- <link rel="stylesheet" href="style.css"> -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/diversen/pandoc-uikit@master/style.css">
+        <link href="https://vjs.zencdn.net/5.4.4/video-js.css" rel="stylesheet" />
+        <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+        <!-- <script src="uikit.js"></script> -->
+        <script src="https://cdn.jsdelivr.net/gh/diversen/pandoc-uikit@master/uikit.js"></script>
+        <!-- <script src="scripts.js"></script> -->
+        <script src="https://cdn.jsdelivr.net/gh/diversen/pandoc-uikit@master/scripts.js"></script>
+        <!-- <script src="jquery.sticky-kit.js "></script> -->
+        <script src="https://cdn.jsdelivr.net/gh/diversen/pandoc-uikit@master/jquery.sticky-kit.js"></script>
+
+        <meta name="generator" content="pandoc-uikit" />
+                        <title>h3-internal-envs</title>
+        <style type="text/css">code{white-space: pre;}</style>
+                                                       
+    </head>
+
+    <body>
+
+
+        <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+
+            
+            <div class="uk-grid" data-uk-grid-margin >          
+                <div class="uk-width-medium-1-4">
+                    <div class="uk-overflow-container" data-uk-sticky="{top:25,media: 768}">
+                        <div class="uk-panel uk-panel-box menu-begin" >
+
+                                                        <ul>
+                                                        <li><a
+                                                        href="#h3-internal-using-h3-cli-in-develop-stage-and-sandbox-environments"
+                                                        id="toc-h3-internal-using-h3-cli-in-develop-stage-and-sandbox-environments">H3-INTERNAL:
+                                                        Using h3-cli in
+                                                        develop, stage,
+                                                        and sandbox
+                                                        environments</a>
+                                                        <ul>
+                                                        <li><a
+                                                        href="#using-h3-cli-in-the-develop-environment"
+                                                        id="toc-using-h3-cli-in-the-develop-environment">Using
+                                                        h3-cli in the
+                                                        develop
+                                                        environment</a></li>
+                                                        <li><a
+                                                        href="#using-h3-cli-in-the-stage-environment"
+                                                        id="toc-using-h3-cli-in-the-stage-environment">Using
+                                                        h3-cli in the
+                                                        stage
+                                                        environment</a></li>
+                                                        <li><a
+                                                        href="#using-h3-cli-in-a-local-sandbox-environment"
+                                                        id="toc-using-h3-cli-in-a-local-sandbox-environment">Using
+                                                        h3-cli in a
+                                                        local sandbox
+                                                        environment</a></li>
+                                                        </ul></li>
+                                                        </ul>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uk-width-medium-3-4">
+
+                    
+<h2
+id="h3-internal-using-h3-cli-in-develop-stage-and-sandbox-environments">H3-INTERNAL:
+Using h3-cli in develop, stage, and sandbox environments</h2>
+<p>By default h3-cli will target our production API. If you want to use
+it in our develop or stage environment, you need to set additional
+environment variables to redirect the h3-cli to the appropriate GraphQL
+and auth services for that environment.</p>
+<h3 id="using-h3-cli-in-the-develop-environment">Using h3-cli in the
+develop environment</h3>
+<p>To set up a separate h3-cli profile for the develop environment,
+first generate an API key in that environment, then use the following
+command to create the h3-cli profile:</p>
+<pre class="shell"><code>h3 save-profile dev {api-key}</code></pre>
+<p>This will create a new file <code>~/.h3/dev.env</code>, and store
+your API key in it. Next, open the file and add the following lines:</p>
+<pre class="shell"><code>H3_GQL_URL=https://api.develop.h3ai.io/v1/graphql
+H3_AUTH_URL=https://api.develop.h3ai.io/v1/auth</code></pre>
+<p>Now activate the profile with the following command (note the leading
+dot <code>.</code>):</p>
+<pre class="shell"><code>. h3 profile dev</code></pre>
+<p>This will activate the profile named <code>dev</code> in your current
+shell session. You can verify by running some h3 commands, for
+example:</p>
+<pre class="shell"><code>h3 whoami
+h3 pentest</code></pre>
+<h3 id="using-h3-cli-in-the-stage-environment">Using h3-cli in the stage
+environment</h3>
+<p>To set up a separate h3-cli profile for the stage environment, first
+generate an API key in that environment, then use the following command
+to create the h3-cli profile:</p>
+<pre class="shell"><code>h3 save-profile stage {api-key}</code></pre>
+<p>This will create a new file <code>~/.h3/stage.env</code>, and store
+your API key in it. Next, open the file and add the following lines:</p>
+<pre class="shell"><code>H3_GQL_URL=https://api.stage.h3ai.io/v1/graphql
+H3_AUTH_URL=https://api.stage.h3ai.io/v1/auth</code></pre>
+<p>Now activate the profile with the following command (note the leading
+dot <code>.</code>):</p>
+<pre class="shell"><code>. h3 profile stage</code></pre>
+<p>This will activate the profile named <code>stage</code> in your
+current shell session. You can verify by running some h3 commands, for
+example:</p>
+<pre class="shell"><code>h3 whoami
+h3 pentest</code></pre>
+<h3 id="using-h3-cli-in-a-local-sandbox-environment">Using h3-cli in a
+local sandbox environment</h3>
+<p>If you’re running an h3-gql service locally for local development,
+you can configure the h3-cli to use it by setting up a special h3-cli
+profile for local dev.</p>
+<pre class="shell"><code>h3 save-profile sandbox sandbox</code></pre>
+<p>This will create a new file <code>~/.h3/sandbox.env</code>. Next,
+open the file and add the following lines:</p>
+<pre class="shell"><code>H3_GQL_URL=http://127.0.0.1:8000/graphql
+H3_AUTH_URL=sandbox</code></pre>
+<p>Now activate the profile with the following command (note the leading
+dot <code>.</code>):</p>
+<pre class="shell"><code>. h3 profile sandbox</code></pre>
+<p>This will activate the profile named <code>sandbox</code> in your
+current shell session. You can verify by running some h3 commands, for
+example:</p>
+<pre class="shell"><code>h3 whoami
+h3 pentest</code></pre>                    
+                </div>
+            </div>
+            <script src="https://vjs.zencdn.net/5.4.4/video.js"></script>
+        </div>
+    </body>
+</html>

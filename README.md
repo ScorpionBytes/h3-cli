@@ -77,6 +77,7 @@ h3
 
 If everything's installed correctly, you should see the h3-cli help text.
 
+❗ ❗ ❗ **H3-INTERNAL: ADDITIONAL STEPS REQUIRED** to use h3-cli in develop, stage, and local sandbox environments. See [this guide](guides/h3-internal-envs.md).
 
 ## Getting started 
 

@@ -35,14 +35,15 @@ h3 whoami                           # Returns information about the user account
 h3 pentests [{search}]              # The list of pentests in the account, optionally filtered by {search}.
 h3 pentest [{op_id}]                # The pentest for the given {op_id}, or latest-pentest by default.
 h3 latest-pentest                   # Returns the most recently scheduled pentest in the account.
-h3 pentest-reports [{op_id}]        # Downloads pentest-reports-{op_id}.zip for the given {op_id}, or latest-pentest by default.
-h3 schedule-pentest [{options}]     # Schedule a pentest using the given optional {options}.  Does NOT also run NodeZero.
+h3 run-pentest [{options}]          # Provision a new pentest using the given optional {options}.  
 h3 run-nodezero [{op_id}]           # Download and run NodeZero for the given {op_id}, or latest-pentest by default.
-h3 run-pentest [{options}]          # Combines schedule-pentest and run-nodezero.
-h3 run-pentests {input-file}        # Reads {options} line-by-line from the given {input-file} and runs each pentest sequentially.
+h3 run-pentest-and-nodezero [{options}] 
+                                    # Combines run-pentest and run-nodezero. Both provisions a new pentest and runs NodeZero on the local machine.
+h3 run-pentests {input-file}        # Reads {options} line-by-line from the given {input-file} and calls h3-run-pentest-and-nodezero {options} for each, consecutively.
 h3 pause-pentest [{op_id}]          # Pauses the given {op_id}, or latest-pentest by default.
 h3 resume-pentest [{op_id}]         # Resumes the given {op_id}, or latest-pentest by default.
 h3 cancel-pentest [{op_id}]         # Ends the given {op_id}, or latest-pentest by default.
+h3 pentest-reports [{op_id}]        # Downloads pentest-reports-{op_id}.zip for the given {op_id}, or latest-pentest by default.
 h3 clients [{search}]               # List of client accounts this user has access to, optionally filtered by {search}.
 h3 users                            # List of users with access to the current client account.
 h3 op-templates [{op-type}]         # Pentest templates for the current client account.  op-type can be either "NodeZero" (default) or "ExternalAttack".
@@ -362,11 +363,15 @@ HERE
 cmd=$1
 shift
 
+cmd=`cat <<<$cmd | sed s/_/-/g`
+
+
+# sed 
 
 if [ -z "$cmd" -o "$cmd" = "help" ]; then
     cmd_help $*
 
-elif [ "$cmd" = "hello-world" -o "$cmd" = "hello_world" ]; then
+elif [ "$cmd" = "hello-world" ]; then
     h3-gql hello_world | jq .
 
 elif [ "$cmd" = "whoami" ]; then
@@ -396,67 +401,64 @@ elif [ "$cmd" = "pentests" ]; then
 elif [ "$cmd" = "pentest" ]; then
     cmd_pentest $*
 
-elif [ "$cmd" = "latest-pentest" -o "$cmd" = "latest_pentest" ]; then
+elif [ "$cmd" = "latest-pentest" ]; then
     h3-gql latest_pentest $* | jq .data.pentests_page.pentests[]
 
-elif [ "$cmd" = "create-pentest" -o "$cmd" = "create_pentest" ]; then
+elif [ "$cmd" = "run-pentest" -o "$cmd" = "schedule-pentest" ]; then
     cmd_create_pentest $*
 
-elif [ "$cmd" = "schedule-pentest" -o "$cmd" = "schedule_pentest" ]; then
-    cmd_create_pentest $*
+elif [ "$cmd" = "run-pentest-and-nodezero" ]; then
+    h3-run-pentest-and-nodezero $*
 
-elif [ "$cmd" = "run-pentest" -o "$cmd" = "run_pentest" ]; then
-    h3-run-pentest $*
-
-elif [ "$cmd" = "run-pentests" -o "$cmd" = "run_pentests" ]; then
+elif [ "$cmd" = "run-pentests" ]; then
     h3-run-pentests $*
 
-elif [ "$cmd" = "cancel-pentest" -o "$cmd" = "cancel_pentest" ]; then
+elif [ "$cmd" = "cancel-pentest" ]; then
     h3-cancel-pentest $*
 
-elif [ "$cmd" = "launch-nodezero" -o "$cmd" = "launch_nodezero" -o "$cmd" = "run-nodezero" -o "$cmd" = "run_nodezero" ]; then
+elif [ "$cmd" = "launch-nodezero" -o "$cmd" = "run-nodezero" ]; then
     h3-run-nodezero $*
 
-elif [ "$cmd" = "pause-pentest" -o "$cmd" = "pause_pentest" ]; then
+elif [ "$cmd" = "pause-pentest" ]; then
     h3-pause-pentest $*
 
-elif [ "$cmd" = "resume-pentest" -o "$cmd" = "resume_pentest" ]; then
+elif [ "$cmd" = "resume-pentest" ]; then
     h3-resume-pentest $*
 
-elif [ "$cmd" = "pentest-reports" -o "$cmd" = "pentest_reports" ]; then
+elif [ "$cmd" = "pentest-reports" ]; then
     h3-pentest-reports $*
 
 elif [ "$cmd" = "checkenv" ]; then
     curl https://h3ai-web.s3.amazonaws.com/checkenv.sh | bash
 
-elif [ "$cmd" = "clients" -o "$cmd" = "accounts" -o "$cmd" = "client-accounts" -o "$cmd" = "client_accounts"  ]; then
+elif [ "$cmd" = "clients" -o "$cmd" = "accounts" -o "$cmd" = "client-accounts" ]; then
     cmd_client_accounts $*
 
-elif [ "$cmd" = "users" -o "$cmd" = "user-accounts" -o "$cmd" = "user_accounts"  ]; then
+elif [ "$cmd" = "users" -o "$cmd" = "user-accounts" ]; then
     cmd_user_accounts $*
 
-elif [ "$cmd" = "op-templates" -o "$cmd" = "op_templates" ]; then
+elif [ "$cmd" = "op-templates" ]; then
     cmd_op_templates $*
 
-elif [ "$cmd" = "op-template" -o "$cmd" = "op_template" ]; then
+elif [ "$cmd" = "op-template" ]; then
     cmd_op_template $*
 
-elif [ "$cmd" = "asset-groups" -o "$cmd" = "asset_groups" ]; then
+elif [ "$cmd" = "asset-groups" ]; then
     cmd_asset_groups $*
 
-elif [ "$cmd" = "asset-group" -o "$cmd" = "asset_group" ]; then
+elif [ "$cmd" = "asset-group" ]; then
     cmd_asset_group $*
 
-elif [ "$cmd" = "start-agent" -o "$cmd" = "start_agent" ]; then
+elif [ "$cmd" = "start-agent" ]; then
     cmd_start_agent "$@"
 
-elif [ "$cmd" = "stop-agent" -o "$cmd" = "stop_agent" ]; then
+elif [ "$cmd" = "stop-agent" ]; then
     pkill_agent
 
-elif [ "$cmd" = "ps-agent" -o "$cmd" = "ps_agent" ]; then
+elif [ "$cmd" = "ps-agent" ]; then
     ps_agent
 
-elif [ "$cmd" = "hello-agent" -o "$cmd" = "hello_agent" ]; then
+elif [ "$cmd" = "hello-agent" ]; then
     cmd_hello_agent $*
 
 elif [ "$cmd" = "agents" ]; then

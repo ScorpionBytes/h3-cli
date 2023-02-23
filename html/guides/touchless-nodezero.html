@@ -56,9 +56,9 @@
                                                         pentests
                                                         only)</a></li>
                                                         <li><a
-                                                        href="#schedule-a-pentest-and-assign-it-to-the-agent"
-                                                        id="toc-schedule-a-pentest-and-assign-it-to-the-agent">2.
-                                                        Schedule a
+                                                        href="#provision-a-pentest-and-assign-it-to-the-agent"
+                                                        id="toc-provision-a-pentest-and-assign-it-to-the-agent">2.
+                                                        Provision a
                                                         pentest and
                                                         assign it to the
                                                         agent</a></li>
@@ -125,21 +125,14 @@ agent in the log. It might take a minute for the message to appear.</p>
     &quot;hello&quot;: &quot;world!&quot;
   }
 }</code></pre>
-<h3 id="schedule-a-pentest-and-assign-it-to-the-agent">2. Schedule a
+<h3 id="provision-a-pentest-and-assign-it-to-the-agent">2. Provision a
 pentest and assign it to the agent</h3>
-<p>To create a pentest and assign it to an agent, use the
+<p>To create a new pentest and assign it to an agent, use the
 <code>agent_name</code> parameter:</p>
-<pre class="shell"><code>h3 schedule-pentest &#39;{&quot;agent_name&quot;: &quot;my-agent&quot;, &quot;op_name&quot;: &quot;Scheduled via CLI and launched by agent&quot;}&#39;</code></pre>
+<pre class="shell"><code>h3 run-pentest &#39;{&quot;agent_name&quot;: &quot;my-agent&quot;, &quot;op_name&quot;: &quot;Pentest created via h3-cli and launched via agent&quot;}&#39;</code></pre>
 <p>In a minute or so you should see the agent kick off the NodeZero
-Launch Script for the newly created pentest.</p>
-<blockquote>
-<p>Note in this case we’re using <code>h3 schedule-pentest</code> as
-opposed to <code>h3 run-pentest</code>, because <code>run-pentest</code>
-would automatically download and run NodeZero itself, whereas
-<code>schedule-pentest</code> only creates the pentest, thereby letting
-the agent be the one to download and run NodeZero.</p>
-</blockquote>
-<p>You can monitor the agent process by tailing the log:</p>
+Launch Script for the newly created pentest. You can monitor the agent
+process by tailing the log:</p>
 <pre class="shell"><code>tail -f /tmp/my-agent.log</code></pre>
 <p>The NodeZero Launch Script will download and run the NodeZero Docker
 container on the local machine, just as if you had copy+pasted the

@@ -95,9 +95,9 @@
                                                         your
                                                         account</a></li>
                                                         <li><a
-                                                        href="#schedule-a-pentest"
-                                                        id="toc-schedule-a-pentest">4.
-                                                        Schedule a
+                                                        href="#run-a-pentest"
+                                                        id="toc-run-a-pentest">4.
+                                                        Run a
                                                         pentest</a></li>
                                                         <li><a
                                                         href="#run-nodezero"
@@ -118,9 +118,8 @@
                                                         href="#authentication"
                                                         id="toc-authentication">Authentication</a></li>
                                                         <li><a
-                                                        href="#scheduling-and-running-pentests-with-h3-cli"
-                                                        id="toc-scheduling-and-running-pentests-with-h3-cli">Scheduling
-                                                        and running
+                                                        href="#running-pentests-with-h3-cli"
+                                                        id="toc-running-pentests-with-h3-cli">Running
                                                         pentests with
                                                         h3-cli</a></li>
                                                         <li><a
@@ -162,8 +161,8 @@ high level, the API allows you to:</p>
 <li>monitor the status of a pentest while it is running</li>
 <li>retrieve a pentest report after it’s complete</li>
 </ul>
-<p>The API can be used for a variety of use cases such as periodically
-scheduling assessments of your environment or kicking off a pentest as
+<p>The API can be used for a variety of use cases such as scheduling
+periodic assessments of your environment or kicking off a pentest as
 part of a continuous integration build pipeline.</p>
 
 <h2 id="installation-and-initial-setup">Installation and initial
@@ -221,9 +220,9 @@ running it from the command prompt:</p>
 <pre class="shell"><code>h3</code></pre>
 <p>If everything’s installed correctly, you should see the h3-cli help
 text.</p>
-<p>❗ ❗ ❗ <strong>H3-INTERNAL: ADDITIONAL STEPS REQUIRED</strong> to
-use h3-cli in develop, stage, and local sandbox environments. See <a
-href="guides/h3-internal-envs.html">this guide</a>.</p>
+<p>❗❗ <strong>H3-INTERNAL ❗❗ ADDITIONAL STEPS REQUIRED</strong> to
+use h3-cli in develop, stage, and local sandbox environments. <a
+href="guides/h3-internal-envs.html">See this guide</a> for details.</p>
 <h2 id="getting-started">Getting started</h2>
 <h3 id="verify-connectivity-with-the-api">1. Verify connectivity with
 the API</h3>
@@ -258,10 +257,10 @@ default, unless an <code>op_id</code> is passed as a parameter.</p>
 <blockquote>
 <p>The terms “op” and “pentest” are often used interchangeably.</p>
 </blockquote>
-<h3 id="schedule-a-pentest">4. Schedule a pentest</h3>
-<p>Scheduling a pentest requires specifying an <em>op template</em>. An
-op template specifies a full pentest configuration, which includes
-scope, attack parameters, and other (optional) configuration.</p>
+<h3 id="run-a-pentest">4. Run a pentest</h3>
+<p>Running a pentest requires specifying an <em>op template</em>. An op
+template specifies a full pentest configuration, which includes scope,
+attack parameters, and other (optional) configuration.</p>
 <p>Horizon3.ai provides new users with a default op template named
 <code>Default 1 - Recommended</code>. This template is always up-to-date
 with our latest attack parameters and recommended configuration. The
@@ -270,38 +269,47 @@ use <em>Intelligent Scope</em> - NodeZero’s host subnet will provide the
 initial scope, and it will expand organically during the pentest as more
 hosts and subnets are discovered. For more information on Intelligent
 Scope and other deployment options, visit our <a
-href="https://portal.horizon3ai.com/documentation/nodezero-deployment-options">product
+href="https://userdocs.horizon3ai.com/sections/getting_started/n0_host/deployment/">product
 documentation</a>.</p>
 <p>For experienced users, custom op template(s) may be created via the
 <a href="https://portal.horizon3ai.com/">Horizon3.ai Portal</a>. To
 create a custom op template, walk through the <em>Run a Pentest</em>
 modal until you see the option to customize the pentest configuration.
 The op template can be created without actually running the pentest.</p>
-<p>To schedule a pentest using the default op template and Intelligent
+<p>To provision a pentest using the default op template and Intelligent
 Scope:</p>
-<pre class="shell"><code>h3 schedule-pentest</code></pre>
-<p>The JSON response contains the details for the newly scheduled
-pentest. You can verify the pentest is provisioning by checking your <a
+<pre class="shell"><code>h3 run-pentest</code></pre>
+<p>The JSON response contains the details for the newly created pentest.
+You can verify the pentest is provisioning by checking your <a
 href="https://portal.horizon3ai.com/pentests">Horizon3.ai Portal</a>, or
 by running <code>h3 pentest</code>.</p>
-<p>There are several ways to specify additional parameters when
-scheduling pentests. For more information see additional examples <a
-href="#scheduling-and-running-pentests-with-h3-cli">here</a>.</p>
-<p><strong>WAIT! YOU’RE NOT DONE!</strong>: For internal pentests (which
-are the default), additional steps are required before the pentest will
-begin running. See the next section about downloading and running
-NodeZero in order to complete the initiation of your pentest.</p>
+<p>There are several ways to specify additional parameters when creating
+pentests. For more information <a
+href="#running-pentests-with-h3-cli">see additional examples
+here</a>.</p>
+<p>❗ <strong>WAIT! YOU’RE NOT DONE!</strong></p>
+<p>For <em>internal</em> pentests (which are the default), additional
+steps are required before the pentest will begin running. See the next
+section about downloading and running NodeZero in order to complete the
+initiation of your pentest.</p>
+<blockquote>
+<p>If you are running an <em>external</em> pentest, NodeZero is launched
+for you automatically in the H3 cloud as part of
+<code>h3 run-pentest</code>, in which case there are no additional steps
+on your end to initiate the pentest.</p>
+</blockquote>
 <h3 id="run-nodezero">5. Run NodeZero</h3>
-<p><strong>⚠️ The following instructions apply to <em>internal</em>
-pentests only, not <em>external</em> pentests.</strong></p>
-<p>After scheduling an <em>internal</em> pentest, you then have to run
-our NodeZero container on a Docker Host inside your network. This is
-done by running the NodeZero Launch Script on your Docker Host.</p>
-<p>To run the NodeZero Launch Script for your most recently scheduled
+<p>❗ <strong>️The following step applies to <em>internal</em> pentests
+only; for <em>external</em> pentests, NodeZero is launched for you
+automatically in the H3 cloud.</strong></p>
+<p>After creating an <em>internal</em> pentest, you then have to run our
+NodeZero container on a Docker Host inside your network. This is done by
+running the NodeZero Launch Script on your Docker Host.</p>
+<p>To run the NodeZero Launch Script for your most recently created
 pentest:</p>
 <pre class="shell"><code>h3 run-nodezero</code></pre>
 <p><strong>YOUR PENTEST HAS BEEN LAUNCHED!</strong> Assuming all
-commands ran without error, then you have successfully scheduled and
+commands ran without error, then you have successfully created and
 launched your pentest. You should see output from the NodeZero Launch
 Script being logged to the console. The script will first verify your
 system is compatible with NodeZero before downloading and running it.
@@ -313,7 +321,7 @@ down.</p>
 <h3 id="download-pentest-reports">6. Download pentest reports</h3>
 <p>After your pentest has finished, use the following command to
 download a zip file containing all PDF and CSV reports for the most
-recently scheduled pentest:</p>
+recently created pentest:</p>
 <pre class="shell"><code>h3 pentest-reports</code></pre>
 <p>The above command will download the zip file to
 <code>pentest-reports-{op_id}.zip</code> in the current directory.</p>
@@ -321,19 +329,19 @@ recently scheduled pentest:</p>
 <p><a href="guides/touchless-nodezero.html"><strong>Touchless NodeZero
 deployment.</strong></a> Deploy NodeZero on your Docker Host in a
 “touchless” way, without having to manually copy+paste the NodeZero
-Launch Script. See <a href="guides/touchless-nodezero.html">this guide</a>
+Launch Script. <a href="guides/touchless-nodezero.html">See this guide</a>
 to learn how to deploy NodeZero automatically using the h3-cli
 agent.</p>
 <p><a href="guides/recurring-pentests.html"><strong>Schedule recurring
 pentests.</strong></a> A common use case for h3-cli is running pentests
 automatically on a recurring basis, for example once a week or once a
-month. See <a href="guides/recurring-pentests.html">this guide</a> to
+month. <a href="guides/recurring-pentests.html">See this guide</a> to
 learn how to set up recurring pentests using h3-cli.</p>
 <p><a href="guides/monitor-pentests.html"><strong>Monitoring
-pentests.</strong></a> See <a href="guides/monitor-pentests.html">this
+pentests.</strong></a> <a href="guides/monitor-pentests.html">See this
 guide</a> to learn how to monitor pentests using h3-cli.</p>
 <p><a href="guides/paginate-results.html"><strong>Paginating
-results.</strong></a> See <a href="guides/paginate-results.html">this
+results.</strong></a> <a href="guides/paginate-results.html">See this
 guide</a> to learn how to paginate through large result sets using
 h3-cli.</p>
 <h2 id="authentication">Authentication</h2>
@@ -358,17 +366,23 @@ that session token rather than re-authenticate.</p>
 <p>This can be useful if you’re switching from one
 <code>H3_API_KEY</code> to another and want to force authentication
 against the new <code>H3_API_KEY</code>.</p>
-<h2 id="scheduling-and-running-pentests-with-h3-cli">Scheduling and
-running pentests with h3-cli</h2>
-<p>This section contains additional examples for scheduling and running
-pentests using h3-cli.</p>
-<p>The simplest way to schedule a pentest is to use the default op
+<h2 id="running-pentests-with-h3-cli">Running pentests with h3-cli</h2>
+<p>This section contains additional examples for running pentests using
+h3-cli.</p>
+<p>The simplest way to provision a pentest is to use the default op
 template and <em>Intelligent Scope</em>:</p>
-<pre class="shell"><code>h3 schedule-pentest</code></pre>
-<p>To schedule a pentest AND launch NodeZero (if it’s an
-<em>internal</em> pentest; for external pentests it skips the launch
-step):</p>
 <pre class="shell"><code>h3 run-pentest</code></pre>
+<p>To provision a pentest AND launch NodeZero on the local machine (for
+<em>internal</em> pentests only):</p>
+<pre class="shell"><code>h3 run-pentest-and-nodezero</code></pre>
+<p>Note that this only applies to <em>internal</em> pentests. For
+<em>external</em> pentests, NodeZero is launched for you automatically
+in the H3 cloud as part of <code>h3 run-pentest</code>.</p>
+<blockquote>
+<p>If you happen to run <code>h3 run-pentest-and-nodezero</code> for an
+external pentest, it will simply skip the part where it downloads and
+runs NodeZero, since that is handled automatically in the H3 cloud.</p>
+</blockquote>
 <p>To run a pentest using a custom op template, specify it as a
 parameter to <a
 href="queries/schedule_op_template.graphql">schedule_op_template.graphql</a>:</p>
@@ -379,6 +393,11 @@ of your choosing, use the optional <code>op_name</code> parameter:</p>
 <p>To run a pentest using the default op template but specify its name
 and scope, use the optional <code>schedule_op_form</code> parameter:</p>
 <pre class="shell"><code>h3 run-pentest &#39;{&quot;schedule_op_form&quot;:{&quot;op_name&quot;:&quot;your-op-name-here&quot;, &quot;op_param_max_scope&quot;: &quot;192.168.0.0/24&quot;}}&#39; </code></pre>
+<blockquote>
+<p>Note that <code>h3 run-pentest</code> and
+<code>h3 run-pentest-and-nodezero</code> accept all the same optional
+parameters.</p>
+</blockquote>
 <h2 id="powered-by-graphql">Powered by GraphQL</h2>
 <p>The Horizon3.ai API is powered by GraphQL. In addition to this CLI
 document, relevant documentation includes:</p>

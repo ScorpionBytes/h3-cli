@@ -60,22 +60,16 @@ It might take a minute for the message to appear.
 ```
 
 
-### 2. Schedule a pentest and assign it to the agent 
+### 2. Provision a pentest and assign it to the agent 
 
-To create a pentest and assign it to an agent, use the `agent_name` parameter:
+To create a new pentest and assign it to an agent, use the `agent_name` parameter:
 
 ```shell
-h3 schedule-pentest '{"agent_name": "my-agent", "op_name": "Scheduled via CLI and launched by agent"}'
+h3 run-pentest '{"agent_name": "my-agent", "op_name": "Pentest created via h3-cli and launched via agent"}'
 ```
 
 In a minute or so you should see the agent kick off the NodeZero Launch Script for the newly
-created pentest.
-
-> Note in this case we're using `h3 schedule-pentest` as opposed to `h3 run-pentest`, because `run-pentest`
-would automatically download and run NodeZero itself, whereas `schedule-pentest` only
-creates the pentest, thereby letting the agent be the one to download and run NodeZero.
-
-You can monitor the agent process by tailing the log:
+created pentest.  You can monitor the agent process by tailing the log:
 
 ```shell
 tail -f /tmp/my-agent.log

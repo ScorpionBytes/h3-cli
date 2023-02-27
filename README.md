@@ -222,15 +222,15 @@ using h3-cli.
 large result sets using h3-cli.
 
 
-## Authentication
+## Authentication & h3-cli profiles
 
 Authentication happens seamlessly and automatically when you invoke the `h3` command.
 There's nothing explicit you need to do to authenticate.  This section documents the 
 underlying mechanics.
 
 h3-cli reads your `H3_API_KEY` from your h3-cli profile (under `$HOME/.h3`) to authenticate 
-to the Horizon3.ai API and establishes a (temporary) session.  The session token (a JWT) is stored 
-in `$HOME/.h3/jwt`.  The session token expires after 1 hour, at which point h3-cli will
+to the Horizon3.ai API and establishes a (temporary) session.  The session token (a JWT) is 
+cached under `$HOME/.h3`. The session token expires after 1 hour, at which point h3-cli will
 automatically re-authenticate and re-establish a session.
 
 You can explicitly authenticate using the following command: 
@@ -239,7 +239,7 @@ You can explicitly authenticate using the following command:
 h3 auth
 ```
 
-The above command will output the session token (and also write it to `$HOME/.h3/jwt`).
+The above command will output the session token (and also cache it under `$HOME/.h3`).
 If you already have an established (non-expired) session token, `h3 auth` will continue to use 
 that session token rather than re-authenticate. 
 
@@ -249,8 +249,41 @@ If you want to _force_ h3-cli to re-authenticate, use the `force` option:
 h3 auth force
 ```
 
-This can be useful if you're switching from one `H3_API_KEY` to another and 
-want to force authentication against the new `H3_API_KEY`.
+
+### h3-cli profiles
+
+You can manage multiple h3-cli profiles under the same `$HOME/.h3` directory.  When you first
+install h3-cli it will automatically create an initial profile named `default`.  If you wish to
+create a new profile, use the following command:
+
+```shell
+h3 save-profile my-profile {api-key}
+```
+
+This will create a profile named `my-profile` under `$HOME/.h3` and will apply the given `{api_key}` to it.
+To switch to this profile, use the following command (note the leading dot `.`): 
+
+```shell
+. h3 profile my-profile
+```
+
+To switch back to the default profile:
+
+```shell
+. h3 profile default
+```
+
+To list out all your profiles:
+
+```shell
+. h3 profiles
+```
+
+To list the currently active profile:
+
+```shell
+h3 profile
+```
 
 
 ## Running pentests with h3-cli

@@ -115,8 +115,16 @@
                                                         id="toc-use-cases">Use
                                                         cases</a></li>
                                                         <li><a
-                                                        href="#authentication"
-                                                        id="toc-authentication">Authentication</a></li>
+                                                        href="#authentication-h3-cli-profiles"
+                                                        id="toc-authentication-h3-cli-profiles">Authentication
+                                                        &amp; h3-cli
+                                                        profiles</a>
+                                                        <ul>
+                                                        <li><a
+                                                        href="#h3-cli-profiles"
+                                                        id="toc-h3-cli-profiles">h3-cli
+                                                        profiles</a></li>
+                                                        </ul></li>
                                                         <li><a
                                                         href="#running-pentests-with-h3-cli"
                                                         id="toc-running-pentests-with-h3-cli">Running
@@ -344,28 +352,43 @@ guide</a> to learn how to monitor pentests using h3-cli.</p>
 results.</strong></a> <a href="guides/paginate-results.html">See this
 guide</a> to learn how to paginate through large result sets using
 h3-cli.</p>
-<h2 id="authentication">Authentication</h2>
+<h2 id="authentication-h3-cli-profiles">Authentication &amp; h3-cli
+profiles</h2>
 <p>Authentication happens seamlessly and automatically when you invoke
 the <code>h3</code> command. There’s nothing explicit you need to do to
 authenticate. This section documents the underlying mechanics.</p>
 <p>h3-cli reads your <code>H3_API_KEY</code> from your h3-cli profile
 (under <code>$HOME/.h3</code>) to authenticate to the Horizon3.ai API
 and establishes a (temporary) session. The session token (a JWT) is
-stored in <code>$HOME/.h3/jwt</code>. The session token expires after 1
+cached under <code>$HOME/.h3</code>. The session token expires after 1
 hour, at which point h3-cli will automatically re-authenticate and
 re-establish a session.</p>
 <p>You can explicitly authenticate using the following command:</p>
 <pre class="shell"><code>h3 auth</code></pre>
-<p>The above command will output the session token (and also write it to
-<code>$HOME/.h3/jwt</code>). If you already have an established
+<p>The above command will output the session token (and also cache it
+under <code>$HOME/.h3</code>). If you already have an established
 (non-expired) session token, <code>h3 auth</code> will continue to use
 that session token rather than re-authenticate.</p>
 <p>If you want to <em>force</em> h3-cli to re-authenticate, use the
 <code>force</code> option:</p>
 <pre class="shell"><code>h3 auth force</code></pre>
-<p>This can be useful if you’re switching from one
-<code>H3_API_KEY</code> to another and want to force authentication
-against the new <code>H3_API_KEY</code>.</p>
+<h3 id="h3-cli-profiles">h3-cli profiles</h3>
+<p>You can manage multiple h3-cli profiles under the same
+<code>$HOME/.h3</code> directory. When you first install h3-cli it will
+automatically create an initial profile named <code>default</code>. If
+you wish to create a new profile, use the following command:</p>
+<pre class="shell"><code>h3 save-profile my-profile {api-key}</code></pre>
+<p>This will create a profile named <code>my-profile</code> under
+<code>$HOME/.h3</code> and will apply the given <code>{api_key}</code>
+to it. To switch to this profile, use the following command (note the
+leading dot <code>.</code>):</p>
+<pre class="shell"><code>. h3 profile my-profile</code></pre>
+<p>To switch back to the default profile:</p>
+<pre class="shell"><code>. h3 profile default</code></pre>
+<p>To list out all your profiles:</p>
+<pre class="shell"><code>. h3 profiles</code></pre>
+<p>To list the currently active profile:</p>
+<pre class="shell"><code>h3 profile</code></pre>
 <h2 id="running-pentests-with-h3-cli">Running pentests with h3-cli</h2>
 <p>This section contains additional examples for running pentests using
 h3-cli.</p>

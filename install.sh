@@ -167,6 +167,9 @@ else
     mv "$profile_file" "$profile_file.bak"
     cat "$profile_file.bak" | sed "s/H3_API_KEY=.*/H3_API_KEY=$H3_API_KEY/" > "$profile_file"
 fi
+# delete existing cached jwt, if any
+jwt_file="$HOME/.h3/default.jwt"
+rm -f $jwt_file
 echo "[.] DONE"
 
 

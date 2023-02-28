@@ -40,7 +40,7 @@ Keep your API key secure, as anyone with your API key can access your H3 account
 First, install this repo on your machine using the following git command within a shell/terminal.  
 
 ```shell
-git clone git@gitlab.com:h3upperbounds/data/h3-cli.git
+git clone https://github.com/horizon3ai/h3-cli
 ```
 
 This will create a new directory, `h3-cli`, and download the contents of the repo to it.  The `h3-cli` directory

@@ -330,11 +330,10 @@ h3 run-pentest '{"schedule_op_form":{"op_name":"your-op-name-here", "op_param_ma
 
 ## Powered by GraphQL
 
-The Horizon3.ai API is powered by GraphQL.  In addition to this CLI document, 
-relevant documentation includes:
+The Horizon3.ai API is powered by GraphQL.  In addition to this CLI document, relevant documentation includes:
 
-- [Horizon3.ai GraphQL API Reference](https://h3-graphql-docsite.horizon3ai.com/)
-- [Learn about GraphQL](https://graphql.org/)
+- [Horizon3.ai Docs](https://docs.horizon3ai.com/)
+- [GraphQL.org](https://graphql.org/)
 
 
 ### Advanced: Writing your own GraphQL queries

@@ -40,7 +40,7 @@ Keep your API key secure, as anyone with your API key can access your H3 account
 First, install this repo on your machine using the following git command within a shell/terminal.  
 
 ```shell
-git clone git@gitlab.com:h3upperbounds/data/h3-cli.git
+git clone https://github.com/horizon3ai/h3-cli
 ```
 
 This will create a new directory, `h3-cli`, and download the contents of the repo to it.  The `h3-cli` directory
@@ -330,11 +330,10 @@ h3 run-pentest '{"schedule_op_form":{"op_name":"your-op-name-here", "op_param_ma
 
 ## Powered by GraphQL
 
-The Horizon3.ai API is powered by GraphQL.  In addition to this CLI document, 
-relevant documentation includes:
+The Horizon3.ai API is powered by GraphQL.  In addition to this CLI document, relevant documentation includes:
 
-- [Horizon3.ai GraphQL API Reference](https://h3-graphql-docsite.horizon3ai.com/)
-- [Learn about GraphQL](https://graphql.org/)
+- [Horizon3.ai Docs](https://docs.horizon3ai.com/)
+- [GraphQL.org](https://graphql.org/)
 
 
 ### Advanced: Writing your own GraphQL queries

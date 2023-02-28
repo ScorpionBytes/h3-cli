@@ -169,7 +169,7 @@ else
 fi
 # delete existing cached jwt, if any
 jwt_file="$HOME/.h3/default.jwt"
-rm -f $jwt_file
+rm -f "$jwt_file"
 echo "[.] DONE"
 
 

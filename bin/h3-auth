@@ -39,7 +39,7 @@ function refresh_jwt {
     if [ $rc -ne 0 ]; then
         echoerr "ERROR: " $res
         H3_API_JWT=""
-        echo $H3_API_JWT > $jwt_file
+        echo $H3_API_JWT > "$jwt_file"
         return $rc
     fi 
     # check if we didn't get a token back
@@ -47,12 +47,12 @@ function refresh_jwt {
     if [ "$token" = "null" ]; then
         echoerr "ERROR: " $res
         H3_API_JWT=""
-        echo $H3_API_JWT > $jwt_file
+        echo $H3_API_JWT > "$jwt_file"
         return 1
     fi
     # success! set env var, write it to jwt file
     H3_API_JWT=$token
-    echo $H3_API_JWT > $jwt_file
+    echo $H3_API_JWT > "$jwt_file"
     echolog H3_API_JWT=$H3_API_JWT
     return 0
 }
@@ -64,8 +64,8 @@ function refresh_jwt {
 # sets H3_API_JWT in the environment
 function read_jwt {
     if [ -z "$H3_API_JWT" ]; then
-        if [ -f $jwt_file ]; then
-            H3_API_JWT=`cat $jwt_file`
+        if [ -f "$jwt_file" ]; then
+            H3_API_JWT=`cat "$jwt_file"`
             H3_API_JWT=`echo $H3_API_JWT`    # gets rid of newlines 
         fi 
     fi

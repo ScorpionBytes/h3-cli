@@ -252,9 +252,9 @@ h3 auth force
 
 ### h3-cli profiles
 
-You can manage multiple h3-cli profiles under the same `$HOME/.h3` directory.  When you first
-install h3-cli it will automatically create an initial profile named `default`.  If you wish to
-create a new profile, use the following command:
+You can manage multiple h3-cli authentication profiles under the same `$HOME/.h3` directory.
+When you first install h3-cli it will automatically create an initial profile named `default`.
+If you wish to create a new profile, use the following command:
 
 ```shell
 h3 save-profile my-profile {api-key}
@@ -276,7 +276,7 @@ To switch back to the default profile:
 To list out all your profiles:
 
 ```shell
-. h3 profiles
+h3 profiles
 ```
 
 To list the currently active profile:

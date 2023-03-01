@@ -1,14 +1,13 @@
 
-## h3-cli: Touchless NodeZero deployment using the h3-cli agent
+## h3-cli: Touchless NodeZero deployment using h3-cli 
 
-You can now deploy NodeZero automatically on your Docker Host using the h3-cli agent.
+You can now deploy NodeZero automatically on your Docker Host using h3-cli.
 
 All _internal_ pentests require that you deploy NodeZero on a Docker Host inside your network.
-This is normally done by manually copy+pasting the NodeZero Launch Script
-and running it on your machine.
+This is usually done by manually copy+pasting the NodeZero Launch Script and running it on your machine.
 
-To launch NodeZero automatically, you first spin up an agent process on your Docker Host, using the h3-cli.
-The h3-cli agent is a long-lived daemon process that periodically polls the H3 API and launches NodeZero 
+To launch NodeZero automatically, you first spin up a persistent agent process on your Docker Host, using h3-cli.
+The h3-cli agent is a long-lived background process that periodically polls the H3 API and launches NodeZero 
 automatically on the local machine whenever a new pentest is created and assigned to that agent.
 
 > If you are running _external_ pentests, NodeZero is deployed automatically to the H3 cloud
@@ -51,7 +50,6 @@ It might take a minute for the message to appear.
   "row_created_at": "2023-02-06T06:38:06.553829"
 }
 [Mon Feb  6 01:38:13 EST 2023] [agent: my-agent] Running command in a separate process: hello-world
-[Mon Feb  6 01:38:13 EST 2023] [agent: my-agent] Sleeping for 60 seconds
 {
   "data": {
     "hello": "world!"
@@ -62,7 +60,7 @@ It might take a minute for the message to appear.
 
 ### 2. Provision a pentest and assign it to the agent 
 
-To create a new pentest and assign it to an agent, use the `agent_name` parameter:
+To create a new pentest and assign it to your agent, use the `agent_name` parameter:
 
 ```shell
 h3 run-pentest '{"agent_name": "my-agent", "op_name": "Pentest created via h3-cli and launched via agent"}'
@@ -85,7 +83,19 @@ h3 pentest
 ```
 
 
-### 3. Useful agent commands
+## h3-cli agent runtime profile
+
+A few notes about the h3-cli agent process:
+
+* The agent process runs as the user that invoked `h3 start-agent`.
+* The agent uses the same H3 API key and has the same role and permissions as the user who that invoked `h3 start-agent`.
+* The agent process is disconnected from the user's shell session and runs in the background.
+* The user can log out of their shell session without affecting the agent process; the agent will continue to run in the background.
+* The agent will NOT restart itself after a system reboot. To enable this, you can wire up `h3 start-agent` to your system launcher, eg. systemd, launchd, cron, etc.
+
+
+
+## Useful agent commands
 
 
 You can list your registered agents via:

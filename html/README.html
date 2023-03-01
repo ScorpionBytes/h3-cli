@@ -195,7 +195,7 @@ H3 account.</p>
 <h3 id="install-this-git-repo">2. Install this git repo</h3>
 <p>First, install this repo on your machine using the following git
 command within a shell/terminal.</p>
-<pre class="shell"><code>git clone git@gitlab.com:h3upperbounds/data/h3-cli.git</code></pre>
+<pre class="shell"><code>git clone https://github.com/horizon3ai/h3-cli</code></pre>
 <p>This will create a new directory, <code>h3-cli</code>, and download
 the contents of the repo to it. The <code>h3-cli</code> directory will
 be created in the directory where you run the git command. You can
@@ -228,9 +228,6 @@ running it from the command prompt:</p>
 <pre class="shell"><code>h3</code></pre>
 <p>If everything’s installed correctly, you should see the h3-cli help
 text.</p>
-<p>❗❗ <strong>H3-INTERNAL ❗❗ ADDITIONAL STEPS REQUIRED</strong> to
-use h3-cli in develop, stage, and local sandbox environments. <a
-href="guides/h3-internal-envs.html">See this guide</a> for details.</p>
 <h2 id="getting-started">Getting started</h2>
 <h3 id="verify-connectivity-with-the-api">1. Verify connectivity with
 the API</h3>
@@ -242,7 +239,7 @@ the API</h3>
     &quot;hello&quot;: &quot;world!&quot;
   }
 }</code></pre>
-<p>⚠️ If you are getting an error response, please contact H3 via the
+<p>❗️ If you are getting an error response, please contact H3 via the
 chat icon in the <a href="https://portal.horizon3ai.com/">Horizon3.ai
 Portal</a>.</p>
 <h3 id="query-the-list-of-pentests-in-your-account">2. Query the list of
@@ -338,8 +335,7 @@ recently created pentest:</p>
 deployment.</strong></a> Deploy NodeZero on your Docker Host in a
 “touchless” way, without having to manually copy+paste the NodeZero
 Launch Script. <a href="guides/touchless-nodezero.html">See this guide</a>
-to learn how to deploy NodeZero automatically using the h3-cli
-agent.</p>
+to learn how to deploy NodeZero automatically using h3-cli.</p>
 <p><a href="guides/recurring-pentests.html"><strong>Schedule recurring
 pentests.</strong></a> A common use case for h3-cli is running pentests
 automatically on a recurring basis, for example once a week or once a
@@ -425,9 +421,8 @@ parameters.</p>
 <p>The Horizon3.ai API is powered by GraphQL. In addition to this CLI
 document, relevant documentation includes:</p>
 <ul>
-<li><a href="https://h3-graphql-docsite.horizon3ai.com/">Horizon3.ai
-GraphQL API Reference</a></li>
-<li><a href="https://graphql.org/">Learn about GraphQL</a></li>
+<li><a href="https://docs.horizon3ai.com/">Horizon3.ai Docs</a></li>
+<li><a href="https://graphql.org/">GraphQL.org</a></li>
 </ul>
 <h3 id="advanced-writing-your-own-graphql-queries">Advanced: Writing
 your own GraphQL queries</h3>

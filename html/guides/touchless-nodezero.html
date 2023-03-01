@@ -40,13 +40,12 @@
 
                                                         <ul>
                                                         <li><a
-                                                        href="#h3-cli-touchless-nodezero-deployment-using-the-h3-cli-agent"
-                                                        id="toc-h3-cli-touchless-nodezero-deployment-using-the-h3-cli-agent">h3-cli:
+                                                        href="#h3-cli-touchless-nodezero-deployment-using-h3-cli"
+                                                        id="toc-h3-cli-touchless-nodezero-deployment-using-h3-cli">h3-cli:
                                                         Touchless
                                                         NodeZero
                                                         deployment using
-                                                        the h3-cli
-                                                        agent</a>
+                                                        h3-cli</a>
                                                         <ul>
                                                         <li><a
                                                         href="#spin-up-an-agent-internal-pentests-only"
@@ -62,12 +61,17 @@
                                                         pentest and
                                                         assign it to the
                                                         agent</a></li>
+                                                        </ul></li>
+                                                        <li><a
+                                                        href="#h3-cli-agent-runtime-profile"
+                                                        id="toc-h3-cli-agent-runtime-profile">h3-cli
+                                                        agent runtime
+                                                        profile</a></li>
                                                         <li><a
                                                         href="#useful-agent-commands"
-                                                        id="toc-useful-agent-commands">3.
-                                                        Useful agent
+                                                        id="toc-useful-agent-commands">Useful
+                                                        agent
                                                         commands</a></li>
-                                                        </ul></li>
                                                         </ul>
                             
                         </div>
@@ -77,20 +81,19 @@
                 <div class="uk-width-medium-3-4">
 
                     
-<h2
-id="h3-cli-touchless-nodezero-deployment-using-the-h3-cli-agent">h3-cli:
-Touchless NodeZero deployment using the h3-cli agent</h2>
+<h2 id="h3-cli-touchless-nodezero-deployment-using-h3-cli">h3-cli:
+Touchless NodeZero deployment using h3-cli</h2>
 <p>You can now deploy NodeZero automatically on your Docker Host using
-the h3-cli agent.</p>
+h3-cli.</p>
 <p>All <em>internal</em> pentests require that you deploy NodeZero on a
-Docker Host inside your network. This is normally done by manually
+Docker Host inside your network. This is usually done by manually
 copy+pasting the NodeZero Launch Script and running it on your
 machine.</p>
-<p>To launch NodeZero automatically, you first spin up an agent process
-on your Docker Host, using the h3-cli. The h3-cli agent is a long-lived
-daemon process that periodically polls the H3 API and launches NodeZero
-automatically on the local machine whenever a new pentest is created and
-assigned to that agent.</p>
+<p>To launch NodeZero automatically, you first spin up a persistent
+agent process on your Docker Host, using h3-cli. The h3-cli agent is a
+long-lived background process that periodically polls the H3 API and
+launches NodeZero automatically on the local machine whenever a new
+pentest is created and assigned to that agent.</p>
 <blockquote>
 <p>If you are running <em>external</em> pentests, NodeZero is deployed
 automatically to the H3 cloud and the h3-cli agent is not required.</p>
@@ -119,7 +122,6 @@ agent in the log. It might take a minute for the message to appear.</p>
   &quot;row_created_at&quot;: &quot;2023-02-06T06:38:06.553829&quot;
 }
 [Mon Feb  6 01:38:13 EST 2023] [agent: my-agent] Running command in a separate process: hello-world
-[Mon Feb  6 01:38:13 EST 2023] [agent: my-agent] Sleeping for 60 seconds
 {
   &quot;data&quot;: {
     &quot;hello&quot;: &quot;world!&quot;
@@ -127,7 +129,7 @@ agent in the log. It might take a minute for the message to appear.</p>
 }</code></pre>
 <h3 id="provision-a-pentest-and-assign-it-to-the-agent">2. Provision a
 pentest and assign it to the agent</h3>
-<p>To create a new pentest and assign it to an agent, use the
+<p>To create a new pentest and assign it to your agent, use the
 <code>agent_name</code> parameter:</p>
 <pre class="shell"><code>h3 run-pentest &#39;{&quot;agent_name&quot;: &quot;my-agent&quot;, &quot;op_name&quot;: &quot;Pentest created via h3-cli and launched via agent&quot;}&#39;</code></pre>
 <p>In a minute or so you should see the agent kick off the NodeZero
@@ -139,7 +141,23 @@ container on the local machine, just as if you had copy+pasted the
 <code>curl</code> command from the Portal.</p>
 <p>You can view the newly created pentest via:</p>
 <pre class="shell"><code>h3 pentest </code></pre>
-<h3 id="useful-agent-commands">3. Useful agent commands</h3>
+<h2 id="h3-cli-agent-runtime-profile">h3-cli agent runtime profile</h2>
+<p>A few notes about the h3-cli agent process:</p>
+<ul>
+<li>The agent process runs as the user that invoked
+<code>h3 start-agent</code>.</li>
+<li>The agent uses the same H3 API key and has the same role and
+permissions as the user who that invoked
+<code>h3 start-agent</code>.</li>
+<li>The agent process is disconnected from the user’s shell session and
+runs in the background.</li>
+<li>The user can log out of their shell session without affecting the
+agent process; the agent will continue to run in the background.</li>
+<li>The agent will NOT restart itself after a system reboot. To enable
+this, you can wire up <code>h3 start-agent</code> to your system
+launcher, eg. systemd, launchd, cron, etc.</li>
+</ul>
+<h2 id="useful-agent-commands">Useful agent commands</h2>
 <p>You can list your registered agents via:</p>
 <pre class="shell"><code>h3 agents</code></pre>
 <p>You can show any active agent processes on the local machine via:</p>

@@ -77,7 +77,6 @@ h3
 
 If everything's installed correctly, you should see the h3-cli help text.
 
-❗❗ **H3-INTERNAL ❗❗ ADDITIONAL STEPS REQUIRED** to use h3-cli in develop, stage, and local sandbox environments. [See this guide](guides/h3-internal-envs.md) for details.
 
 ## Getting started 
 
@@ -99,7 +98,7 @@ You should see the response:
 }
 ```
 
-⚠️ If you are getting an error response, please contact H3 via the chat icon in the [Horizon3.ai Portal](https://portal.horizon3ai.com/).
+❗️ If you are getting an error response, please contact H3 via the chat icon in the [Horizon3.ai Portal](https://portal.horizon3ai.com/).
 
 
 ### 2. Query the list of pentests in your account

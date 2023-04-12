@@ -119,7 +119,7 @@ function cmd_pentest {
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq .data.pentest
     else
-        echo $res
+        echo "$res"
     fi 
     return $rc
 }
@@ -135,7 +135,7 @@ HERE
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq '.data.pentests_page.pentests[] | {op_id, name, state, scheduled_at, completed_at, etl_completed_at, hosts_count, impacts_count, weaknesses_count, credentials_count}'
     else
-        echo $res
+        echo "$res"
     fi 
     return $rc
 }
@@ -151,7 +151,7 @@ HERE
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq '.data.asset_groups_page.asset_groups[]'
     else
-        echo $res
+        echo "$res"
     fi 
     return $rc
 }
@@ -167,7 +167,7 @@ HERE
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq '.data.asset_group'
     else
-        echo $res
+        echo "$res"
     fi 
     return $rc
 }
@@ -183,7 +183,7 @@ HERE
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq '.data.client_accounts_page.client_accounts[]'
     else
-        echo $res
+        echo "$res"
     fi 
     return $rc
 }
@@ -195,7 +195,7 @@ function cmd_user_accounts {
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq '.data.user_accounts[]'
     else
-        echo $res
+        echo "$res"
     fi 
     return $rc
 }
@@ -211,7 +211,7 @@ HERE
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq '.data.op_templates[]'
     else
-        echo $res
+        echo "$res"
     fi 
     return $rc
 }
@@ -227,7 +227,7 @@ HERE
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq '.data.op_template'
     else
-        echo $res
+        echo "$res"
     fi 
     return $rc
 }
@@ -239,7 +239,7 @@ function cmd_whoami {
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq .data.session_user_account
     else
-        echo $res
+        echo "$res"
     fi 
     return $rc
 }
@@ -251,7 +251,7 @@ function cmd_create_pentest {
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq .data.schedule_op_template.op
     else
-        echo $res
+        echo "$res"
     fi 
     return $rc
 }
@@ -350,7 +350,7 @@ HERE
     if [ $rc -eq 0 ]; then
         cat <<<$res | jq .data.hello_agent
     else
-        echo $res
+        echo "$res"
     fi 
     return $rc
 }
@@ -402,7 +402,10 @@ elif [ "$cmd" = "pentest" ]; then
     cmd_pentest $*
 
 elif [ "$cmd" = "latest-pentest" ]; then
-    h3-gql latest_pentest $* | jq .data.pentests_page.pentests[]
+    res=`h3-gql latest_pentest $*`
+    rc=$?
+    if [ $rc -eq 0 ]; then cat <<<$res | jq '.data.pentests_page.pentests[]'
+    else echo "$res"; fi
 
 elif [ "$cmd" = "run-pentest" -o "$cmd" = "schedule-pentest" ]; then
     cmd_create_pentest $*
@@ -462,7 +465,10 @@ elif [ "$cmd" = "hello-agent" ]; then
     cmd_hello_agent $*
 
 elif [ "$cmd" = "agents" ]; then
-    h3-gql agents | jq .data.agents[]
+    res=`h3-gql agents`
+    rc=$?
+    if [ $rc -eq 0 ]; then cat <<<$res | jq '.data.agents[]'
+    else echo "$res"; fi
 
 elif [ "$cmd" = "create-scheduled-action" ]; then
     h3-create-scheduled-action "$@"
@@ -474,7 +480,10 @@ elif [ "$cmd" = "trigger-scheduled-action" ]; then
     h3-trigger-scheduled-action "$@"
 
 elif [ "$cmd" = "schedules" -o "$cmd" = "schedule" ]; then
-    h3-gql schedules | jq '.data.schedules[]'
+    res=`h3-gql schedules`
+    rc=$?
+    if [ $rc -eq 0 ]; then cat <<<$res | jq '.data.schedules[]'
+    else echo "$res"; fi
 
 elif [ "$cmd" = "enable-schedule" ]; then
     h3-enable-schedule "$@"

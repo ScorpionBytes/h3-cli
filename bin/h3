@@ -60,14 +60,14 @@ h3 gql-describe {graphql-file} [{options}]
 h3 checkenv                         # Run the checkenv script to check for NodeZero compatibility.
 
 
--------
-Agents:
+-----------------
+NodeZero Runners:
 
-h3 agents                           # List of agents in the current client account.
-h3 start-agent {name} {log-file}    # Runs an agent as a background process and assigns it the given {name}.  The agent logs to {log-file}.
-h3 hello-agent {name}               # Sends a hello-world command to the agent with the assigned {name}.
-h3 stop-agent                       # Stops the agent running on the local machine.
-h3 ps-agent                         # Shows the running agent process.
+h3 runners                          # List of NodeZero Runners in the current client account.
+h3 start-runner {name} {log-file}   # Runs a NodeZero Runner as a background process and assigns it the given {name}.  The Runner logs to {log-file}.
+h3 hello-runner {name}              # Sends a hello-world command to the Runner with the assigned {name}.
+h3 stop-runner                      # Stops all Runner processes on the local machine.
+h3 ps-runner                        # Shows all Runner processes on the local machine.
 
 
 ------------------
@@ -320,7 +320,7 @@ function ps_agent {
 
 
 function pkill_agent {
-    echoerr "Killing any running agents via: pkill -f h3-start-agent"
+    echoerr "Killing all NodeZero Runner processes ..."
     ps_agent
     pkill -f h3-start-agent
     sleep 2
@@ -331,15 +331,17 @@ function cmd_start_agent {
     agent_name=$1
     log_file=$2
     if [ -z "$agent_name" -o -z "$log_file" ]; then
-        echo "agent_name and log_file are required"
+        echo "runner_name and log_file are required"
         return 1
     fi
-    pkill_agent
-    echoerr "Starting agent via: nohup h3-start-agent \"$agent_name\" < /dev/null >> \"$log_file\" 2>&1 &"
+    # pkill_agent
+    # echoerr "Starting NodeZero Runner via: nohup h3-start-agent \"$agent_name\" < /dev/null >> \"$log_file\" 2>&1 &"
+    echoerr "Starting NodeZero Runner $agent_name ..."
     nohup h3-start-agent "$agent_name" < /dev/null >> "$log_file" 2>&1 &
     rc=$?
     if [ $rc -eq 0 ]; then 
-        echoerr "Stream the agent logs via: tail -f $log_file"
+        ps_agent
+        echoerr "Stream the NodeZero Runner logs via: tail -f $log_file"
     fi
     return $rc
 }
@@ -494,19 +496,19 @@ elif [ "$cmd" = "asset-groups" ]; then
 elif [ "$cmd" = "asset-group" ]; then
     cmd_asset_group $*
 
-elif [ "$cmd" = "start-agent" ]; then
+elif [ "$cmd" = "start-agent" -o "$cmd" = "start-runner" ]; then
     cmd_start_agent "$@"
 
-elif [ "$cmd" = "stop-agent" ]; then
+elif [ "$cmd" = "stop-agent" -o "$cmd" = "stop-runner" ]; then
     pkill_agent
 
-elif [ "$cmd" = "ps-agent" ]; then
+elif [ "$cmd" = "ps-agent" -o "$cmd" = "ps-runner" ]; then
     ps_agent
 
-elif [ "$cmd" = "hello-agent" ]; then
+elif [ "$cmd" = "hello-agent" -o "$cmd" = "hello-runner" ]; then
     cmd_hello_agent $*
 
-elif [ "$cmd" = "agents" ]; then
+elif [ "$cmd" = "agents" -o "$cmd" = "runners" ]; then
     res=`h3-gql agents`
     rc=$?
     if [ $rc -eq 0 ]; then cat <<<$res | jq '.data.agents[]'

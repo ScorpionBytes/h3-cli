@@ -89,7 +89,7 @@ To verify the runner has connected to the H3 API and registered itself, run the 
 h3 runners
 ```
 
-You should see an entry for the agent `my-nodezero-runner` that you just started.
+You should see an entry for the runner `my-nodezero-runner` that you just started.
 
 You can now assign pentests to your NodeZero Runner and the Runner will automatically launch 
 NodeZero.  You can tail the logfile to see it in action:

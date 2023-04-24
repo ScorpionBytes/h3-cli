@@ -83,13 +83,13 @@ Each NodeZero Runner is given a name, in this case `my-nodezero-runner`.  The na
 be anything you want.  The name helps you identify the Runner when assigning pentests 
 to it, especially if you spin up multiple Runners across your network.
 
-To verify the runner has connected to the H3 API and registered itself, run the command below:
+To verify the Runner has connected to the H3 API and registered itself, run the command below:
 
 ```shell
 h3 runners
 ```
 
-You should see an entry for the runner `my-nodezero-runner` that you just started.
+You should see an entry for the Runner `my-nodezero-runner` that you just started.
 
 You can now assign pentests to your NodeZero Runner and the Runner will automatically launch 
 NodeZero.  You can tail the logfile to see it in action:

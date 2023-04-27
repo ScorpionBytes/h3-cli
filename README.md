@@ -19,7 +19,7 @@ of your environment or kicking off a pentest as part of a continuous integration
 ## Installation and initial setup
 
 The steps below will get you up and running quickly with h3-cli. These instructions were tested on 
-MacOS and Linux machines, and generally should work on any [POSIX-compliant](https://en.wikipedia.org/wiki/POSIX) system with bash support.
+macOS and Linux machines, and generally should work on any [POSIX-compliant](https://en.wikipedia.org/wiki/POSIX) system with bash support.
 
 If you plan to run _internal_ pentests using h3-cli, you should install h3-cli on the same Docker Host
 where you launch NodeZero.

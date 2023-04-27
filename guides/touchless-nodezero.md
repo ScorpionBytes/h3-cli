@@ -2,8 +2,8 @@
 ## h3-cli: Automated NodeZero deployment using a NodeZero Runner
 
 Part of the process of running an _internal_ pentest involves launching the NodeZero Docker container on a 
-Docker Host within your private network.  This is typically done by signing into your Docker Host and 
-manually running the the Nodezero Launch Script provided in the Portal.
+Docker Host within your private network.  This is typically done by signing in to your Docker Host and 
+manually running the Nodezero Launch Script provided in the Portal.
 
 **A NodeZero Runner enables automated deployment of the NodeZero Docker container.** This allows you to provision and deploy pentests 
 fully from the Portal, without having to manually run the NodeZero Launch Script. The NodeZero Runner is a 
@@ -40,7 +40,7 @@ can do is poll the API to detect when a pentest has been assigned to it, and the
 
 ## 2. Install h3-cli on your Docker Host
 
-The NodeZero Runner process is started via the h3-cli.  Therefore the h3-cli must be installed 
+The NodeZero Runner process is started via the h3-cli.  Therefore, the h3-cli must be installed 
 on your Docker Host.  
 
 The quick-and-easy install steps are below.  Simply copy+paste the commands into a shell on your Docker Host.

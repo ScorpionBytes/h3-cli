@@ -14,8 +14,6 @@ the API allows you to:
 The API can be used for a variety of use cases such as scheduling periodic assessments 
 of your environment or kicking off a pentest as part of a continuous integration build pipeline.
 
-[[_TOC_]]
-
 ## Installation and initial setup
 
 The steps below will get you up and running quickly with h3-cli. These instructions were tested on 

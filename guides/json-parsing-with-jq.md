@@ -138,7 +138,7 @@ If you want to convert the `pentests` array to a CSV:
 h3 gql pentests | jq '.data.pentests_page.pentests[]' | jq -rsf $H3_CLI_HOME/filters/to_csv.jq
 ```
 
-> Note: the [to_csv.jq](filters/to_csv.jq) filter will automatically convert lists and objects to JSON-encoded strings in the CSV.
+> Note: the [to_csv.jq](../filters/to_csv.jq) filter will automatically convert lists and objects to JSON-encoded strings in the CSV.
 
 
 

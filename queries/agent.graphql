@@ -1,15 +1,25 @@
 query q($name: String!) {
     agent(name:$name) {
-        ...AgentScalarFragment
+        ...AgentFragment
     }
 }
   
-fragment AgentScalarFragment on Agent {
+fragment AgentFragment on Agent {
     uuid
     name
     uname
     log_file
     last_heartbeat_at
     last_heartbeat_time_ago
-    row_created_at
+    created_at
+    commands(last_n:5) {
+        ...AgentCommandFragment
+    }
+}
+
+fragment AgentCommandFragment on AgentCommand {
+    uuid
+    command
+    received_at
+    created_at
 }

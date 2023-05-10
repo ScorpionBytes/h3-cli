@@ -12,7 +12,7 @@ fragment AgentFragment on Agent {
     last_heartbeat_at
     last_heartbeat_time_ago
     created_at
-    commands(last_n:5) {
+    commands(last_n:3) {
         ...AgentCommandFragment
     }
 }
@@ -20,6 +20,9 @@ fragment AgentFragment on Agent {
 fragment AgentCommandFragment on AgentCommand {
     uuid
     command
-    received_at
     created_at
+    received_at
+    completed_at
+    exit_status
+    log
 }

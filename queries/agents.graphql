@@ -20,7 +20,9 @@ fragment AgentFragment on Agent {
 fragment AgentCommandFragment on AgentCommand {
     uuid
     command
-    received_at
     created_at
+    received_at
+    completed_at
+    exit_status
 }
 

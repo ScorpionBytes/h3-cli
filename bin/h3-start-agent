@@ -78,9 +78,10 @@ while [ 1 ]; do
     # c.
     # run the command
     echoerr "[$agent_name] Received command: $agent_command"
+    command_uuid=`cat <<<$agent_command | jq -r .uuid`
     command=`cat <<<$agent_command | jq -r .command`
     echoerr "[$agent_name] Running command in a separate process: $command"
-    eval "h3 $command" &
+    h3-run-command "$command_uuid" "$command" &
 
     sleepy "$agent_name"
 done

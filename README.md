@@ -76,6 +76,20 @@ h3
 If everything's installed correctly, you should see the h3-cli help text.
 
 
+## Upgrading h3-cli
+
+We release new features, bug fixes, and other updates for the h3-cli every month.  Upgrading your installation is easy:
+
+#### Via git
+
+If you used `git clone` to install the repo, then simply run `git pull` to install the latest version.
+
+#### Via zip download
+
+If you downloaded the repo as a zip file, then re-download the zip file and unzip it to the same location (ie. replace
+your existing h3-cli installation with the new zip).
+
+
 ## Getting started 
 
 ### 1. Verify connectivity with the API

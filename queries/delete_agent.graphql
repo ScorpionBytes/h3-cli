@@ -1,0 +1,31 @@
+mutation m($agent_name: String!) {
+    delete_agent(agent_name:$agent_name) {
+        agent {
+            ...AgentFragment
+        }
+    }
+}
+  
+fragment AgentFragment on Agent {
+    uuid
+    name
+    uname
+    log_file
+    last_heartbeat_at
+    last_heartbeat_time_ago
+    created_at
+    is_deleted
+    deleted_at
+    last_command {
+        ...AgentCommandFragment
+    }
+}
+
+fragment AgentCommandFragment on AgentCommand {
+    uuid
+    command
+    created_at
+    received_at
+    completed_at
+    exit_status
+}

@@ -70,6 +70,8 @@ h3 hello-runner {name}              # Sends a hello-world command to the Runner 
 h3 stop-runner                      # Stops all Runner processes on the local machine.
 h3 ps-runner                        # Shows all Runner processes on the local machine.
 h3 tail-runner {name}               # Tail the log for the NodeZero Runner on the local machine with the given {name}.
+h3 delete-runner {name}             # Delete the Runner with the given {name}.  This will NOT stop the Runner if it is still running.
+                                    # If a deleted Runner is still running, it will be recreated upon the next heartbeat.
 h3 run-nodezero-on-runner {op_id} {runner_name}
                                     # Run NodeZero for the given {op_id} on the Runner with the given {runner_name}.
 
@@ -529,6 +531,9 @@ elif [ "$cmd" = "tail-agent" -o "$cmd" = "tail-runner" ]; then
 
 elif [ "$cmd" = "run-nodezero-on-agent" -o "$cmd" = "run-nodezero-on-runner" ]; then
     h3-run-nodezero-on-agent "$@"
+
+elif [ "$cmd" = "delete-agent" -o "$cmd" = "delete-runner" ]; then
+    h3-delete-agent "$@"
 
 elif [ "$cmd" = "create-scheduled-action" ]; then
     h3-create-scheduled-action "$@"

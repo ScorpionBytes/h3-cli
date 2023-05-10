@@ -104,6 +104,8 @@ tail -f /tmp/my-nodezero-runner.log
 * The Runner process is disconnected from the shell session and runs in the background. It continues to run after the shell session is closed.
 * The Runner will NOT restart itself after a system reboot. To enable this, you can wire up `h3 start-runner` to your system launcher, eg. systemd, launchd, cron, etc.
 * To terminate the Runner process, use `h3 stop-runner`.
+* To delete a Runner, use `h3 delete-runner {name}`.
+    * If a deleted Runner is still running, it will be recreated upon the next heartbeat.
 
 
 ## Troubleshooting

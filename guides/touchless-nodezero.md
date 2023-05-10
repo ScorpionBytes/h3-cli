@@ -131,3 +131,14 @@ tail -f /tmp/my-nodezero-runner.log
 
 If your Docker Host requires `sudo` to run `docker` commands, then you may need to start the Runner using `sudo` as well.
 
+
+### Retry
+
+After resolving issues with your Runner, you can retry a NodeZero deployment by directly queuing a request to the Runner
+using the following command.  Substitute `{op_id}` and `{runner_name}` for your specific usage.  
+
+```shell
+h3 run-nodezero-on-runner {op_id} {runner_name}
+```
+
+> You can use `h3 pentest` to get the `op_id` for the most recently created pentest.

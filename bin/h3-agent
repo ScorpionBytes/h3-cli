@@ -23,7 +23,7 @@ json_params=`cat <<HERE
 {"name":"$agent_name"}
 HERE
 `
-res=`h3-gql agent $json_params`
+res=`h3-gql agent "$json_params"`
 rc=$?
 if [ $rc -eq 0 ]; then 
     cat <<<$res | jq '.data.agent'

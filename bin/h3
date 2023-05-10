@@ -64,10 +64,12 @@ h3 checkenv                         # Run the checkenv script to check for NodeZ
 NodeZero Runners:
 
 h3 runners                          # List of NodeZero Runners in the current client account.
+h3 runner {name}                    # List the NodeZero Runner with the given {name}.
 h3 start-runner {name} {log-file}   # Runs a NodeZero Runner as a background process and assigns it the given {name}.  The Runner logs to {log-file}.
 h3 hello-runner {name}              # Sends a hello-world command to the Runner with the assigned {name}.
 h3 stop-runner                      # Stops all Runner processes on the local machine.
 h3 ps-runner                        # Shows all Runner processes on the local machine.
+h3 tail-runner {name}               # NEW! Tail the log for the NodeZero Runner on the local machine with the given {name}.
 
 
 ------------------
@@ -340,7 +342,7 @@ function cmd_start_agent {
     # pkill_agent
     # echoerr "Starting NodeZero Runner via: nohup h3-start-agent \"$agent_name\" < /dev/null >> \"$log_file\" 2>&1 &"
     echoerr "Starting NodeZero Runner $agent_name ..."
-    nohup h3-start-agent "$agent_name" < /dev/null >> "$log_file" 2>&1 &
+    nohup h3-start-agent "$agent_name" "$log_file" < /dev/null >> "$log_file" 2>&1 &
     rc=$?
     if [ $rc -eq 0 ]; then 
         ps_agent
@@ -516,6 +518,12 @@ elif [ "$cmd" = "agents" -o "$cmd" = "runners" ]; then
     rc=$?
     if [ $rc -eq 0 ]; then cat <<<$res | jq '.data.agents[]'
     else echo "$res"; fi
+
+elif [ "$cmd" = "agent" -o "$cmd" = "runner" ]; then
+    h3-agent "$@"
+
+elif [ "$cmd" = "tail-agent" -o "$cmd" = "tail-runner" ]; then
+    h3-tail-agent "$@"
 
 elif [ "$cmd" = "create-scheduled-action" ]; then
     h3-create-scheduled-action "$@"

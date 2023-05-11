@@ -3,6 +3,7 @@ mutation m($input:AgentCommandCompleteInput!) {
         agent_command {
             ...AgentCommandFragment
         }
+        log_upload_url
     }
 }
   

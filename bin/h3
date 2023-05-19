@@ -81,6 +81,7 @@ h3 run-nodezero-on-runner {op_id} {runner_name}
 Scheduled actions:
 
 h3 schedules                        # The list of Schedule objects in the account and their associated actions.
+h3 schedule {name}                  # List the Schedule with the given {name}.
 h3 create-scheduled-action {schedule-name} {cron-expression} {action} [{params}]
                                     # Create or update the given scheduled action.  Supports hourly resolution for the cron-expression.
                                     # cron-expression format: 'min hour day month dow'
@@ -548,11 +549,14 @@ elif [ "$cmd" = "delete-scheduled-action" ]; then
 elif [ "$cmd" = "trigger-scheduled-action" ]; then
     h3-trigger-scheduled-action "$@"
 
-elif [ "$cmd" = "schedules" -o "$cmd" = "schedule" ]; then
+elif [ "$cmd" = "schedules" ]; then
     res=`h3-gql schedules`
     rc=$?
     if [ $rc -eq 0 ]; then cat <<<$res | jq '.data.schedules[]'
     else echo "$res"; fi
+
+elif [ "$cmd" = "schedule" ]; then
+    h3-schedule "$@"
 
 elif [ "$cmd" = "enable-schedule" ]; then
     h3-enable-schedule "$@"

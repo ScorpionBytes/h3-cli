@@ -1,0 +1,27 @@
+query q($name: String!) {
+    schedule(name: $name) {
+        ...ScheduleFragment
+    }
+}
+ 
+fragment ScheduleFragment on Schedule {
+    name
+    state
+    created_at
+    last_updated_at
+    actions {
+        ...ScheduledActionFragment
+    }
+}
+
+fragment ScheduledActionFragment on ScheduledAction {
+    action
+    params
+    cron_expression
+    cron_description
+    next_triggered_ats
+    next_triggered_time_in
+    last_triggered_at
+    last_triggered_time_ago
+    last_triggered_error
+}

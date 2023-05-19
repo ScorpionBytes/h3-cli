@@ -19,6 +19,8 @@ fragment ScheduledActionFragment on ScheduledAction {
     params
     cron_expression
     cron_description
+    next_triggered_ats
+    next_triggered_time_in
     last_triggered_at
     last_triggered_time_ago
     last_triggered_error

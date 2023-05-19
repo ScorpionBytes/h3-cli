@@ -129,6 +129,16 @@ Look for errors in the log:
 tail -f /tmp/my-nodezero-runner.log
 ```
 
+
+### View Runner command errors
+
+Use the following to list out the last 5 comands executed by the Runner.  The output includes the exit status and output from the command:
+
+```shell
+h3 runner-commands {runner_name}
+```
+
+
 ### Docker permission errors
 
 If your Docker Host requires `sudo` to run `docker` commands, then you may need to start the Runner using `sudo` as well.

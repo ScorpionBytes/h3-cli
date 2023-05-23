@@ -103,6 +103,8 @@ h3 profile                          # Show the current h3-cli profile.
 . h3 profile {name}                 # Set the current h3-cli profile to the profile with the given name.
 h3 save-profile {name} {api-key}    # Create or updates an h3-cli profile with the given name and API key.
                                     # h3-cli profiles are stored under the ~/.h3 directory.
+h3 delete-profile {name}            # Delete the h3-cli profile with the given name. This will NOT revoke the API key.
+                            
 
 ------------
 Other notes:
@@ -325,6 +327,23 @@ HERE
 }
 
 
+function cmd_delete_profile {
+    profile_name=$1
+    if [ -z "$H3_CLI_PROFILES_DIR" ]; then
+        H3_CLI_PROFILES_DIR="$HOME/.h3"
+    fi
+    profile_file="$H3_CLI_PROFILES_DIR/$profile_name.env"
+    profile_file_bak="$H3_CLI_PROFILES_DIR/$profile_name.env.bak"
+    jwt_file="$H3_CLI_PROFILES_DIR/$profile_name.jwt"
+    if [ -e "$profile_file" ]; then 
+        echoerr "Deleting h3-cli profile $profile_name under $H3_CLI_PROFILES_DIR ..."
+        rm -f "$profile_file" "$jwt_file" "$profile_file_bak"
+    else 
+        echoerr "Profile $profile_name does not exist under $H3_CLI_PROFILES_DIR ..."
+    fi
+}
+
+
 function ps_agent {
     ps -ef | grep h3-start-agent | grep -v grep
 }
@@ -437,6 +456,9 @@ elif [ "$cmd" = "profile" ]; then
 
 elif [ "$cmd" = "add-profile" -o "$cmd" = "save-profile" ]; then
     cmd_add_profile $*
+
+elif [ "$cmd" = "delete-profile" ]; then
+    cmd_delete_profile $*
 
 elif [ "$cmd" = "gql" ]; then
     h3-gql $*

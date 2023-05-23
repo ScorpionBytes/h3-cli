@@ -218,19 +218,14 @@ The above command will download the zip file to `pentest-reports-{op_id}.zip` in
 
 ## Use cases
 
-* [**Automated NodeZero deployment.**](guides/touchless-nodezero.md) Deploy NodeZero on your Docker Host automatically,
-without having to manually copy+paste the NodeZero Launch Script.  [See this guide](guides/touchless-nodezero.md) 
-to learn how to deploy NodeZero automatically using h3-cli.
-* [**Automated scheduling.**](guides/recurring-pentests.md) A common use case for h3-cli is running pentests automatically 
-on a recurring basis, for example once a week or once a month. [See this guide](guides/recurring-pentests.md) to learn how to set 
-up recurring pentests using h3-cli.
-* [**Monitoring pentests.**](guides/monitor-pentests.md) [See this guide](guides/monitor-pentests.md) to learn how to monitor pentests 
-using h3-cli.
-* [**Paginating results.**](guides/paginate-results.md) [See this guide](guides/paginate-results.md) to learn how to paginate through 
-large result sets using h3-cli.
-* [**JSON Parsing using `jq`.**](guides/json-parsing-with-jq.md) [See this guide](guides/json-parsing-with-jq.md) to learn how to 
-leverage the power of `jq` to parse JSON responses from h3-cli.  `jq` can parse specific fields, print the structure of a response,
-and even transform a JSON response to CSV.  
+* [**Automated NodeZero deployment.**](guides/touchless-nodezero.md) Learn how to deploy NodeZero on your Docker Host automatically,
+without having to manually copy+paste the NodeZero Launch Script, using h3-cli.
+* [**Automated scheduling.**](guides/recurring-pentests.md) Learn how to run pentests automatically on a regular schedule, 
+for example once a week or once a month, using h3-cli.
+* [**Monitoring pentests.**](guides/monitor-pentests.md) Learn how to monitor pentests using h3-cli.
+* [**Paginating results.**](guides/paginate-results.md) Learn how to paginate through large result sets using h3-cli.
+* [**JSON Parsing using `jq`.**](guides/json-parsing-with-jq.md) Learn how to leverage the power of `jq` to parse JSON responses 
+from h3-cli.  `jq` can parse specific fields, print the structure of a response, and even transform a JSON response to CSV.  
 
 
 
@@ -265,37 +260,53 @@ h3 auth force
 ### h3-cli profiles
 
 You can manage multiple h3-cli authentication profiles under the same `$HOME/.h3` directory.
-When you first install h3-cli it will automatically create an initial profile named `default`.
-If you wish to create a new profile, use the following command:
+Each h3-cli profile has its own API key.
+
+When you first install h3-cli it will automatically create an initial profile named `default`
+with the API key you provided to `install.sh`. 
+
+If you wish to create another profile with a different API key, use the following command:
 
 ```shell
 h3 save-profile my-profile {api-key}
 ```
 
-This will create a profile named `my-profile` under `$HOME/.h3` and will apply the given `{api_key}` to it.
-To switch to this profile, use the following command (note the leading dot `.`): 
+This will create a profile named `my-profile` under `$HOME/.h3` for the given `{api_key}`.
+To activate the profile in your current shell session, use the following command (note the leading dot `.`): 
 
 ```shell
 . h3 profile my-profile
 ```
 
-To switch back to the default profile:
+You can verify the currently active profile using `h3 profile`, and view details about its API key using `h3 whoami`:
+
+```shell
+h3 profile
+h3 whoami
+```
+
+You can save multiple API keys under different h3-cli profiles and switch between them as needed using the command above.
+For example, to switch back to the `default` profile:
 
 ```shell
 . h3 profile default
 ```
 
-To list out all your profiles:
+To view the list of h3-cli profiles under your `$HOME/.h3` directory:
 
 ```shell
 h3 profiles
 ```
 
-To list the currently active profile:
+You can delete a profile from your `$HOME/.h3` directory using: 
 
 ```shell
-h3 profile
+h3 delete-profile {name}
 ```
+
+This will remove the profile named `{name}` and its API key from your `$HOME/.h3` directory on the local machine. 
+Note that it will NOT *revoke* the API key; it only deletes it from the local machine. You can revoke the API key from the Portal.
+
 
 
 ## Running pentests with h3-cli

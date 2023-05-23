@@ -100,12 +100,14 @@ tail -f /tmp/my-nodezero-runner.log
 
 ### Additional notes 
 
-* The Runner process runs as the user that invoked `h3 start-runner`.
-* The Runner process is disconnected from the shell session and runs in the background. It continues to run after the shell session is closed.
-* The Runner will NOT restart itself after a system reboot. To enable this, you can wire up `h3 start-runner` to your system launcher, eg. systemd, launchd, cron, etc.
-* To terminate the Runner process, use `h3 stop-runner`.
-* To delete a Runner, use `h3 delete-runner {name}`.
+* **Runs as:** The Runner process runs as the user that invoked `h3 start-runner`.
+* **Background process:** The Runner process is disconnected from the shell session and runs in the background. It continues to run after the shell session is closed.
+* **System reboot:** The Runner will NOT restart itself after a system reboot. To enable this, you can wire up `h3 start-runner` to your system launcher, eg. systemd, launchd, cron, etc.
+* **Stop Runner:** To terminate the Runner process, use `h3 stop-runner`.
+* **Delete Runner:** To delete a Runner, use `h3 delete-runner {name}`.
     * If a deleted Runner is still running, it will be recreated upon the next heartbeat.
+* **Rename Runner:** You can NOT rename an existing Runner; however you can stop (and optionally delete) a Runner, then start a new Runner with a different name.
+    * ❗ **NOTE:** if you saved the old Runner name to an op template, the template will need to be updated to use the new Runner name.
 
 
 ## Troubleshooting

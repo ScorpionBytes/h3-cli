@@ -26,16 +26,31 @@ It is assumed you already have an account with Horizon3.ai.  If not, sign up
 at [https://portal.horizon3ai.com/](https://portal.horizon3ai.com/).
 
 
-### 1. Obtain an API key
+### 1. Create an API key
 
-An API key is required to access the H3 API.  Obtain one from the Portal under the User -> Settings menu: [https://portal.horizon3ai.com/settings/api](https://portal.horizon3ai.com/settings/api).
+An API key is required to access the H3 API.  You can create one in the Portal under the [**User -> Account Settings**](https://portal.horizon3ai.com/account-settings) menu.
 
-Keep your API key secure, as anyone with your API key can access your H3 account.  
+When creating an API key you must assign it a role that controls its permissions.  The available roles are:
+
+* **User:** Basic read/write permissions. The API key can run pentests and read results.
+* **Readonly:** The API key can read pentest results, but cannot run pentests.
+* **NodeZero Runner:** A specialized, heavily restricted role designed specifically for [NodeZero Runners](guides/touchless-nodezero.md).  
+
+We recommend the **User** role if you're testing out h3-cli and want to experiment with all its features. 
+After that, you may want to use more restrictive permissions, based on your use case.  For example, if you only
+want to use h3-cli to set up a NodeZero Runner, we recommend using the **NodeZero Runner** role.  
+
+You can easily manage multiple API keys within the same h3-cli install.  Learn more [here](#authentication--h3-cli-profiles).
+
+❗ **Keep your API key secure, as anyone with your API key can access your H3 account.**  Think of an API key as
+a username + password rolled into one.  Anyone with the API key can access your account from anywhere.  h3-cli
+will store your API key under the `$HOME/.h3` directory.  This directory is created during installation and 
+configured with permissions such that only you can read or write to it.  
 
 
 ### 2. Install this git repo
 
-First, install this repo on your machine using the following git command within a shell/terminal.  
+Install the h3-cli git repo on your machine by executing the following git command within a shell/terminal session.  
 
 ```shell
 git clone https://github.com/horizon3ai/h3-cli
@@ -56,9 +71,9 @@ cd h3-cli
 bash install.sh your-api-key-here
 ```
 
-The install script will install dependencies (jq) and create your h3-cli profile under the `$HOME/.h3` directory.
-Your API key is stored in your h3-cli profile.  The profile permissions are restricted so that no other
-users (besides yourself) can read it.
+The install script will install dependencies (jq) and create your default h3-cli profile under the `$HOME/.h3` directory.
+Your API key is stored in your h3-cli profile.  The directory and profile permissions are restricted so that no other
+users (besides yourself) can read or write to it.
 
 The install script will ask you to edit your shell profile (`$HOME/.bash_profile` or `$HOME/.bash_login` or `$HOME/.profile`, depending
 on your operating system) to set the following environment variables:
@@ -86,7 +101,7 @@ If you used `git clone` to install the repo, then simply run `git pull` to insta
 
 #### Via zip download
 
-If you downloaded the repo as a zip file, then re-download the zip file and unzip it to the same location (ie. replace
+If you downloaded the repo as a zip file, then re-download the zip file and unzip it to the same location (in other words replace
 your existing h3-cli installation with the new zip).
 
 
@@ -236,7 +251,7 @@ There's nothing explicit you need to do to authenticate.  This section documents
 underlying mechanics.
 
 h3-cli reads your `H3_API_KEY` from your h3-cli profile (under `$HOME/.h3`) to authenticate 
-to the Horizon3.ai API and establishes a (temporary) session.  The session token (a JWT) is 
+to the Horizon3.ai API and establish a (temporary) session.  The session token (a JWT) is 
 cached under `$HOME/.h3`. The session token expires after 1 hour, at which point h3-cli will
 automatically re-authenticate and re-establish a session.
 

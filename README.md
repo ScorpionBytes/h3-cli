@@ -33,7 +33,7 @@ An API key is required to access the H3 API.  You can create one in the Portal u
 When creating an API key you must assign it a role that controls its permissions.  The available roles are:
 
 * **User:** Basic read/write permissions. The API key can run pentests and read results.
-* **Readonly:** The API key can read pentest results, but cannot run pentests.
+* **Read-only:** The API key can read pentest results, but cannot run pentests.
 * **NodeZero Runner:** A specialized, heavily restricted role designed specifically for [NodeZero Runners](guides/touchless-nodezero.md).  
 
 We recommend the **User** role if you're testing out h3-cli and want to experiment with all its features. 

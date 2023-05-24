@@ -371,7 +371,7 @@ function cmd_start_agent {
     rc=$?
     if [ $rc -eq 0 ]; then 
         ps_agent
-        echoerr "Stream the NodeZero Runner logs via: tail -f $log_file"
+        echoerr "Stream the NodeZero Runner logs via: h3 tail-runner \"$agent_name\" "
     fi
     return $rc
 }

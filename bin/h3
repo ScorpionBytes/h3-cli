@@ -58,6 +58,7 @@ h3 gql {graphql-file} [{options}]   # Run the GraphQL request in the given {grap
 h3 gql-describe {graphql-file} [{options}]   
                                     # Run the GraphQL request and describe the JSON response structure using jq -rf filters/to_struct.jq
 h3 checkenv                         # Run the checkenv script to check for NodeZero compatibility.
+h3 version                          # The h3-cli version.
 
 
 -----------------
@@ -589,7 +590,12 @@ elif [ "$cmd" = "disable-schedule" ]; then
 elif [ "$cmd" = "utc" ]; then
     date -u
 
+elif [ "$cmd" = "version" ]; then
+    source h3-env
+    cat $H3_CLI_HOME/version.txt
+
 elif [ "$cmd" = "gql-describe" ]; then
+    source h3-env
     res=`h3-gql $*`
     rc=$?
     if [ $rc -eq 0 ]; then cat <<<$res | jq -rf $H3_CLI_HOME/filters/to_struct.jq

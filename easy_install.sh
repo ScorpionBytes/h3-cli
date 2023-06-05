@@ -165,7 +165,8 @@ if [ $rc -ne 0 ]; then
     exit 1
 fi
 export PATH="$H3_CLI_HOME/bin:$PATH"
-echoerr "INFO: h3-cli installation complete: `h3 version`"
+echoerr "INFO: h3-cli installation complete. h3 version:"
+h3 version
 
 
 # 4.

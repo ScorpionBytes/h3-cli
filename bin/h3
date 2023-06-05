@@ -601,6 +601,7 @@ elif [ "$cmd" = "utc" ]; then
 elif [ "$cmd" = "version" ]; then
     source h3-env
     cat $H3_CLI_HOME/version.txt
+    echo
 
 elif [ "$cmd" = "upgrade" ]; then
     h3-upgrade

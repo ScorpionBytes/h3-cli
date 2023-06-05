@@ -59,6 +59,7 @@ h3 gql-describe {graphql-file} [{options}]
                                     # Run the GraphQL request and describe the JSON response structure using jq -rf filters/to_struct.jq
 h3 checkenv                         # Run the checkenv script to check for NodeZero compatibility.
 h3 version                          # The h3-cli version.
+h3 upgrade                          # Upgrade h3-cli to the latest version.
 
 
 -----------------
@@ -351,10 +352,17 @@ function ps_agent {
 
 
 function pkill_agent {
-    echoerr "Killing all NodeZero Runner processes ..."
+    agent_name=$1
     ps_agent
-    pkill -f h3-start-agent
+    if [ -z "$agent_name" ]; then 
+        echoerr "Killing all NodeZero Runner processes ..."
+        pkill -f "h3-start-agent"
+    else
+        echoerr "Killing NodeZero Runner process $agent_name ..."
+        pkill -f "h3-start-agent $agent_name "
+    fi
     sleep 2
+    ps_agent
 }
 
 
@@ -365,7 +373,7 @@ function cmd_start_agent {
         echo "runner_name and log_file are required"
         return 1
     fi
-    # pkill_agent
+    pkill_agent "$agent_name"
     # echoerr "Starting NodeZero Runner via: nohup h3-start-agent \"$agent_name\" < /dev/null >> \"$log_file\" 2>&1 &"
     echoerr "Starting NodeZero Runner $agent_name ..."
     nohup h3-start-agent "$agent_name" "$log_file" < /dev/null >> "$log_file" 2>&1 &
@@ -534,7 +542,7 @@ elif [ "$cmd" = "start-agent" -o "$cmd" = "start-runner" ]; then
     cmd_start_agent "$@"
 
 elif [ "$cmd" = "stop-agent" -o "$cmd" = "stop-runner" ]; then
-    pkill_agent
+    pkill_agent "$@"
 
 elif [ "$cmd" = "ps-agent" -o "$cmd" = "ps-runner" ]; then
     ps_agent
@@ -593,6 +601,9 @@ elif [ "$cmd" = "utc" ]; then
 elif [ "$cmd" = "version" ]; then
     source h3-env
     cat $H3_CLI_HOME/version.txt
+
+elif [ "$cmd" = "upgrade" ]; then
+    h3-upgrade
 
 elif [ "$cmd" = "gql-describe" ]; then
     source h3-env

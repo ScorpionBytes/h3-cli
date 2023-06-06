@@ -2,15 +2,11 @@
 # 
 # deps: git, unzip or tar
 #
-# TODO: GQL API: create API key, returns command
-# curl https://raw.githubusercontent.com/horizon3ai/h3-cli/public/easy_install.sh | bash -s {runner-api-key} {runner-name}
+# This script can be downloaded and executed using a single command:
+#   $ curl https://raw.githubusercontent.com/horizon3ai/h3-cli/public/easy_install.sh | bash -s [{api-key}] [{runner-name}]
 #
-# TODO: make this work for both initial install and upgrade 
-#           - scenario: fresh install
-#           - scenario: upgrade, running from h3-cli or h3-cli-public parent dir
-#           - scenario: upgrade, running from some other dir
-#           - scenario: upgrade, running from within h3-cli or h3-cli-public dir
 #
+
 
 function echoerr { 
     echo "[`date`] $@" 1>&2;   

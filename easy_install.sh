@@ -175,9 +175,7 @@ if [ -z "$runner_name" ]; then
     echolog "DEBUG: runner_name not provided, will not start a NodeZero Runner"
     exit 0
 fi
-echoerr INFO: Starting NodeZero Runner "$runner_name" ...
-h3 stop-runner  
-h3 start-runner "$runner_name" "$runner_name.log"
+h3 start-runner "$runner_name" 
 
 echoerr "INFO: NodeZero Runner installation complete."
 

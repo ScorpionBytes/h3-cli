@@ -91,7 +91,9 @@ while [ 1 ]; do
         if [ $rc -eq 0 ]; then 
             # restart the agent.
             echoerr "[$agent_name:$$] Restarting NodeZero Runner ... "
+            # NOTE: command dup'ed in h3 and h3-start-agent.
             nohup h3-start-agent "$agent_name" "$log_file" < /dev/null >> "$log_file" 2>&1 &
+            echoerr "[$agent_name:$$] Previous NodeZero Runner process is exiting."
             exit 0
         fi
     else
@@ -103,4 +105,4 @@ while [ 1 ]; do
 done
 
 
-echoerr "[$agent_name:$$] H3 agent process is exiting."
+echoerr "[$agent_name:$$] NodeZero Runner process is exiting."

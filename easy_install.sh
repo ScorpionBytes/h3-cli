@@ -5,6 +5,14 @@
 # This script can be downloaded and executed using a single command:
 #   $ curl https://raw.githubusercontent.com/horizon3ai/h3-cli/public/easy_install.sh | bash -s [{api-key}] [{runner-name}]
 #
+# The script downloads h3-cli and runs the install script (install.sh), passing in the {api-key}, if provided.
+#
+# If h3-cli is already installed, this script will upgrade it to the latest version.
+#
+# By default the script installs into a new h3-cli directory under the current directory.
+# If env var H3_CLI_HOME is defined, the script installs/upgrades into that directory.
+#
+# If a {runner-name} is provided, the script starts a NodeZero Runner with the given name.
 #
 
 
@@ -92,7 +100,8 @@ function download_h3_cli {
     if [ $rc -eq 0 ]; then 
         return 0
     fi
-    # download into tmp dir first
+    # download into tmp dir first, to handle diffs between download methods,
+    # eg. how git creates h3-cli dir and the zip download creates h3-cli-public dir.
     install_tmp_basedir="`pwd`/.h3-cli-install-tmp"
     mkdir -p "$install_tmp_basedir"
     cd "$install_tmp_basedir"

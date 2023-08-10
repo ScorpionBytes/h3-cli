@@ -284,8 +284,14 @@ function cmd_create_pentest {
 
 
 function cmd_env {
-    source h3-env
-    rc=$?
+    source h3-utils
+    ensure_H3_CLI_PROFILES_DIR
+    ensure_H3_CLI_LOGGING_DIR
+    ensure_H3_API_KEY
+    ensure_H3_CLI_HOME
+    ensure_H3_AUTH_URL
+    ensure_H3_GQL_URL
+    ensure_H3_CLI_GQL_PATH
     echo "H3_CLI_HOME=$H3_CLI_HOME" 
     echo "H3_CLI_PROFILES_DIR=$H3_CLI_PROFILES_DIR" 
     echo "H3_CLI_PROFILE=$H3_CLI_PROFILE" 
@@ -294,12 +300,12 @@ function cmd_env {
     echo "H3_AUTH_URL=$H3_AUTH_URL" 
     echo "H3_GQL_URL=$H3_GQL_URL" 
     echo "H3_CLI_LOGGING_DIR=$H3_CLI_LOGGING_DIR" 
-    return $rc
 }
 
 
 function cmd_profiles {
-    source h3-env
+    source h3-utils
+    assert_H3_CLI_PROFILES_DIR
     for x in `ls $H3_CLI_PROFILES_DIR/*.env`; do 
         basename $x | sed 's/[.]env$//'
     done
@@ -312,7 +318,8 @@ function cmd_profile {
         export H3_CLI_PROFILE=$set_profile
         jwt=`h3-auth force`
     fi
-    source h3-env
+    source h3-utils
+    ensure_H3_CLI_PROFILE
     echo $H3_CLI_PROFILE
 }
 
@@ -381,7 +388,7 @@ function cmd_start_agent {
     agent_name=$1
     log_file=$2
     if [ -z "$agent_name" ]; then
-        echo "runner_name is required"
+        echoerr "runner_name is required"
         return 1
     fi
     if [ -z "$log_file" ]; then
@@ -614,7 +621,8 @@ elif [ "$cmd" = "utc" ]; then
     date -u
 
 elif [ "$cmd" = "version" ]; then
-    source h3-env
+    source h3-utils
+    assert_H3_CLI_HOME
     cat $H3_CLI_HOME/version.txt
     echo
 

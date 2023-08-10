@@ -8,6 +8,12 @@
 # usage: h3-start-agent {agent-name} {log-file}
 #
 
+# bootstrap PATH if needed
+if ! command -v h3-env &> /dev/null; then
+    d=`dirname $0`
+    export PATH="$d:$PATH"
+fi
+
 # 0.
 # include common utils
 source h3-env

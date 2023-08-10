@@ -5,6 +5,12 @@
 # For verbose tracing: export H3_CLI_VERBOSE=1
 #
 
+# bootstrap PATH if needed
+if ! command -v h3-env &> /dev/null; then
+    d=`dirname $0`
+    PATH="$d:$PATH"
+fi
+
 
 # writes message to stderr
 # usage: echoerr "the message"

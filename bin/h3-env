@@ -1,5 +1,8 @@
 #!/bin/bash
 #
+# depends on these env vars:
+# HOME
+#
 # checks/sets these env vars:
 #
 # H3_CLI_PROFILES_DIR
@@ -25,6 +28,7 @@ if [ ! -e "$H3_CLI_PROFILES_DIR" ]; then
 fi
 
 # logging for nodezero runners
+# order of precedence: LOGDIR, TMPDIR, /tmp, .
 if [ -z "$H3_CLI_LOGGING_DIR" -o ! -e "$H3_CLI_LOGGING_DIR" ]; then
     H3_CLI_LOGGING_DIR="$LOGDIR"
 fi

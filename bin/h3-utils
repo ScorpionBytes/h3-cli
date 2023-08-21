@@ -6,7 +6,6 @@
 function echoerr { 
     echo "[`date`] $@" 1>&2;   
 }
- 
 
 # writes message to stderr 
 # usage: echolog "the message"
@@ -43,7 +42,11 @@ function ensure_H3_CLI_PROFILES_DIR {
 function assert_H3_CLI_PROFILES_DIR {
     ensure_H3_CLI_PROFILES_DIR
     if [ ! -e "$H3_CLI_PROFILES_DIR" ]; then
-        echoerr "ERROR: h3 profile directory H3_CLI_PROFILES_DIR=$H3_CLI_PROFILES_DIR does not exist. Please create and define a profile. See README for more info."
+        sudo_msg=""
+        if is_root_user; then 
+            sudo_msg=" If you are running via sudo, try using sudo -E to preserve your environment settings."
+        fi
+        echoerr "ERROR: h3 profile directory H3_CLI_PROFILES_DIR=$H3_CLI_PROFILES_DIR does not exist. Please create and define a profile.$sudo_msg See README for more info."
         exit 1
     fi
 }
@@ -136,5 +139,49 @@ function ensure_H3_CLI_GQL_PATH {
     else
         H3_CLI_GQL_PATH="$prepend_gql_path:$H3_CLI_GQL_PATH"
     fi
+}
+
+# :returns: 0 if systemd is running; non-zero otherwise
+function is_systemd_running {
+    if ! command -v systemctl &> /dev/null; then
+        return 1
+    fi
+    systemctl is-system-running --quiet
+    return $?
+}
+
+# :returns: 0 if the process was launched by systemd; non-zero otherwise
+function was_launched_by_systemd {
+    if [ "$(ps -o comm= $PPID)" = "systemd" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+function is_root_user {
+    if [ "$(id -u)" -eq 0 ]; then 
+        return 0
+    else
+        return 1
+    fi
+}
+
+function ps_agent {
+    ps -ef | grep h3-start-agent | grep -v grep
+}
+
+function pkill_agent {
+    agent_name=$1
+    ps_agent
+    if [ -z "$agent_name" ]; then 
+        echoerr "Killing all NodeZero Runner processes ..."
+        pkill -f "h3-start-agent"
+    else
+        echoerr "Killing NodeZero Runner process $agent_name ..."
+        pkill -f "h3-start-agent $agent_name "
+    fi
+    sleep 2
+    ps_agent
 }
 

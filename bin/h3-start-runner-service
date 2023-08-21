@@ -2,6 +2,8 @@
 #
 # usage: h3-start-runner-service {runner-name} [{log-file}]
 #
+# Related systemctl commands:
+#
 # sudo systemctl daemon-reload
 # sudo systemctl enable nodezero-runner-{name}
 # sudo systemctl start nodezero-runner-{name}
@@ -13,15 +15,6 @@
 # systemctl is-failed nodezero-runner-{name}
 # systemctl list-units
 #
-# various use cases:
-# 1. user has already started the runner
-# 2. user is installing runner for first time via easy-install.sh
-#       - try to register w/ systemd 
-#       - if error, just start the runner 
-#       - print out a msg
-# 3. user does not have systemd 
-# 4. user cannot sudo
-# 5. user can sudo
 # 
 
 # 0.
@@ -52,12 +45,15 @@ if [ -z "$log_file" ]; then
     log_file="$H3_CLI_LOGGING_DIR/$runner_name.log"
 fi
 
-# -rx- # chmod log_file to avoid 209/STDOUT errors where the started service can't write to an existing log file.
-# -rx- if [ -f "$log_file" ]; then 
-# -rx-     sudo -E chmod a+w "$log_file"
-# -rx- fi
+# x.
+# check if systemd is available
+if ! is_systemd_running; then 
+    echoerr "ERROR: systemd does not appear to be running on this system."
+    exit 1
+fi
  
-# determine current user
+# x.
+# determine current user (needed for the service file)
 username="$SUDO_USER"
 if [ -z "$username" ]; then 
     username="$USER"
@@ -109,11 +105,7 @@ else
 fi
 if [ $rc -ne 0 ]; then 
     echoerr "ERROR: Cannot write to $systemd_service_file_name. "
-    if is_systemd_running; then 
-        echoerr "       Try using sudo -E, or manually create the file using the contents above."
-    else
-        echoerr "ERROR: systemd does not appear to be running on this system."
-    fi
+    echoerr "       Try using sudo -E, or manually create the file using the contents above."
     exit $rc
 fi
 
@@ -125,11 +117,7 @@ sudo -E systemctl daemon-reload
 rc=$?
 if [ $rc -ne 0 ]; then 
     echoerr "ERROR: Failed to execute systemctl."
-    if is_systemd_running; then 
-        echoerr "       Try using sudo -E, or you can manually run the command above."
-    else
-        echoerr "ERROR: systemd does not appear to be running on this system."
-    fi
+    echoerr "       Try using sudo -E, or you can manually run the command above."
     exit $rc
 fi
 
@@ -137,6 +125,12 @@ fi
 # stop any existing runners before enalbing and starting the systemd service 
 # (waited til after we've confirmed above that systemd is accessible)
 pkill_agent "$runner_name"
+
+# x.
+# chmod log_file to avoid 209/STDOUT errors where the started service can't write to an existing log file.
+if [ -f "$log_file" ]; then 
+    sudo -E chmod a+w "$log_file"
+fi
 
 # x.
 # enable runner service

@@ -374,11 +374,13 @@ function cmd_stop_agent {
             # find and stop all nodezero-runner services
             # TODO: check if runner service in use via systemctl status 
             # TODO: check if sudo systemctl will work ?
+            echo sudo systemctl stop 'nodezero-runner*'
             sudo systemctl stop 'nodezero-runner*'
         fi
     else 
         if is_systemd_running; then 
             service_name="nodezero-runner-$runner_name"
+            echo sudo systemctl stop "$service_name"
             sudo systemctl stop "$service_name"
         fi
     fi

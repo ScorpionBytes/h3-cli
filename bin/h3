@@ -6,10 +6,17 @@
 #
 
 # bootstrap PATH if needed
-if ! command -v h3-env &> /dev/null; then
-    d=`dirname $0`
-    PATH="$d:$PATH"
-fi
+function bootstrap_path {
+    if ! command -v h3-env &> /dev/null; then
+        if [ -n "$BASH_SOURCE" ]; then s="$BASH_SOURCE"; else s="$0"; fi
+        d=`dirname "$s"`
+        rc=$?
+        if [ $rc -eq 0 ]; then 
+            PATH="$d:$PATH"
+        fi
+    fi
+}
+bootstrap_path
 
 
 # writes message to stderr

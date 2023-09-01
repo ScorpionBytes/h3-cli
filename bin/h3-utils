@@ -75,6 +75,7 @@ function ensure_H3_CLI_HOME {
             echoerr "H3_CLI_HOME environment variable required.  Must be set to the full path of the h3-cli directory."
             exit 1
         fi
+        H3_CLI_HOME=`abs_path "$H3_CLI_HOME"`
     fi
 }
 
@@ -146,7 +147,12 @@ function is_systemd_running {
     if ! command -v systemctl &> /dev/null; then
         return 1
     fi
-    systemctl is-system-running --quiet
+    if ! command -v systemd-notify &> /dev/null; then
+        return 1
+    fi
+    # below returns non-zero if "degraded" (some services did not start)
+    # systemctl is-system-running --quiet
+    systemd-notify --booted
     return $?
 }
 
@@ -185,3 +191,14 @@ function pkill_agent {
     ps_agent
 }
 
+# converts relative path to absolute path
+# https://stackoverflow.com/a/31605674
+function abs_path {
+    f=$1
+    if [ ! -e "$f" ]; then 
+        # echoerr "file $f does not exist"
+        echo $f
+    else
+        echo "$(cd "$(dirname "$f")"; pwd)/$(basename "$f")"
+    fi
+} 

@@ -202,18 +202,20 @@ In order to do this you must register the Runner with the system's boot service.
 Different systems have different boot services, but the most popular one used by various
 Linux distributions is `systemd`.  
 
-h3-cli provides built-in support for `systemd`.  To register your Runner with `systemd`, 
+**h3-cli provides built-in support for `systemd`.**  To register your Runner with `systemd`, 
 use the `h3 start-runner-service` command, example below.  Note the command will attempt 
-to use `sudo` for running the necessary `systemd` commands. 
+to use `sudo` for running the necessary `systemd`/`systemctl` commands. 
 
 ```shell
 h3 start-runner-service my-nodezero-runner /tmp/my-nodezero-runner.log
 ```
 
-> If your system uses a different boot service other than `systemd`, contact us for assistance with setting up your NodeZero Runner service. 
+> If your system uses a different boot service than `systemd`, contact us for assistance with setting up your NodeZero Runner service. 
 
-If all goes well, your NodeZero Runner is now registered as a service with `systemd` and will automatically 
-start up at boot time.  `systemd` will also automatically restart the Runner if it fails for any reason.
+If all goes well, your NodeZero Runner is now registered as a service with `systemd`.  This means the Runner will...
+
+* automatically start up at boot time
+* automatically be restarted if it fails for any reason
 
 The Runner service will be registered with `systemd` under the name `nodezero-runner-{runner-name}`.  For example the command above 
 will register the service as `nodezero-runner-my-nodezero-runner`.

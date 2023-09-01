@@ -383,12 +383,24 @@ function cmd_stop_agent {
             # TODO: check if sudo systemctl will work ?
             echo sudo systemctl stop 'nodezero-runner*'
             sudo systemctl stop 'nodezero-runner*'
+            # rc=$?
+            # if [ $rc -eq 0 ]; then 
+            #     # TODO: glob doesn't work for disable.  
+            #     # TODO: maybe just require the runner name? 
+            #     # echo sudo systemctl disable 'nodezero-runner*'
+            #     # sudo systemctl disable 'nodezero-runner*'
+            # fi
         fi
     else 
         if is_systemd_running; then 
             service_name="nodezero-runner-$runner_name"
             echo sudo systemctl stop "$service_name"
             sudo systemctl stop "$service_name"
+            rc=$?
+            if [ $rc -eq 0 ]; then 
+                echo sudo systemctl disable "$service_name"
+                sudo systemctl disable "$service_name"
+            fi
         fi
     fi
     pkill_agent "$@"

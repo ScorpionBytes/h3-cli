@@ -57,6 +57,12 @@ fi
 # check if systemd is available
 if ! is_systemd_running; then 
     echoerr "ERROR: systemd does not appear to be running on this system."
+    echoerr "       Use the following command to start the NodeZero Runner as a standalone background process: "
+    if [ -z "$2" ]; then 
+        echoerr "       h3 start-runner \"$runner_name\" "
+    else
+        echoerr "       h3 start-runner \"$runner_name\" \"$log_file\" "
+    fi
     exit 1
 fi
  

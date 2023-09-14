@@ -136,7 +136,7 @@ tail -f /tmp/my-nodezero-runner.log
 * **Runs as:** The Runner process runs as the user that invoked `h3 start-runner`.
 * **Background process:** The Runner process is disconnected from the shell session and runs in the background. It continues to run after the shell session is closed.
 * **System reboot:** The Runner will NOT (by default) restart itself after a system reboot. To enable this, see [Auto-start Runner at system startup](#auto-start-runner-at-system-startup).
-* **Stop Runner:** To terminate the Runner process, use `h3 stop-runner`.
+* **Stop Runner:** To terminate the Runner process, use `h3 stop-runner {name}`.
 * **Delete Runner:** To delete a Runner, use `h3 delete-runner {name}`.
     * If a deleted Runner is still running, it will be recreated upon the next heartbeat.
 * **Unique Runner names:** Runner names should be treated as unique identifiers. Avoid re-using the same name for different Runners in your account.

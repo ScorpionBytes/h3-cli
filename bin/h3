@@ -116,6 +116,20 @@ h3 disable-schedule {schedule-name} # Disable the given schedule.
 h3 utc                              # Prints current UTC time. Scheduled action cron-expressions are specified in UTC time.
 
 
+----------------------
+Encrypted Credentials:
+
+h3 create-encrypted-credential {input} 
+                                    # Create an encrypted credential with the given {input}. 
+                                    # Encrypted credentials are registered with H3, but are stored locally on this machine 
+                                    # under the ~/.h3 directory. They are used in combination with a NodeZero Runner 
+                                    # to auto-inject credentials into a scheduled pentest.
+h3 inject-encrypted-credential {uuid} {op_id} 
+                                    # Inject the encrypted credential with the given {uuid} into the given {op_id}.
+                                    # This command is invoked by the NodeZero Runner for scheduled pentests that 
+                                    # are configured with auto-injected credentials.
+
+
 -------------------------
 Managing h3-cli profiles:
 
@@ -663,6 +677,12 @@ elif [ "$cmd" = "gql-describe" ]; then
     rc=$?
     if [ $rc -eq 0 ]; then cat <<<$res | jq -rf $H3_CLI_HOME/filters/to_struct.jq
     else echo "$res"; fi
+
+elif [ "$cmd" = "create-encrypted-credential" ]; then
+    h3-create-encrypted-credential "$@"
+
+elif [ "$cmd" = "inject-encrypted-credential" ]; then
+    h3-inject-encrypted-credential "$@"
 
 else 
     echoerr "ERROR: unrecognized command: \"$cmd\".  Run \"h3 help\" for usage info."

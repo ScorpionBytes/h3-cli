@@ -96,26 +96,26 @@ If everything's installed correctly, you should see the h3-cli help text.
 We release new features, bug fixes, and other updates for the h3-cli every month.  Upgrade your installation using
 one of the methods below.
 
-#### Via the `h3 upgrade` command 
+#### Option 1: Via the `h3 upgrade` command 
 
 As of June, 2023, you can use the `h3 upgrade` command to upgrade to the latest version of h3-cli.
 
 If you get an `ERROR: unrecognized command: "upgrade"`, then you are on a previous version of h3-cli that does not 
 support the upgrade command.  Use one of the methods below to upgrade h3-cli.
 
-#### Via easy_install.sh
+#### Option 2: Via easy_install.sh
 
-Run this command from h3-cli's parent directory:
+Run this command from h3-cli's parent directory (ie. the directory that contains the `h3-cli/` directory):
 
 ```shell
 curl https://raw.githubusercontent.com/horizon3ai/h3-cli/public/easy_install.sh | bash 
 ```
 
-#### Via git
+#### Option 3: Via git
 
 If you used `git clone` to install the repo, then simply run `git pull` to install the latest version.
 
-#### Via zip download
+#### Option 4: Via zip download
 
 If you downloaded the repo as a zip file, then re-download the zip file and unzip it to the same location (in other words replace
 your existing h3-cli installation with the new zip).

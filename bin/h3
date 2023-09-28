@@ -123,12 +123,15 @@ h3 create-encrypted-credential {input}
                                     # Create an encrypted credential with the given {input}. 
                                     # Encrypted credentials are registered with H3, but are stored locally on this machine 
                                     # under the ~/.h3 directory. They are used in combination with a NodeZero Runner 
-                                    # to auto-inject credentials into a scheduled pentest.
+                                    # to auto-inject credentials into a scheduled pentest. See docs for examples.
 h3 inject-encrypted-credential {uuid} {op_id} 
                                     # Inject the encrypted credential with the given {uuid} into the given {op_id}.
                                     # This command is invoked by the NodeZero Runner for scheduled pentests that 
                                     # are configured with auto-injected credentials.
-
+h3 encrypted-credentials            # Lists all encrypted credentials in the account.
+h3 delete-encrypted-credential {uuid} 
+                                    # Delete the encrypted credential with the given {uuid}. This will send a command to 
+                                    # the NodeZero Runner to delete the credential from the machine.
 
 -------------------------
 Managing h3-cli profiles:
@@ -683,6 +686,18 @@ elif [ "$cmd" = "create-encrypted-credential" ]; then
 
 elif [ "$cmd" = "inject-encrypted-credential" ]; then
     h3-inject-encrypted-credential "$@"
+
+elif [ "$cmd" = "delete-encrypted-credential" ]; then
+    h3-delete-encrypted-credential "$@"
+
+elif [ "$cmd" = "delete-encrypted-credential-secret" ]; then
+    h3-delete-encrypted-credential-secret "$@"
+
+elif [ "$cmd" = "encrypted-credentials" ]; then
+    res=`h3-gql encrypted_credentials`
+    rc=$?
+    if [ $rc -eq 0 ]; then cat <<<$res | jq '.data.encrypted_credentials[]'
+    else echo "$res"; fi
 
 else 
     echoerr "ERROR: unrecognized command: \"$cmd\".  Run \"h3 help\" for usage info."

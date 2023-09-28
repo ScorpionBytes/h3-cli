@@ -103,7 +103,7 @@ As of June, 2023, you can use the `h3 upgrade` command to upgrade to the latest 
 If you get an `ERROR: unrecognized command: "upgrade"`, then you are on a previous version of h3-cli that does not 
 support the upgrade command.  Use one of the methods below to upgrade h3-cli.
 
-#### Option 2: Via easy_install.sh
+#### Option 2: Via `easy_install.sh`
 
 Run this command from h3-cli's parent directory (ie. the directory that contains the `h3-cli/` directory):
 

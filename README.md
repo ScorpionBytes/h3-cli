@@ -2,7 +2,7 @@
 ## h3-cli: CLI tool for the Horizon3.ai API
 
 h3-cli is a convenient CLI (command-line interface) for accessing the 
-Horizon3.ai API.  The Horizon3.ai API provides programmatic access to a subset 
+Horizon3.ai API. The Horizon3.ai API provides programmatic access to a subset 
 of functionality available through the Horizon3.ai Portal.  At a high level, 
 the API allows you to:
 
@@ -105,7 +105,7 @@ support the upgrade command.  Use one of the methods below to upgrade h3-cli.
 
 #### Option 2: Via `easy_install.sh`
 
-Run this command from h3-cli's parent directory (ie. the directory that contains the `h3-cli/` directory):
+Run this command from h3-cli's parent directory (i.e. the directory that contains the `h3-cli/` directory):
 
 ```shell
 curl https://raw.githubusercontent.com/horizon3ai/h3-cli/public/easy_install.sh | bash 
@@ -453,7 +453,7 @@ You should see the raw JSON response from the GraphQL server.  You can pretty-pr
 h3 gql ./my_session.graphql | jq .
 ```
 
-**Important!** You must specify the path to the graphql file (full or relative, ie. `./my_session.graphql` instead of just `my_session.graphql`),
+**Important!** You must specify the path to the graphql file (full or relative, e.g. `./my_session.graphql` instead of just `my_session.graphql`),
 otherwise you risk colliding with graphql files that h3-cli uses internally.
 
 

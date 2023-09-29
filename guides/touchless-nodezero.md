@@ -132,7 +132,7 @@ You can now assign pentests to your NodeZero Runner from the Portal and the Runn
 
 * **Runs as:** The Runner process runs as the user that invoked `h3 start-runner`.
 * **Background process:** The Runner process is disconnected from the shell session and runs in the background. It continues to run after the shell session is closed.
-* **System reboot:** To enable auto-restart of the Runner on system reboot, see [Auto-start Runner at system startup](#auto-start-runner-at-system-startup).
+* **Auto-Restart:** To enable auto-restart of the Runner on system reboot, see [Auto-start Runner at system startup](#auto-start-runner-at-system-startup).
 * **Runner Log**: To view the Runner log, use `h3 tail-runner {name}`
 * **Stop Runner:** To terminate the Runner process, use `h3 stop-runner {name}`.
 * **Delete Runner:** To delete a Runner, use `h3 delete-runner {name}`.
@@ -166,7 +166,7 @@ h3 tail-runner {runner_name}
 
 ### View Runner command errors
 
-Use the following to list out the last 5 comands executed by the Runner.  The output includes the exit status and output from the command:
+Use the following to list out the last 5 commands executed by the Runner.  The output includes the exit status and output from the command:
 
 ```shell
 h3 runner-commands {runner_name}
@@ -175,7 +175,21 @@ h3 runner-commands {runner_name}
 
 ### Docker permission errors
 
+Example:
+```shell
+[#] Checking Docker functionality by running the hello-world test container:
+[+] PASSED: Docker version installed meets the minimum required version 20.10.
+[!] FAILED: Failed to validate Docker. Verify this account has permissions to run Docker and retry.
+```
+
 If your Docker Host requires `sudo` to run `docker` commands, then you may need to start the Runner using `sudo` as well.
+
+Alternatively, you try adding the user that invokes `h3 start-runner` to the `docker` group, for example (using `ubuntu` user):
+```shell
+sudo usermod -aG docker ubuntu
+sudo systemctl restart docker
+```
+(Note: Make sure to log out and back in after changing groups for the actively logged on user)
 
 
 ### Retry

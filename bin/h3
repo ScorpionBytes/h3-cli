@@ -116,21 +116,21 @@ h3 disable-schedule {schedule-name} # Disable the given schedule.
 h3 utc                              # Prints current UTC time. Scheduled action cron-expressions are specified in UTC time.
 
 
-----------------------
-Encrypted Credentials:
+--------------------------
+Auto-Injected Credentials:
 
-h3 create-encrypted-credential {input} 
-                                    # Create an encrypted credential with the given {input}. 
-                                    # Encrypted credentials are registered with H3, but are stored locally on this machine 
+h3 create-auto-injected-credential {input} 
+                                    # Create an auto-injected credential with the given {input}. 
+                                    # Auto-injected credentials are registered with H3, but are stored locally on this machine 
                                     # under the ~/.h3 directory. They are used in combination with a NodeZero Runner 
                                     # to auto-inject credentials into a scheduled pentest. See docs for examples.
-h3 inject-encrypted-credential {uuid} {op_id} 
-                                    # Inject the encrypted credential with the given {uuid} into the given {op_id}.
+h3 inject-auto-injected-credential {uuid} {op_id} 
+                                    # Inject the auto-injected credential with the given {uuid} into the given {op_id}.
                                     # This command is invoked by the NodeZero Runner for scheduled pentests that 
                                     # are configured with auto-injected credentials.
-h3 encrypted-credentials            # Lists all encrypted credentials in the account.
-h3 delete-encrypted-credential {uuid} 
-                                    # Delete the encrypted credential with the given {uuid}. This will send a command to 
+h3 auto-injected-credentials        # Lists all auto-injected credentials in the account.
+h3 delete-auto-injected-credential {uuid} 
+                                    # Delete the auto-injected credential with the given {uuid}. This will send a command to 
                                     # the NodeZero Runner to delete the credential from the machine.
 
 -------------------------
@@ -681,22 +681,22 @@ elif [ "$cmd" = "gql-describe" ]; then
     if [ $rc -eq 0 ]; then cat <<<$res | jq -rf $H3_CLI_HOME/filters/to_struct.jq
     else echo "$res"; fi
 
-elif [ "$cmd" = "create-encrypted-credential" ]; then
-    h3-create-encrypted-credential "$@"
+elif [ "$cmd" = "create-auto-injected-credential" ]; then
+    h3-create-auto-injected-credential "$@"
 
-elif [ "$cmd" = "inject-encrypted-credential" ]; then
-    h3-inject-encrypted-credential "$@"
+elif [ "$cmd" = "inject-auto-injected-credential" ]; then
+    h3-inject-auto-injected-credential "$@"
 
-elif [ "$cmd" = "delete-encrypted-credential" ]; then
-    h3-delete-encrypted-credential "$@"
+elif [ "$cmd" = "delete-auto-injected-credential" ]; then
+    h3-delete-auto-injected-credential "$@"
 
-elif [ "$cmd" = "delete-encrypted-credential-secret" ]; then
-    h3-delete-encrypted-credential-secret "$@"
+elif [ "$cmd" = "delete-auto-injected-credential-secret" ]; then
+    h3-delete-auto-injected-credential-secret "$@"
 
-elif [ "$cmd" = "encrypted-credentials" ]; then
-    res=`h3-gql encrypted_credentials`
+elif [ "$cmd" = "auto-injected-credentials" ]; then
+    res=`h3-gql auto_injected_credentials`
     rc=$?
-    if [ $rc -eq 0 ]; then cat <<<$res | jq '.data.encrypted_credentials[]'
+    if [ $rc -eq 0 ]; then cat <<<$res | jq '.data.auto_injected_credentials[]'
     else echo "$res"; fi
 
 else 

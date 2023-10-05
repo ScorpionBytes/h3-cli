@@ -13,12 +13,14 @@ they will be auto-injected when the pentest starts.
 This is particularly useful for running [Password Audit](https://docs.horizon3.ai/getting_started/ad_password_audit/) pentests 
 on an automated schedule, as they require a credential to be injected.
 
+> This support was added in h3-cli version `2023-10-13: October, 2023`.  To upgrade your existing h3-cli installation, see [here](../readme.md#upgrading-h3-cli).
+
 
 ## How it works
 
 At a high level, the steps for configuring an auto-injected credental are:
 
-1. Install h3-cli and spin up a [NodeZero Runner](https://docs.horizon3.ai/reference/api/cli/guides/touchless-nodezero/) on your system (the Runner is what auto-injects the credential).
+1. Install h3-cli and spin up a [NodeZero Runner](touchless-nodezero.md) on your system (the Runner is what auto-injects the credential).
 2. Use h3-cli to create an auto-injected credential.
 3. Add the auto-injected credential to your pentest configuration/template.
 
@@ -26,7 +28,7 @@ That's all.  The credential will be auto-injected by the Runner when the pentest
 
 ### Step 1: Install h3-cli and spin up a NodeZero Runner
 
-Installing h3-cli and spinning up a NodeZero Runner can be done with a single operation. See [here](https://docs.horizon3.ai/reference/api/cli/guides/touchless-nodezero/#install-option-1-the-easy-way-recommended) 
+Installing h3-cli and spinning up a NodeZero Runner can be done with a single operation. See [here](touchless-nodezero.md#install-option-1-the-easy-way-recommended) 
 for instructions.
 
 ### Step 2: Create an auto-injected credential

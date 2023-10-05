@@ -140,7 +140,7 @@ You can now assign pentests to your NodeZero Runner from the Portal and the Runn
 * **Unique Runner names:** Runner names should be treated as unique identifiers. Avoid re-using the same name for different Runners in your account.
 * **Rename Runner:** You can NOT rename an existing Runner; however you can stop (and optionally delete) a Runner, then start a new Runner with a different name.
     * ❗ **NOTE:** if you saved the old Runner name to an op template, the template will need to be updated to use the new Runner name.
-* **Auto-Injecting Credentials:** Runners can also be used to [auto-inject credentials](https://docs.horizon3.ai/reference/api/cli/guides/auto-inject-creds/) into a pentest. 
+* **Auto-Injecting Credentials:** Runners can also be used to [auto-inject credentials](auto-inject-creds.md) into a pentest. 
 
 ## Troubleshooting
 

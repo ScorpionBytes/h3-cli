@@ -39,10 +39,11 @@ Use the h3-cli command `h3 create-auto-injected-credential` to create an auto-in
 h3 create-auto-injected-credential '{"key_type":"cleartext", "user":"MYDOMAIN\myuser", "cleartext":"mypassword"}'
 ```
 
-> Note: if you see errors like `h3 command not found`, try adding the `h3-cli/bin` directory to your `PATH`. For example (swap `/path/to` with the actual path on your system):
-> ```shell 
-> export PATH="/path/to/h3-cli/bin:$PATH"     
-> ```
+You can also omit the JSON input from the command, in which case you'll be prompted for it. This would prevent any sensitive data
+in the input being recorded in your bash history.
+
+> ❗ If you see errors like `h3: command not found`, try adding the `h3-cli/bin` directory to your `PATH`, 
+> for example: `export PATH="/path/to/h3-cli/bin:$PATH"` (swap `/path/to` with the actual path on your system).
 
 There are several types of credentials you can create. Each type requires different parameters. Some examples are:
 
@@ -66,10 +67,10 @@ There are a number of security considerations to be aware of when using auto-inj
   The credential's existence is registered with H3; however H3 does NOT store the credential's secret (i.e. the cleartext password, hash, or aws key) on its systems,
   not even in encrypted form. The encrypted secret is stored on the local filesystem 
   under the `~/.h3` directory (same location as the h3-cli API key).
-* **Encrypted:** Auto-injected credentials are encrypted using an AES key that H3 keeps secure on its backend systems.
-  The AES key never leaves H3's backend systems and is never exposed to the user. The encryption is performed on the backend
-  under `h3 create-auto-injected-credential`, and the backend API returns the encrypted secret to h3-cli, which then writes it to the local filesystem.
-* **Unique Keys:** Each auto-injected credential has its own unique AES key.  AES keys are never shared between credentials.
+* **Encrypted:** Auto-injected credentials are encrypted using an AES-256 key that H3 creates and secures on its backend systems.
+* **Unique keys:** Each auto-injected credential has its own unique AES-256 key. 
+* **Re-encrypting a credential:** You can re-encrypt a credential by re-invoking `h3 create-auto-injected-credential`. A new AES-256 key is generated each time 
+  the command is executed.
 
 These security measures were taken to best ensure the security of your auto-injected credentials - even in the 
 event that your system or H3 systems are compromised.  
@@ -96,14 +97,20 @@ Some important notes to be aware of:
 
 * **The Runner must be active in order to auto-inject credentials.** If the Runner is not active, the credentials will not be injected.
 * **The Runner that auto-injects credentials does not have to be the same Runner that launches NodeZero.**
-Any Runner can auto-inject credentials into any pentest. For example, a Runner can auto-inject credentials into an external pentest, 
-even though external pentests are not launched by Runners (external pentests are launched automatically in the H3 cloud). This independence 
-between (1) launching NodeZero, and (2) auto-injecting credentials, gives you some flexibility in how you manage your Runners and credentials. 
+  Any Runner can auto-inject credentials into any pentest. For example, a Runner can auto-inject credentials into an external pentest, 
+  even though external pentests are not launched by Runners (external pentests are launched automatically in the H3 cloud). 
+  
+  This independence between (1) launching NodeZero, and (2) auto-injecting credentials, gives you some flexibility in how you manage your Runners and credentials. 
 * **Multiple auto-injected credentials** can be added to the same pentest configuration. Similarly, the same auto-injected credential 
 can be added to multiple pentest configurations.
 * **You can store multiple auto-injected credentials across multiple Runners in your environment.** H3 keeps track of which Runners have access to which 
 credentials, in order to notify the correct Runner to auto-inject the credential when the pentest starts.
+* ❗ **Do NOT store the same auto-injected credential on multiple Runners.** A new AES-256 key is created each time `h3 create-auto-injected-credential` is
+  invoked.  Once you create the same auto-injected credential on a second Runner, the encrypted secret stored on the first Runner will no longer be valid
+  and will fail to be decrypted and injected.
 
+  > An auto-injected credential is "the same" as another if all non-secret input fields are identical (key_type, user, ip, aws_access_key_id)
+    
 
 
 ## Listing and deleting auto-injected credentials

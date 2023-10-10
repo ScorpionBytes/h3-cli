@@ -212,3 +212,9 @@ function trim_quotes {
     s=$1
     sed -e "s/^'//" -e "s/'$//" <<<"$s"
 }
+
+# returns the input string with any chars that aren't file-path-safe replaced with "-"
+function slugify {
+    s=$1
+    sed -E 's/[^a-zA-Z0-9-]+/-/g' <<<"$s"
+}

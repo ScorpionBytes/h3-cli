@@ -433,7 +433,8 @@ function cmd_start_agent {
         return 1
     fi
     if [ -z "$log_file" ]; then
-        log_file="$H3_CLI_LOGGING_DIR/$agent_name.log"
+        agent_name_slug=`slugify "$agent_name"`
+        log_file="$H3_CLI_LOGGING_DIR/$agent_name_slug.log"
     fi
     pkill_agent "$agent_name"
     # echoerr "Starting NodeZero Runner via: nohup h3-start-agent \"$agent_name\" < /dev/null >> \"$log_file\" 2>&1 &"

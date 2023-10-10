@@ -50,7 +50,8 @@ fi
 
 log_file=$2
 if [ -z "$log_file" ]; then
-    log_file="$H3_CLI_LOGGING_DIR/$runner_name.log"
+    runner_name_slug=`slugify "$runner_name"`
+    log_file="$H3_CLI_LOGGING_DIR/$runner_name_slug.log"
 fi
 
 # x.

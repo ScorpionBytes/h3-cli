@@ -257,10 +257,12 @@ The above command will download the zip file to `pentest-reports-{op_id}.zip` in
 
 ## Use cases
 
-* [**Automated NodeZero deployment.**](guides/touchless-nodezero.md) Learn how to deploy NodeZero on your Docker Host automatically,
-without having to manually copy+paste the NodeZero Launch Script, using h3-cli.
+* [**Automated NodeZero deployment using a NodeZero Runner.**](guides/touchless-nodezero.md) Learn how to use a NodeZero Runner 
+to deploy NodeZero on your Docker Host automatically, without having to manually copy+paste the NodeZero Launch Script.
 * [**Automated scheduling.**](guides/recurring-pentests.md) Learn how to run pentests automatically on a regular schedule, 
-for example once a week or once a month, using h3-cli.
+for example once a week or once a month.
+* [**Auto-injected credentials.**](guides/auto-inject-creds.md) Learn how to automatically inject credentials into a 
+regularly scheduled pentest using a NodeZero Runner. 
 * [**Monitoring pentests.**](guides/monitor-pentests.md) Learn how to monitor pentests using h3-cli.
 * [**Paginating results.**](guides/paginate-results.md) Learn how to paginate through large result sets using h3-cli.
 * [**JSON Parsing using `jq`.**](guides/json-parsing-with-jq.md) Learn how to leverage the power of `jq` to parse JSON responses 

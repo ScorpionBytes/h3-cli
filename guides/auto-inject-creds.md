@@ -13,8 +13,6 @@ they will be auto-injected when the pentest starts.
 This is particularly useful for running [Password Audit](https://docs.horizon3.ai/getting_started/ad_password_audit/) pentests 
 on an automated schedule, as they require a credential to be injected.
 
-> This support was added in h3-cli version `2023-10-13: October, 2023`.  To upgrade your existing h3-cli installation, see [here](../readme.md#upgrading-h3-cli).
-
 
 ## How it works
 
@@ -36,24 +34,26 @@ for instructions.
 Use the h3-cli command `h3 create-auto-injected-credential` to create an auto-injected credential. For example:
 
 ```shell
-h3 create-auto-injected-credential '{"key_type":"cleartext", "user":"MYDOMAIN\myuser", "cleartext":"mypassword"}'
+$ h3 create-auto-injected-credential 
+Please provide JSON input on a single line:
+{"key_type":"cleartext", "user":"MYDOMAIN\myuser", "cleartext":"mypassword"}
 ```
 
-You can also omit the JSON input from the command, in which case you'll be prompted for it. This would prevent any sensitive data
-in the input being recorded in your bash history.
-
 > ❗ If you see errors like `h3: command not found`, try adding the `h3-cli/bin` directory to your `PATH`, 
-> for example: `export PATH="/path/to/h3-cli/bin:$PATH"` (swap `/path/to` with the actual path on your system).
+> for example: `export PATH="/path/to/h3-cli/bin:$PATH"` (replace `/path/to` with the actual path on your system).
+
+You can also pass the JSON input as a command-line parameter; however be aware **this could be less secure**, as the full command,
+including the credential parameter, will be recorded in your bash history. 
 
 There are several types of credentials you can create. Each type requires different parameters. Some examples are:
 
 ```shell
-h3 create-auto-injected-credential '{"key_type":"cleartext", "user":"MYDOMAIN\myuser", "cleartext":"mypassword"}'
-h3 create-auto-injected-credential '{"key_type":"cleartext", "user":"myuser", "cleartext":"mypassword", "ip":"192.168.1.2"}'
-h3 create-auto-injected-credential '{"key_type":"ntlm_hash", "user":"myuser", "hash":"myhash"}'
-h3 create-auto-injected-credential '{"key_type":"ntlm_hash", "user":"myuser", "hash":"myhash", "ip":"192.168.1.3"}'
-h3 create-auto-injected-credential '{"key_type":"aws", "aws_access_key_id":"AK123456789ABCDEFGHI", "aws_secret_access_key":"DSAfR...BOl0c"}'
-h3 create-auto-injected-credential '{"key_type":"aws", "aws_access_key_id":"AK123456789ABCDEFGHI", "aws_secret_access_key":"DSAfR...BOl0c", "aws_session_token":"IQoJb3JpZ2lu...BUTWASw="}'
+{"key_type":"cleartext", "user":"MYDOMAIN\myuser", "cleartext":"mypassword"}
+{"key_type":"cleartext", "user":"myuser", "cleartext":"mypassword", "ip":"192.168.1.2"}
+{"key_type":"ntlm_hash", "user":"myuser", "hash":"myhash"}
+{"key_type":"ntlm_hash", "user":"myuser", "hash":"myhash", "ip":"192.168.1.3"}
+{"key_type":"aws", "aws_access_key_id":"AK123456789ABCDEFGHI", "aws_secret_access_key":"DSAfR...BOl0c"}
+{"key_type":"aws", "aws_access_key_id":"AK123456789ABCDEFGHI", "aws_secret_access_key":"DSAfR...BOl0c", "aws_session_token":"IQoJb3JpZ2lu...BUTWASw="}
 ```
 
 See [here](https://docs.horizon3.ai/reference/injecting_credentials/) for more information about injected credentials.
@@ -72,19 +72,7 @@ There are a number of security considerations to be aware of when using auto-inj
 * **Re-encrypting a credential:** You can re-encrypt a credential by re-invoking `h3 create-auto-injected-credential`. A new AES-256 key is generated each time 
   the command is executed.
 
-These security measures were taken to best ensure the security of your auto-injected credentials - even in the 
-event that your system or H3 systems are compromised.  
-
-If H3 systems are compromised, the attacker could 
-potentially gain access to the AES key, but they would not have access to the encrypted credential, which is stored
-on your system.  
-
-Similarly, if your system is compromised, the attacker could potentially gain access to the
-encrypted credential and your h3-cli API key, but they would not have access to the AES key needed to decrypt the credential,
-which is stored on H3's systems.  
-
-Both H3 systems *and* your system would have to be compromised simultaneously 
-for an attacker to decrypt your auto-injected credential.
+These security measures were taken to ensure the security of your auto-injected credentials.
 
 
 ### Step 3: Add the auto-injected credential to your pentest configuration
@@ -127,6 +115,6 @@ Use the following command to delete an auto-injected credential:
 h3 delete-auto-injected-credential {uuid}
 ```
 
-This will delete the credential's registration on the backend, and also notify the Runner to delete the encrypted file stored 
-locally on the Runner's machine.
+This will delete the credential's registration on the backend, remove the credential from any pentest templates it has
+been added to, and also notify the Runner to delete the encrypted file stored locally on the Runner's machine.
 

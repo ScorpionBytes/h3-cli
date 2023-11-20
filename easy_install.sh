@@ -15,9 +15,6 @@
 # If a {runner-name} is provided, the script starts a NodeZero Runner with the given name.
 #
 
-if [ -z "$H3_CLI_GIT_CLONE_URL" ]; then 
-    H3_CLI_GIT_CLONE_URL=https://github.com/horizon3ai/h3-cli.git
-fi
 
 function echoerr { 
     echo "[`date`] $@" 1>&2;   
@@ -48,7 +45,7 @@ function via_git_clone {
         return 1
     fi
     echoerr "INFO: Downloading via git "
-    git clone $H3_CLI_GIT_CLONE_URL
+    git clone https://github.com/horizon3ai/h3-cli.git
     rc=$?
     if [ $rc -ne 0 ]; then 
         echoerr "ERROR: git clone failed"

@@ -541,6 +541,9 @@ elif [ "$cmd" = "delete-profile" ]; then
 elif [ "$cmd" = "gql" ]; then
     h3-gql $*
 
+elif [ "$cmd" = "gql-resolve-fragments" ]; then
+    h3-gql-resolve-fragments "$@"
+
 elif [ "$cmd" = "pentests" ]; then
     cmd_pentests $*
 

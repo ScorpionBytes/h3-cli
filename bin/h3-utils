@@ -74,7 +74,12 @@ function ensure_H3_CLI_LOGGING_DIR {
 
 function ensure_H3_CLI_HOME {
     if [ -z "$H3_CLI_HOME" ]; then
-        H3_CLI_HOME=`dirname $(dirname $(which h3))`
+        d=`dirname $(which h3)`
+        if [ "$d" = "." ]; then 
+            H3_CLI_HOME=".."
+        else 
+            H3_CLI_HOME=`dirname "$d"`
+        fi
         if [ -z "$H3_CLI_HOME" ]; then
             echoerr "H3_CLI_HOME environment variable required.  Must be set to the full path of the h3-cli directory."
             exit 1
@@ -171,6 +176,15 @@ function was_launched_by_systemd {
         return 0
     else
         return 1
+    fi
+}
+
+function runner_services {
+    if is_systemd_running; then 
+        echo systemctl status 'nodezero-runner*'
+        systemctl status 'nodezero-runner*'
+    else 
+        echoerr "ERROR: systemd does not appear to be running"
     fi
 }
 

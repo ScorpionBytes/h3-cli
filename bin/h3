@@ -90,6 +90,7 @@ h3 start-runner-service {name} [{log-file}]
 h3 hello-runner {name}              # Sends a hello-world command to the Runner with the assigned {name}.
 h3 stop-runner [{name}]             # Stops the Runner process with the given {name} on the local machine.
                                     # If {name} is not provided, then it stops ALL Runner processes on the local machine.
+h3 runner-services                  # Shows all Runner services registered with systemd on the local machine.
 h3 ps-runner                        # Shows all Runner processes on the local machine.
 h3 tail-runner {name}               # Tail the log for the NodeZero Runner on the local machine with the given {name}.
 h3 delete-runner {name}             # Delete the Runner with the given {name}.  This will NOT stop the Runner if it is still running.
@@ -622,6 +623,10 @@ elif [ "$cmd" = "start-runner-service" ]; then
 elif [ "$cmd" = "ps-agent" -o "$cmd" = "ps-runner" ]; then
     source h3-utils
     ps_agent
+
+elif [ "$cmd" = "runner-services" ]; then
+    source h3-utils
+    runner_services
 
 elif [ "$cmd" = "hello-agent" -o "$cmd" = "hello-runner" ]; then
     cmd_hello_agent $*

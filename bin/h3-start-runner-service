@@ -81,6 +81,12 @@ if [ -z "$username" ]; then
     exit 2
 fi
 
+# TODO: set http_proxy, HTTP_PROXY, https_proxy, HTTPS_PROXY env vars if they are set
+#       use EnvironmentFile=$H3_CLI_PROFILES_DIR/runner-{runner-name-slug}.env? instead of Environment?
+#       OR, add H3_CLI_PROXY_URL to their profile.env
+#       OR, add http_proxy env vars to their profile.env  
+#       the latter two options are easier.  less mucking with the systemd service
+
 # x.
 # build the file contents
 service_name="nodezero-runner-$runner_name_slug"

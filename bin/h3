@@ -60,6 +60,7 @@ h3 archive-pentest {op_id}          # Archive the given {op_id}
 h3 unarchive-pentest {op_id}        # Un-archive the given {op_id}
 h3 delete-pentest {op_id}           # Delete the given {op_id}. This action cannot be un-done.
 h3 pentest-reports [{op_id}]        # Downloads pentest-reports-{op_id}.zip for the given {op_id}, or latest-pentest by default.
+h3 weaknesses-stream {op_id}        # Streams all weaknesses from the given {op_id}.
 h3 clients [{search}]               # List of client accounts this user has access to, optionally filtered by {search}.
 h3 users                            # List of users with access to the current client account.
 h3 op-templates [{op-type}]         # Pentest templates for the current client account.  op-type can be either "NodeZero" (default) or "ExternalAttack".
@@ -67,9 +68,14 @@ h3 op-template {uuid}               # Pentest template with the given uuid.
 h3 asset-groups [{search}]          # List of asset groups in the account, optionally filtered by {search}.
 h3 asset-group {uuid}               # The asset group with the given uuid.
 h3 auth [force]                     # Authenticate to the API.
-h3 gql {graphql-file} [{options}]   # Run the GraphQL request in the given {graphql-file}.
-h3 gql-describe {graphql-file} [{options}]   
+h3 gql {graphql-file} [{vars}]      # Run the GraphQL request in the given {graphql-file}.
+h3 gql-describe {graphql-file} [{vars}]   
                                     # Run the GraphQL request and describe the JSON response structure using jq -rf filters/to_struct.jq
+h3 gql-stream {graphql-file} {array-field} [{vars}]
+                                    # Streams the output from the paginated query in {graphql-file}. 
+                                    # Streaming continues until {array-field} within the response is empty. 
+                                    # NOTE: {graphql-file} must define (and use) the parameter: $page_input: PageInput 
+                                    # NOTE: for a CSV, pipe the output to: jq -rsf \$H3_CLI_HOME/filters/to_csv.jq
 h3 checkenv                         # Run the checkenv script to check for NodeZero compatibility.
 h3 version                          # The h3-cli version.
 h3 upgrade                          # Upgrade h3-cli to the latest version.
@@ -542,6 +548,9 @@ elif [ "$cmd" = "delete-profile" ]; then
 elif [ "$cmd" = "gql" ]; then
     h3-gql $*
 
+elif [ "$cmd" = "gql-stream" ]; then
+    h3-gql-stream $*
+
 elif [ "$cmd" = "gql-resolve-fragments" ]; then
     h3-gql-resolve-fragments "$@"
 
@@ -712,6 +721,13 @@ elif [ "$cmd" = "auto-injected-credentials" ]; then
     rc=$?
     if [ $rc -eq 0 ]; then cat <<<$res | jq '.data.auto_injected_credentials[]'
     else echo "$res"; fi
+
+elif [ "$cmd" = "weaknesses-stream" ]; then
+    source h3-env
+    json_params=`build_op_id_args $1`
+    rc=$?
+    if [ $rc -ne 0 ]; then exit $rc; fi
+    h3-gql-stream weaknesses .data.weaknesses_page.weaknesses "$json_params"
 
 else 
     echoerr "ERROR: unrecognized command: \"$cmd\".  Run \"h3 help\" for usage info."

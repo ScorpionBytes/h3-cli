@@ -151,7 +151,7 @@ function ensure_H3_CLI_GQL_PATH {
 
     if [ -z "$H3_CLI_GQL_PATH" ]; then
         H3_CLI_GQL_PATH=$prepend_gql_path
-    else
+    elif [[ "$H3_CLI_GQL_PATH" != *"$prepend_gql_path"* ]]; then
         H3_CLI_GQL_PATH="$prepend_gql_path:$H3_CLI_GQL_PATH"
     fi
 }
@@ -271,5 +271,22 @@ function find_query_file {
     done
     echoerr "ERROR: file not found; searching for $f in H3_CLI_GQL_PATH=$H3_CLI_GQL_PATH"
     exit 1
+}
+
+# NOTE: wrap parameters in "" to avoid inadvertant shell expansion of asterisks '*'
+function combine_json {
+    echo "$*" | jq -s add
+}
+
+
+function build_op_id_args {
+    op_id=$1
+    if [ -z "$op_id" ]; then 
+        echoerr "ERROR: op_id is required"
+        exit 1
+    fi
+    cat <<HERE
+{"op_id":"$op_id"}
+HERE
 }
 

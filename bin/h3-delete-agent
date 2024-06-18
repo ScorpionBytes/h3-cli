@@ -32,3 +32,6 @@ else
     exit $rc
 fi
 
+# Cleanup artifacts (/etc/systemd/system/nodezero-runner-<name>.service and .service.d files)
+runner_proxy_dir="/etc/systemd/system/nodezero-runner-$agent_name.service"
+sudo rm -rf "${runner_proxy_dir}"*

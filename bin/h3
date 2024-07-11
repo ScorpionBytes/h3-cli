@@ -600,7 +600,7 @@ elif [ "$cmd" = "pentest-reports" ]; then
     h3-pentest-reports $*
 
 elif [ "$cmd" = "checkenv" ]; then
-    curl -x "$H3_CLI_PROXY_URL" https://h3ai-web.s3.amazonaws.com/checkenv.sh | bash
+    curl -x "$H3_CLI_PROXY_URL" https://downloads.horizon3ai.com/utilities/checkenv.sh | bash
 
 elif [ "$cmd" = "clients" -o "$cmd" = "accounts" -o "$cmd" = "client-accounts" ]; then
     cmd_client_accounts $*

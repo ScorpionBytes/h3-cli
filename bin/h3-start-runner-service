@@ -94,6 +94,7 @@ After=network.target
 [Service]
 Type=simple
 User=$username
+WorkingDirectory=/home/$username
 Environment="H3_CLI_PROFILE=$H3_CLI_PROFILE"
 ExecStart=$H3_CLI_HOME/bin/h3-start-agent "$runner_name" "$log_file"
 StandardInput=null
@@ -141,11 +142,11 @@ if [ -f ${docker_proxy} ]; then
     no_proxy=`echo "$no_proxy" | sed 's/\"//g'`
 
     # Check if proxy is setup already
-    if [ ! -e ${proxy} ]; then
+    if [ ! -e ${proxy} ] && [ "${proxy}" != "null" ] ; then
 
         # Create service file for nodezero runner
-        sudo mkdir -p $runner_proxy_dir
-        sudo touch $runner_proxy_file
+        sudo -E mkdir -p $runner_proxy_dir
+        sudo -E touch $runner_proxy_file
 
         # Save proxy settings to nodezero runner's service file
         proxy_service='[Service]
@@ -156,7 +157,7 @@ Environment="http_proxy='${proxy}'"
 Environment="https_proxy='${proxy}'"
 Environment="no_proxy='${no_proxy}'"
 '
-        sudo bash -c "echo '${proxy_service}' > ${runner_proxy_file}"
+        sudo -E bash -c "echo '${proxy_service}' > ${runner_proxy_file}"
     fi
     # Proxy has not been setup, do not need to change anything.
 
@@ -175,14 +176,15 @@ if [ $rc -ne 0 ]; then
 fi
 
 # x.
-# stop any existing runners before enalbing and starting the systemd service 
+# stop any existing runners before enabling and starting the systemd service
 # (waited til after we've confirmed above that systemd is accessible)
 pkill_agent "$runner_name"
 
 # x.
 # chmod log_file to avoid 209/STDOUT errors where the started service can't write to an existing log file.
-if [ -f "$log_file" ]; then 
-    sudo -E chmod a+w "$log_file"
+if [ -f "$log_file" ]; then
+    sudo -E chown root:root "$log_file"
+    sudo -E chmod 666 "$log_file"
 fi
 
 # x.

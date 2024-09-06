@@ -94,7 +94,6 @@ After=network.target
 [Service]
 Type=simple
 User=$username
-WorkingDirectory=/home/$username
 Environment="H3_CLI_PROFILE=$H3_CLI_PROFILE"
 ExecStart=$H3_CLI_HOME/bin/h3-start-agent "$runner_name" "$log_file"
 StandardInput=null
@@ -135,14 +134,12 @@ runner_proxy_file="/etc/systemd/system/${service_name}.service.d/http-proxy.conf
 if [ -f ${docker_proxy} ]; then
 
     # Get proxy values from config.json
-    proxy=`cat $docker_proxy | jq '.proxies.default.httpProxy'`
-    proxy=`echo "$proxy" | sed 's/\"//g'`
+    proxy=`cat $docker_proxy | jq -r '.proxies.default.httpProxy'`
 
-    no_proxy=`cat $docker_proxy | jq '.proxies.default.noProxy'`
-    no_proxy=`echo "$no_proxy" | sed 's/\"//g'`
+    no_proxy=`cat $docker_proxy | jq -r '.proxies.default.noProxy'`
 
     # Check if proxy is setup already
-    if [ ! -e ${proxy} ] && [ "${proxy}" != "null" ] ; then
+    if [ ! -e ${proxy} ] && [ "${proxy}" != "null" ] && [ "${no_proxy}" != "null" ]; then
 
         # Create service file for nodezero runner
         sudo -E mkdir -p $runner_proxy_dir
@@ -180,11 +177,10 @@ fi
 # (waited til after we've confirmed above that systemd is accessible)
 pkill_agent "$runner_name"
 
-# x.
-# chmod log_file to avoid 209/STDOUT errors where the started service can't write to an existing log file.
-if [ -f "$log_file" ]; then
-    sudo -E chown root:root "$log_file"
-    sudo -E chmod 666 "$log_file"
+# Move logfile if it exists, we do this after pkill_agent to avoid
+# possibiltiy of an event regenerating the log_file we are moving
+if [ -e "$log_file" ]; then
+    sudo mv  "$log_file" "$log_file.bak.`date +%Y%m%d%H%M%S`"
 fi
 
 # x.

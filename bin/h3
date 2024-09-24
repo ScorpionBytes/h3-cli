@@ -131,11 +131,19 @@ h3 create-auto-injected-credential {input}
                                     # Auto-injected credentials are registered with H3, but are stored locally on this machine 
                                     # under the ~/.h3 directory. They are used in combination with a NodeZero Runner 
                                     # to auto-inject credentials into a scheduled pentest. See docs for examples.
+h3 create-kubernetes-auto-injected-credential {input} {namespace} {runner_name}
+                                    # Create an auto-injected credential with the given {input} in a given Kubernetes Namespace for a given Runner. 
+                                    # Auto-injected credentials are registered with H3, but are stored encrypted in the Kuberntes Namespace.
+                                    # They are used in combination with a NodeZero Runner 
+                                    # to auto-inject credentials into a scheduled pentest. See docs for examples.
 h3 inject-auto-injected-credential {uuid} {op_id} 
                                     # Inject the auto-injected credential with the given {uuid} into the given {op_id}.
                                     # This command is invoked by the NodeZero Runner for scheduled pentests that 
                                     # are configured with auto-injected credentials.
 h3 auto-injected-credentials        # Lists all auto-injected credentials in the account.
+h3 delete-kubernetes-auto-injected-credential {uuid} {namespace}
+                                    # Delete the auto-injected credential with the given {uuid} and Kubernetes Namespace. This will send a command to 
+                                    # the NodeZero Runner to delete the credential from Kubernetes.
 h3 delete-auto-injected-credential {uuid} 
                                     # Delete the auto-injected credential with the given {uuid}. This will send a command to 
                                     # the NodeZero Runner to delete the credential from the machine.
@@ -707,6 +715,9 @@ elif [ "$cmd" = "gql-describe" ]; then
 elif [ "$cmd" = "create-auto-injected-credential" ]; then
     h3-create-auto-injected-credential "$@"
 
+elif [ "$cmd" = "create-kubernetes-auto-injected-credential" ]; then
+    h3-create-kubernetes-auto-injected-credential "$@"
+
 elif [ "$cmd" = "inject-auto-injected-credential" ]; then
     h3-inject-auto-injected-credential "$@"
 
@@ -715,6 +726,9 @@ elif [ "$cmd" = "delete-auto-injected-credential" ]; then
 
 elif [ "$cmd" = "delete-auto-injected-credential-secret" ]; then
     h3-delete-auto-injected-credential-secret "$@"
+
+elif [ "$cmd" = "delete-kubernetes-auto-injected-credential-secret" ]; then
+    h3-delete-kubernetes-auto-injected-credential-secret "$@"
 
 elif [ "$cmd" = "auto-injected-credentials" ]; then
     res=`h3-gql auto_injected_credentials`

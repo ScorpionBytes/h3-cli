@@ -334,7 +334,9 @@ function cmd_env {
     echo "H3_AUTH_URL=$H3_AUTH_URL" 
     echo "H3_GQL_URL=$H3_GQL_URL" 
     # hide this option for now.  users should set the system-level http_proxy env var.
-    # echo "H3_CLI_PROXY_URL=$H3_CLI_PROXY_URL" 
+    if [ -n "$H3_CLI_PROXY_URL" ]; then 
+        echo "H3_CLI_PROXY_URL=$H3_CLI_PROXY_URL" 
+    fi
     echo "H3_CLI_LOGGING_DIR=$H3_CLI_LOGGING_DIR" 
 }
 
@@ -600,7 +602,8 @@ elif [ "$cmd" = "pentest-reports" ]; then
     h3-pentest-reports $*
 
 elif [ "$cmd" = "checkenv" ]; then
-    curl -x "$H3_CLI_PROXY_URL" https://downloads.horizon3ai.com/utilities/checkenv.sh | bash
+    source h3-env
+    run_curl https://downloads.horizon3ai.com/utilities/checkenv.sh | bash
 
 elif [ "$cmd" = "clients" -o "$cmd" = "accounts" -o "$cmd" = "client-accounts" ]; then
     cmd_client_accounts $*

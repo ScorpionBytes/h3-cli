@@ -134,7 +134,7 @@ function download_h3_cli {
 echoerr "INFO: Installing h3-cli ..."
 api_key=$1
 runner_name=$2
-
+h3_env=$3
 
 # 0.
 # check deps
@@ -143,12 +143,12 @@ if ! command -v git &> /dev/null; then
         if ! command -v tar &> /dev/null; then
             echoerr "ERROR: h3-cli requires git, unzip or tar to download."
             exit 1
-        fi 
+        fi
     fi
 fi
 
 
-# 1. 
+# 1.
 # determine H3_CLI_HOME, where h3-cli will be downloaded/upgraded.
 if [ -z "$H3_CLI_HOME" ]; then
     H3_CLI_HOME=`dirname $(dirname $(which h3))`
@@ -161,14 +161,14 @@ mkdir -p "$H3_CLI_HOME"
 
 # 2.
 # download/upgrade h3-cli
-download_h3_cli 
+download_h3_cli
 
 
-# 3. 
+# 3.
 # run bash install.sh
 cd "$H3_CLI_HOME"
 echoerr "INFO: Running h3-cli install.sh in `pwd` ..."
-bash install.sh $api_key
+bash install.sh $api_key $h3_env
 rc=$?
 if [ $rc -ne 0 ]; then 
     echoerr "ERROR: Failed to install h3-cli"

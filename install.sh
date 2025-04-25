@@ -173,7 +173,7 @@ case $h3_env in
         ;;
     "prod")
         H3_AUTH_URL="https://api.horizon3ai.com/v1/auth"
-        H3_GQL_URL="https://api.horizon3ai.com/v1/auth"
+        H3_GQL_URL="https://api.horizon3ai.com/v1/graphql"
         ;;
     "prod_eu")
         H3_AUTH_URL="https://api.horizon3ai.eu/v1/auth"

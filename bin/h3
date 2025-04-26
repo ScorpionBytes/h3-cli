@@ -80,6 +80,9 @@ h3 checkenv                         # Run the checkenv script to check for NodeZ
 h3 version                          # The h3-cli version.
 h3 upgrade                          # Upgrade h3-cli to the latest version.
 h3 env                              # List h3-cli environment configuration.
+h3 gql-def {id}                     # Fetch the GraphQL API schema definition for the given schema element {id}. 
+                                    # {id} can be a type, field, enum, or enum value id, eg. "Query", "Query.pentests_page", "AuthzRole", "AuthzRole.ORG_ADMIN".
+                                    # Note that field and enum value ids are always prefixed with their containing type or enum.
 
 
 -----------------
@@ -742,7 +745,14 @@ elif [ "$cmd" = "weaknesses-stream" ]; then
     h3-gql-stream weaknesses .data.weaknesses_page.weaknesses "$json_params"
 
 else 
-    echoerr "ERROR: unrecognized command: \"$cmd\".  Run \"h3 help\" for usage info."
-    exit 1
+    # check if the command is defined in the bin directory
+    source h3-utils
+    assert_H3_CLI_HOME
+    if [ -f "$H3_CLI_HOME/bin/h3-$cmd" ]; then 
+        eval "$H3_CLI_HOME/bin/h3-$cmd" "$@"   
+    else 
+        echoerr "ERROR: unrecognized command: \"$cmd\".  Run \"h3 help\" for usage info."
+        exit 1
+    fi
 fi
 

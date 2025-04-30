@@ -151,7 +151,10 @@ fi
 # 1.
 # determine H3_CLI_HOME, where h3-cli will be downloaded/upgraded.
 if [ -z "$H3_CLI_HOME" ]; then
-    H3_CLI_HOME=`dirname $(dirname $(which h3))`
+    path_to_h3=`which h3`
+    if [ -n "$path_to_h3" ]; then
+        H3_CLI_HOME=`dirname $(dirname "$path_to_h3")`
+    fi
     if [ -z "$H3_CLI_HOME" ]; then
         H3_CLI_HOME="`pwd`/h3-cli"
     fi
@@ -178,18 +181,8 @@ export PATH="$H3_CLI_HOME/bin:$PATH"
 echoerr "INFO: h3-cli installation complete. h3 version:"
 h3 version
 
-# 4.
-# Restart existing runners (if any)
-service_files=`sudo ls /etc/systemd/system/`
-for file in $service_files; do
-    # Skip service.d file, not a service
-    if [[ $file == "nodezero-runner"*  && $file != *"service.d" ]]; then
-        echolog "INFO: Restarting runner service $file..."
-        sudo systemctl restart $file
-    fi
-done
 
-# 5.
+# 4.
 # start runner (if specified)
 if [ -z "$runner_name" ]; then 
     echolog "DEBUG: runner_name not provided, will not start a NodeZero Runner"

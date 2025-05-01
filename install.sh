@@ -163,14 +163,6 @@ fi
 # determine GQL and AUTH endpoints
 h3_env=$2
 case $h3_env in
-    "develop")
-        H3_AUTH_URL="https://api.develop.h3ai.io/v1/auth"
-        H3_GQL_URL="https://api.develop.h3ai.io/v1/graphql"
-        ;;
-    "staging")
-        H3_AUTH_URL="https://api.stage.h3ai.io/v1/auth"
-        H3_GQL_URL="https://api.stage.h3ai.io/v1/graphql"
-        ;;
     "prod")
         H3_AUTH_URL="https://api.horizon3ai.com/v1/auth"
         H3_GQL_URL="https://api.horizon3ai.com/v1/graphql"
@@ -182,14 +174,6 @@ case $h3_env in
     "fh-prod")
         H3_AUTH_URL="https://api.gov-horizon3ai.com/v1/auth"
         H3_GQL_URL="https://api.gov-horizon3ai.com/v1/graphql"
-        ;;
-    "gov-dev")
-        H3_AUTH_URL="https://api.develop.gov-h3ai.io/v1/auth"
-        H3_GQL_URL="https://api.develop.gov-h3ai.io/v1/graphql"
-        ;;
-    "sandbox")
-        H3_AUTH_URL="sandbox"
-        H3_GQL_URL="http://127.0.0.1:8000/graphql"
         ;;
 esac
 

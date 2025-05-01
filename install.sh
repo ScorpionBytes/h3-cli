@@ -2,7 +2,7 @@
 #
 # install script for h3-cli
 #
-# usage: bash install.sh [{h3-api-key}]
+# usage: bash install.sh [ {h3-api-key} [ {h3-env} ] ]
 #
 # 1. install jq
 # 1b. install yq (currently disabled)
@@ -186,6 +186,10 @@ case $h3_env in
     "gov-dev")
         H3_AUTH_URL="https://api.develop.gov-h3ai.io/v1/auth"
         H3_GQL_URL="https://api.develop.gov-h3ai.io/v1/graphql"
+        ;;
+    "sandbox")
+        H3_AUTH_URL="sandbox"
+        H3_GQL_URL="http://127.0.0.1:8000/graphql"
         ;;
 esac
 

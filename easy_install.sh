@@ -3,7 +3,7 @@
 # deps: git, unzip or tar
 #
 # This script can be downloaded and executed using a single command:
-#   $ curl https://raw.githubusercontent.com/horizon3ai/h3-cli/public/easy_install.sh | bash -s [{api-key}] [{runner-name}]
+#   $ curl https://raw.githubusercontent.com/horizon3ai/h3-cli/public/easy_install.sh | bash -s [ {api-key} [ {runner-name} [ {h3-env} ] ] ]
 #
 # The script downloads h3-cli and runs the install script (install.sh), passing in the {api-key}, if provided.
 #

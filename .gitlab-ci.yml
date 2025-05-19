@@ -1,0 +1,75 @@
+include:
+  - project: 'h3upperbounds/cicd-templates'
+    file:
+      - aws/assume_role.yaml
+
+stages:
+  - stage
+  - production
+
+.merge:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
+
+.deploy:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "public"
+
+# After merging into develop, push a copy of the h3-cli to dev s3 bucket
+stage-deploy:
+  stage: stage
+  image:
+    name: $NXRM_DOCKER_REGISTRY_URL/aws-cli:latest
+    pull_policy: always
+  variables:
+    ASSUME_ROLE_ARN: '$GLAB_NON_PROD_ASSUME_ROLE_ARN'
+    EXTERNAL_ID: '$GLAB_EXTERNAL_ID'
+  script:
+    # Get super secret access roles
+    - !reference [.assume_role_scripts, assume_with_external_id]
+    - aws sts get-caller-identity
+
+    # strip out argo folder
+    - rm -rf argocd
+
+    # wrap up code into .zip
+    - zip -r h3-cli.zip ./*
+
+    # Upload to S3
+    - sha256sum h3-cli.zip > h3-cli.sha256.checksum
+    - aws s3 cp h3-cli.zip s3://downloads-devstage-us-east-1/utilities/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+    - aws s3 cp h3-cli.sha256.checksum s3://downloads-devstage-us-east-1/utilities/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+  tags:
+    - h3internal-k8s-runner
+  rules:
+    - !reference [.merge, rules]
+
+
+# After merging into production, we release
+production-deploy:
+  stage: production
+  image:
+    name: $NXRM_DOCKER_REGISTRY_URL/aws-cli:latest
+    pull_policy: always
+  variables:
+    ASSUME_ROLE_ARN: '$GLAB_PROD_US_ASSUME_ROLE_ARN'
+    EXTERNAL_ID: '$GLAB_EXTERNAL_ID'
+  script:
+    # Get super secret access roles
+    - !reference [.assume_role_scripts, assume_with_external_id]
+    - aws sts get-caller-identity
+
+    # strip out argo folder
+    - rm -rf argocd
+
+    # wrap up code into .zip
+    - zip -r h3-cli.zip ./*
+
+    # Upload to S3
+    - sha256sum h3-cli.zip > h3-cli.sha256.checksum
+    - aws s3 cp h3-cli.zip s3://downloads-prod-us-east-1/utilities/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+    - aws s3 cp h3-cli.sha256.checksum s3://downloads-prod-us-east-1/utilities/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+  tags:
+    - us-c2-k8s-runner
+  rules:
+    - !reference [.deploy, rules]

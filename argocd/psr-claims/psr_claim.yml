@@ -1,0 +1,5 @@
+apiVersion: irsa.h3ai.io/v1alpha1
+kind: GlabPipeline
+metadata:
+  name: example-glabpipeline-claim-full
+spec: {}

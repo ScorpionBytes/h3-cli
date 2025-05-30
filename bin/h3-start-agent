@@ -34,9 +34,31 @@ function read_auto_injected_credential_uuids {
 }
 
 
+function read_ad_account_credential_uuids {
+    if [ -d "$H3_CLI_PROFILES_DIR/ad_agent" ]; then
+        for x in $H3_CLI_PROFILES_DIR/ad_agent/*.h3ec; do 
+            if [ -f "$x" ]; then
+                basename "$x" .h3ec
+            fi
+        done
+    fi
+}
+
+
 # :returns: a json array containing the uuids from read_auto_injected_credential_uuids.
 function build_auto_injected_credential_uuids_param {
     uuids=`read_auto_injected_credential_uuids`
+    if [ -z "$uuids" ]; then 
+        echo '[]'
+    else
+        jq -ncR '[inputs]' <<< "$uuids"
+    fi
+}
+
+
+# :returns: a json array containing the uuids from read_ad_account_credential_uuids.
+function build_ad_account_credential_uuids_param {
+    uuids=`read_ad_account_credential_uuids`
     if [ -z "$uuids" ]; then 
         echo '[]'
     else
@@ -57,9 +79,10 @@ function build_json_params {
     pid=$$
     uid=$UID
     auto_injected_credential_uuids=`build_auto_injected_credential_uuids_param`
+    ad_account_credential_uuids=`build_ad_account_credential_uuids_param`
     ip_addr=`get_ip_address`
     cat <<HERE
-{"input":{"name":"$name","uname":"$uname","log_file":"$log_file","h3_cli_version":"$h3_cli_version","pid":"$pid","uid":"$UID","auto_injected_credential_uuids":$auto_injected_credential_uuids,"ip_addr":"$ip_addr"}}
+{"input":{"name":"$name","uname":"$uname","log_file":"$log_file","h3_cli_version":"$h3_cli_version","pid":"$pid","uid":"$UID","auto_injected_credential_uuids":$auto_injected_credential_uuids,"ip_addr":"$ip_addr","ad_account_credential_uuids":$ad_account_credential_uuids}}
 HERE
 }
 

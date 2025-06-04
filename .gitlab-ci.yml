@@ -134,8 +134,14 @@ push-to-public-branch:
   tags:
     - h3internal-k8s-runner
   script:
+
+    - git branch
+    - git fetch origin main
+    - git fetch origin public-20250328
+
     # Ensure we are on the main branch
     - git checkout main
+    - git pull origin main
 
     # Create new branch to merge into public
     - TIMESTAMP=$(date +%Y%m%d%H%M%S)

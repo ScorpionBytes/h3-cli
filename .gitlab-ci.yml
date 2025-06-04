@@ -129,7 +129,7 @@ push-to-public-branch:
   needs:
     - production-deploy
   image:
-    name: $NXRM_DOCKER_REGISTRY_URL/aws-cli:latest
+    name: alpine/git:v2.49.0
     pull_policy: always
   tags:
     - h3internal-k8s-runner

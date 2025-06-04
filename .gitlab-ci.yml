@@ -9,18 +9,41 @@ stages:
 
 .merge:
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+      when: always
 
-.deploy:
+.deploy-stage:
   rules:
-    - if: $CI_COMMIT_BRANCH == "public"
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: always
 
-# After merging into develop, push a copy of the h3-cli to dev s3 bucket
+.deploy-production:
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^\d{4}\.W\d{4}\.\d+$/
+      when: always
+
+
+stage-merge:
+  stage: stage
+  image:
+    name: $NXRM_DOCKER_REGISTRY_URL/aws-cli:latest
+    pull_policy: always
+  tags:
+    - h3internal-k8s-runner
+  script:
+    - echo "Space holder for possible merge checks"
+  rules:
+    - !reference [.merge, rules]
+
+
+# After merging into main, push a copy of the h3-cli to dev s3 bucket
 stage-deploy:
   stage: stage
   image:
     name: $NXRM_DOCKER_REGISTRY_URL/aws-cli:latest
     pull_policy: always
+  tags:
+    - h3internal-k8s-runner
   variables:
     ASSUME_ROLE_ARN: '$GLAB_NON_PROD_ASSUME_ROLE_ARN'
     EXTERNAL_ID: '$GLAB_EXTERNAL_ID'
@@ -31,26 +54,39 @@ stage-deploy:
 
     # strip out argo folder
     - rm -rf argocd
+    - rm -rf .gitlab-ci.yml
 
     # wrap up code into .zip
     - zip -r h3-cli.zip ./*
 
-    # Upload to S3
+    # Upload easy_install script to S3
+    - sha256sum easy_install.sh > easy_install.sha256.checksum
+    - aws s3 cp easy_install.sh s3://downloads-devstage-us-east-1/utilities/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+    - aws s3 cp easy_install.sha256.checksum s3://downloads-devstage-us-east-1/utilities/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+
+    # Upload h3-cli to S3
     - sha256sum h3-cli.zip > h3-cli.sha256.checksum
     - aws s3 cp h3-cli.zip s3://downloads-devstage-us-east-1/utilities/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
     - aws s3 cp h3-cli.sha256.checksum s3://downloads-devstage-us-east-1/utilities/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
-  tags:
-    - h3internal-k8s-runner
+  after_script:
+    - echo "Clean up"
+
+    # Clean up
+    - rm -rf easy_install.sha256.checksum
+    - rm -rf h3-cli.zip
+    - rm -rf h3-cli.sha256.checksum
   rules:
-    - !reference [.merge, rules]
+    - !reference [.deploy-stage, rules]
 
 
-# After merging into production, we release
+# After merging into main and creating a tag, We want to push a copy of the h3-cli to prod s3 bucket
 production-deploy:
   stage: production
   image:
     name: $NXRM_DOCKER_REGISTRY_URL/aws-cli:latest
     pull_policy: always
+  tags:
+    - us-c2-k8s-runner
   variables:
     ASSUME_ROLE_ARN: '$GLAB_PROD_US_ASSUME_ROLE_ARN'
     EXTERNAL_ID: '$GLAB_EXTERNAL_ID'
@@ -61,15 +97,69 @@ production-deploy:
 
     # strip out argo folder
     - rm -rf argocd
+    - rm -rf .gitlab-ci.yml
 
     # wrap up code into .zip
     - zip -r h3-cli.zip ./*
 
     # Upload to S3
+    - sha256sum easy_install.sh > easy_install.sha256.checksum
+    - aws s3 cp easy_install.sh s3://downloads-prod-us-east-1/utilities/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+    - aws s3 cp easy_install.sha256.checksum s3://downloads-prod-us-east-1/utilities/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+
+    # Upload to S3
     - sha256sum h3-cli.zip > h3-cli.sha256.checksum
     - aws s3 cp h3-cli.zip s3://downloads-prod-us-east-1/utilities/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
     - aws s3 cp h3-cli.sha256.checksum s3://downloads-prod-us-east-1/utilities/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
-  tags:
-    - us-c2-k8s-runner
+  after_script:
+    - echo "Clean up"
+
+    # Clean up
+    - rm -rf easy_install.sha256.checksum
+    - rm -rf h3-cli.zip
+    - rm -rf h3-cli.sha256.checksum
   rules:
-    - !reference [.deploy, rules]
+    - !reference [.deploy-production, rules]
+
+# After merging to main, we want to update the public branch to then get mirrored to github.
+push-to-public-branch:
+  stage: production
+  needs: ["production-deploy"]
+  image:
+    name: $NXRM_DOCKER_REGISTRY_URL/aws-cli:latest
+    pull_policy: always
+  tags:
+    - h3internal-k8s-runner
+  script:
+    # Ensure we are on the main branch
+    - git checkout main
+
+    # Create new branch to merge into public
+    - TIMESTAMP=$(date +%Y%m%d%H%M%S)
+    - BRANCH_NAME="public-$TIMESTAMP"
+    - git checkout -b $BRANCH_NAME
+
+    # Remove CI/CD files and folders
+    - git rm -rf argocd
+    - git rm -rf .gitlab-ci.yml
+    - git commit -m "Release h3-cli $TIMESTAMP"
+
+    # This is to ensure that the public branch only has the latest release without a commit history.
+    # - git checkout public
+    - git checkout public-20250328
+    - git merge --squash $BRANCH_NAME
+    - git commit -m "Release h3-cli $TIMESTAMP"
+
+    # Push to public branch
+    # - git push origin public --force
+    - git push origin public-20250328 --force
+
+  after_script:
+    - echo "Clean up"
+
+    # Remove temporary branch
+    # - git checkout public
+    - git checkout public-20250328
+    - git branch -D $BRANCH_NAME
+  rules:
+    - !reference [.deploy-production, rules]

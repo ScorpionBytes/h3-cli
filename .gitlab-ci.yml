@@ -129,7 +129,6 @@ push-to-public-branch:
   needs:
     - production-deploy
   image:
-    # name: alpine/git:v2.49.0
     name: $NXRM_DOCKER_REGISTRY_URL/gerber:latest
     pull_policy: always
   tags:
@@ -138,10 +137,6 @@ push-to-public-branch:
     # Set up git settings
     - git config --global user.email "ci@example.com"
     - git config --global user.name "GitLab CI"
-
-    - git remote show origin
-
-    # - git remote set-url origin "https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/<namespace>/<repo>.git"
 
     # Fetch branches we are going to work with
     - git fetch origin main
@@ -164,7 +159,8 @@ push-to-public-branch:
     # This is to ensure that the public branch only has the latest release without a commit history.
     # - git checkout public
     - git checkout public-20250328
-    - git merge --squash $BRANCH_NAME
+    - git merge --strategy-option theirs
+    - git merge --squash $BRANCH_NAME --allow-unrelated-histories
     - git commit -m "Release h3-cli $TIMESTAMP"
 
     # Push to public branch

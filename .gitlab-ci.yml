@@ -140,7 +140,7 @@ push-to-public-branch:
 
     # Fetch branches we are going to work with
     - git fetch origin main
-    - git fetch origin public-20250328
+    - git fetch origin public
 
     # Ensure we are on the main branch
     - git checkout main
@@ -157,8 +157,7 @@ push-to-public-branch:
     - git commit -m "Release h3-cli $TIMESTAMP"
 
     # This is to ensure that the public branch only has the latest release without a commit history.
-    # - git checkout public
-    - git checkout public-20250328
+    - git checkout public
     - if [[ !$(git merge --squash $BRANCH_NAME) ]]; then
         echo "Squash merge failed";
         exit 1;
@@ -166,8 +165,7 @@ push-to-public-branch:
     - git commit -m "Release h3-cli $TIMESTAMP"
 
     # Push to public branch
-    # - git push origin public --force
-    - git push origin public-20250328 --force
+    - git push origin public --force
 
   rules:
     - !reference [.deploy-production, rules]

@@ -19,7 +19,7 @@ stages:
 
 .deploy-production:
   rules:
-    - if: $CI_COMMIT_TAG =~ /^\d{4}\.W\d{2}\.\d+$/
+    - if: $CI_COMMIT_TAG =~ /^\d{4}-\d{2}-\d{2}\.\d+$/
       when: always
 
 

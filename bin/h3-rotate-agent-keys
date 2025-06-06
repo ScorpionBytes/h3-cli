@@ -11,7 +11,6 @@ source h3-env
 
 # 1.
 # create key pair with passphrase
-# create key pair with passphrase
 if [ -e "$H3_CLI_PROFILES_DIR/private_key.pem" ]; then
     echoerr "INFO: Removing existing private key"
     rm "$H3_CLI_PROFILES_DIR/private_key.pem"

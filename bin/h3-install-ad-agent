@@ -18,14 +18,11 @@ if [ -z "$ad_agent_uuid" ]; then
     exit 1
 fi
 
-# 2.
-# Get the h3 CLI profiles directory
-h3_cli_profiles_dir="${H3_CLI_PROFILES_DIR:-$HOME/.h3}"
 
-# 3.
+# 2.
 # Call the install_ad_agent mutation to get the install script URL and API key
 # Build GraphQL query input
-json_input="{\"uuid\":\"$ad_agent_uuid\", \"h3_cli_profiles_dir\":\"$h3_cli_profiles_dir\"}"
+json_input="{\"uuid\":\"$ad_agent_uuid\", \"h3_cli_profiles_dir\":\"$H3_CLI_PROFILES_DIR\"}"
 
 echoerr "INFO: Fetching AD agent installation script for agent: $ad_agent_uuid"
 res=$(h3-gql install_ad_agent "$json_input")
@@ -36,7 +33,7 @@ if [ $rc -ne 0 ]; then
     exit $rc
 fi
 
-# 4.
+# 3.
 # Extract the install_script_url and api_key from the response
 install_script_url=$(echo "$res" | jq -r '.data.install_ad_agent.install_script_url')
 api_key=$(echo "$res" | jq -r '.data.install_ad_agent.api_key')
@@ -53,9 +50,9 @@ if [ -z "$api_key" ] || [ "$api_key" = "null" ]; then
     exit 1
 fi
 
-# 5.
+# 4.
 # Create the agent directory if it doesn't exist
-agent_dir="$h3_cli_profiles_dir/ad_agent/$ad_agent_uuid"
+agent_dir="$H3_CLI_PROFILES_DIR/ad_agent/$ad_agent_uuid"
 echoerr "INFO: Creating directory for AD agent: $agent_dir"
 mkdir -p "$agent_dir"
 rc=$?
@@ -64,7 +61,7 @@ if [ $rc -ne 0 ]; then
     exit $rc
 fi
 
-# 6.
+# 5.
 # Change to the agent directory and execute the installation script
 original_dir=$(pwd)
 echoerr "INFO: Changing to directory: $agent_dir"
@@ -75,13 +72,13 @@ if [ $rc -ne 0 ]; then
     exit $rc
 fi
 
-# 7.
+# 6.
 # Download and execute the installation script with the API key
 echoerr "INFO: Installing AD agent with UUID: $ad_agent_uuid"
 run_curl "$install_script_url" | bash -s -- "$api_key"
 install_rc=$?
 
-# 8.
+# 7.
 # Return to the original directory
 cd "$original_dir"
 

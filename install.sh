@@ -162,36 +162,46 @@ fi
 
 # determine GQL and AUTH endpoints
 h3_env=$2
-case $h3_env in
-    "prod")
-        H3_AUTH_URL="https://api.horizon3ai.com/v1/auth"
-        H3_GQL_URL="https://api.horizon3ai.com/v1/graphql"
-        ;;
-    "prod_eu")
-        H3_AUTH_URL="https://api.horizon3ai.eu/v1/auth"
-        H3_GQL_URL="https://api.horizon3ai.eu/v1/graphql"
-        ;;
-    "fh-prod")
-        H3_AUTH_URL="https://api.gov-horizon3ai.com/v1/auth"
-        H3_GQL_URL="https://api.gov-horizon3ai.com/v1/graphql"
-        ;;
-    "us")
-        H3_AUTH_URL="https://api.gateway.horizon3ai.com/v1/auth"
-        H3_GQL_URL="https://api.gateway.horizon3ai.com/v1/graphql"
-        ;;
-    "eu")
-        H3_AUTH_URL="https://api.gateway.horizon3ai.eu/v1/auth"
-        H3_GQL_URL="https://api.gateway.horizon3ai.eu/v1/graphql"
-        ;;
-    "fed-fh")
-        H3_AUTH_URL="https://api.gov-horizon3ai.com/v1/auth"
-        H3_GQL_URL="https://api.gov-horizon3ai.com/v1/graphql"
-        ;;
-    "fed-h3")
-        H3_AUTH_URL=""
-        H3_GQL_URL=""
-        ;;
-esac
+if [ -z "$h3_env" ]; then
+    H3_AUTH_URL=""
+    H3_GQL_URL=""
+elif [[ "$h3_env" == "https://api"* ]]; then
+    # if the env starts with https://api, then assume it's a URL and set the H3_AUTH_URL and H3_GQL_URL accordingly.
+    clean_h3_env="${h3_env%/}"  # remove trailing slash if any
+    H3_AUTH_URL="$clean_h3_env/v1/auth"
+    H3_GQL_URL="$clean_h3_env/v1/graphql"
+else
+    case $h3_env in
+        "prod")
+            H3_AUTH_URL="https://api.horizon3ai.com/v1/auth"
+            H3_GQL_URL="https://api.horizon3ai.com/v1/graphql"
+            ;;
+        "prod_eu")
+            H3_AUTH_URL="https://api.horizon3ai.eu/v1/auth"
+            H3_GQL_URL="https://api.horizon3ai.eu/v1/graphql"
+            ;;
+        "fh-prod")
+            H3_AUTH_URL="https://api.gov-horizon3ai.com/v1/auth"
+            H3_GQL_URL="https://api.gov-horizon3ai.com/v1/graphql"
+            ;;
+        "us")
+            H3_AUTH_URL="https://api.gateway.horizon3ai.com/v1/auth"
+            H3_GQL_URL="https://api.gateway.horizon3ai.com/v1/graphql"
+            ;;
+        "eu")
+            H3_AUTH_URL="https://api.gateway.horizon3ai.eu/v1/auth"
+            H3_GQL_URL="https://api.gateway.horizon3ai.eu/v1/graphql"
+            ;;
+        "fed-fh")
+            H3_AUTH_URL="https://api.gov-horizon3ai.com/v1/auth"
+            H3_GQL_URL="https://api.gov-horizon3ai.com/v1/graphql"
+            ;;
+        "fed-h3")
+            H3_AUTH_URL=""
+            H3_GQL_URL=""
+            ;;
+    esac
+fi
 
 # if H3_CLI_PROFILE is already set, use it, otherwise set to "default".
 if [ -z "$H3_CLI_PROFILE" ]; then

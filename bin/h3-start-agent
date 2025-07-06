@@ -123,7 +123,6 @@ res=`h3-gql register_agent "$json_params"`
 rc=$?
 if [ $rc -ne 0 ]; then
     echoerr "[$agent_name:$$] API request failed: rc=$rc, res=$res"
-    continue
 fi
 
 

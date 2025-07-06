@@ -75,7 +75,7 @@ fi
 # 6.
 # Download and execute the installation script with the API key
 echoerr "INFO: Installing AD agent with UUID: $ad_agent_uuid"
-run_curl "$install_script_url" | bash -s -- "$api_key"
+run_curl "$install_script_url" | bash -s "$api_key"
 install_rc=$?
 
 # 7.

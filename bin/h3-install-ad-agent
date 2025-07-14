@@ -18,7 +18,6 @@ if [ -z "$ad_agent_uuid" ]; then
     exit 1
 fi
 
-
 # 2.
 # Call the install_ad_agent mutation to get the install script URL and API key
 # Build GraphQL query input
@@ -51,36 +50,10 @@ if [ -z "$api_key" ] || [ "$api_key" = "null" ]; then
 fi
 
 # 4.
-# Create the agent directory if it doesn't exist
-agent_dir="$H3_CLI_PROFILES_DIR/ad_agent/$ad_agent_uuid"
-echoerr "INFO: Creating directory for AD agent: $agent_dir"
-mkdir -p "$agent_dir"
-rc=$?
-if [ $rc -ne 0 ]; then
-    echoerr "ERROR: Failed to create directory: $agent_dir"
-    exit $rc
-fi
-
-# 5.
-# Change to the agent directory and execute the installation script
-original_dir=$(pwd)
-echoerr "INFO: Changing to directory: $agent_dir"
-cd "$agent_dir"
-rc=$?
-if [ $rc -ne 0 ]; then
-    echoerr "ERROR: Failed to change to directory: $agent_dir"
-    exit $rc
-fi
-
-# 6.
 # Download and execute the installation script with the API key
 echoerr "INFO: Installing AD agent with UUID: $ad_agent_uuid"
 run_curl "$install_script_url" | bash -s "$api_key"
 install_rc=$?
-
-# 7.
-# Return to the original directory
-cd "$original_dir"
 
 if [ $install_rc -eq 0 ]; then
     echoerr "INFO: AD agent installation completed successfully"

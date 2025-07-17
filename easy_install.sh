@@ -20,7 +20,6 @@
 # 
 #
 
-
 function echoerr {
     echo "[`date`] $@" 1>&2;   
 }
@@ -30,6 +29,20 @@ function echolog {
         echo "[`date`] $@" 1>&2;   
     fi
 }
+
+function is_systemd_running {
+    if ! command -v systemctl &> /dev/null; then
+        return 1
+    fi
+    if ! command -v systemd-notify &> /dev/null; then
+        return 1
+    fi
+    # below returns non-zero if "degraded" (some services did not start)
+    # systemctl is-system-running --quiet
+    systemd-notify --booted
+    return $?
+}
+
 
 # :dep H3_CLI_HOME:
 function via_git_pull {
@@ -175,6 +188,12 @@ if [ ! -e "$config_file" ]; then
 
     # Write h3_download_url to config file
     if [ -n "$h3_download_url" ]; then
+
+        if [ ! -e "$HOME/.h3/" ]; then
+            echoerr "INFO: Creating directory $HOME/.h3/"
+            mkdir -p "$HOME/.h3/"
+        fi
+
         H3_CLI_DOWNLOAD_URL=$h3_download_url
         echo "H3_CLI_DOWNLOAD_URL=$H3_CLI_DOWNLOAD_URL" > "$config_file"
     fi
@@ -245,8 +264,26 @@ export PATH="$H3_CLI_HOME/bin:$PATH"
 echoerr "INFO: h3-cli installation complete. h3 version:"
 h3 version
 
-
 # 4.
+# Restart existing runners using the upgraded CLI (if any)
+if is_systemd_running; then
+    service_files=`sudo ls /etc/systemd/system/`
+    for file in $service_files; do
+        # Skip service.d file, not a service
+        if [[ $file == "nodezero-runner"*  && $file != *"service.d" ]]; then
+
+            # Only restart services that are already running and using the upgraded h3-cli
+            if sudo systemctl status "$file" | grep -q "active" && \
+               sudo cat /etc/systemd/system/"$file" | grep -q "$H3_CLI_HOME"
+            then
+                echoerr "INFO: Restarting runner service $file..."
+                sudo systemctl restart "$file"
+            fi
+        fi
+    done
+fi
+
+# 5.
 # start runner (if specified)
 if [ -z "$runner_name" ]; then 
     echolog "DEBUG: runner_name not provided, will not start a NodeZero Runner"

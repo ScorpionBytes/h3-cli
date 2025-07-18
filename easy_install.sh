@@ -273,7 +273,7 @@ if is_systemd_running; then
         if [[ $file == "nodezero-runner"*  && $file != *"service.d" ]]; then
 
             # Only restart services that are already running and using the upgraded h3-cli
-            if sudo systemctl status "$file" | grep -q "active" && \
+            if sudo systemctl status "$file" | grep -q "active (running)" && \
                sudo cat /etc/systemd/system/"$file" | grep -q "$H3_CLI_HOME"
             then
                 echoerr "INFO: Restarting runner service $file..."

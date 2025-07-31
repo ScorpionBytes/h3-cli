@@ -1,0 +1,12 @@
+apiVersion: irsa.h3ai.io/v1alpha1
+kind: GlabPipeline
+metadata:
+  name: h3-cli-prod
+  namespace: data-team
+spec:
+  description: Role for the h3-cli-prod pipeline
+  market: us
+  env: prod
+  prodUsPolicyClaimRefs:
+  - kind: PublicRepo
+    name: h3-mcp-server

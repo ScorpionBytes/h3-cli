@@ -1,0 +1,11 @@
+apiVersion: repository.h3ai.io/v1alpha1
+kind: PublicRepo
+metadata:
+  name: h3-mcp-server
+  namespace: data-team
+spec:
+  name: h3-mcp-server
+  description: Horizon3.ai Nodezero MCP Server
+  market: us
+  env: prod
+  service: h3-mcp-server

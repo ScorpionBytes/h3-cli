@@ -1,0 +1,69 @@
+release-container-dockerhub:
+  stage: release-image
+  image:
+    name: $NXRM_DOCKER_REGISTRY/go-containerregistry/crane:debug
+    entrypoint: [""]
+  needs:
+    - build-container-nexus
+  variables:
+    KUBERNETES_CPU_REQUEST: "500m"
+    KUBERNETES_MEMORY_REQUEST: "100Mi"
+    DOCKER_CONFIG: /tmp/docker-config
+  script:
+    # Set up Docker authentication
+    - mkdir -p $DOCKER_CONFIG
+    - echo "$DOCKER_AUTH_CONFIG" > $DOCKER_CONFIG/config.json
+    # Copying from Nexus to Docker Hub
+    - crane copy $NXRM_DOCKER_REGISTRY_URL/$MCP_SERVER_IMAGE:${CI_COMMIT_TAG} horizon3ai/$MCP_SERVER_IMAGE:${CI_COMMIT_TAG}
+    - crane copy $NXRM_DOCKER_REGISTRY_URL/$MCP_SERVER_IMAGE:${CI_COMMIT_TAG} horizon3ai/$MCP_SERVER_IMAGE:latest
+  rules:
+    - !reference [.deploy-public, rules]
+
+login-ecr:
+  allow_failure: false
+  stage: release-image
+  image:
+    name: $NXRM_DOCKER_REGISTRY_URL/aws-cli:latest
+    pull_policy: always
+  artifacts:
+    when: on_success
+    paths:
+      - ecr_auth_token
+  variables:
+    ASSUME_ROLE_ARN: '$GLAB_PROD_ECR_ASSUME_ROLE_ARN'
+    EXTERNAL_ID: '$GLAB_ECR_EXTERNAL_ID'
+  script:
+    - echo "Logging into ECR"
+    - !reference [.assume_role_scripts, assume_with_external_id]
+    - aws ecr-public get-login-password --region us-east-1 > ecr_auth_token
+  tags:
+    - us-c2-k8s-runner
+  rules:
+    - !reference [.deploy-public, rules]
+
+release-container-ecr:
+  stage: release-image
+  image:
+    name: $NXRM_DOCKER_REGISTRY/go-containerregistry/crane:debug
+    entrypoint: [""]
+  needs:
+    - build-container-nexus
+    - login-ecr
+  variables:
+    KUBERNETES_CPU_REQUEST: "500m"
+    KUBERNETES_MEMORY_REQUEST: "100Mi"
+    DOCKER_CONFIG: /tmp/docker-config
+    ECR_REPO_URL: public.ecr.aws/horizon3ai
+    ASSUME_ROLE_ARN: '$GLAB_PROD_ECR_ASSUME_ROLE_ARN'
+  script:
+    # Set up Docker authentication
+    - mkdir -p $DOCKER_CONFIG
+    - echo "$DOCKER_AUTH_CONFIG" > $DOCKER_CONFIG/config.json
+    # Copying from Nexus to ECR
+    - cat ecr_auth_token | crane auth login -u AWS --password-stdin public.ecr.aws
+    - crane copy $NXRM_DOCKER_REGISTRY_URL/$MCP_SERVER_IMAGE:${CI_COMMIT_TAG} $ECR_REPO_URL/$MCP_SERVER_IMAGE:${CI_COMMIT_TAG}
+    - crane copy $NXRM_DOCKER_REGISTRY_URL/$MCP_SERVER_IMAGE:${CI_COMMIT_TAG} $ECR_REPO_URL/$MCP_SERVER_IMAGE:latest
+  rules:
+    - !reference [.deploy-public, rules]
+  tags:
+    - us-c2-k8s-runner

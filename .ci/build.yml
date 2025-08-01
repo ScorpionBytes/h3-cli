@@ -1,0 +1,36 @@
+# Build and push H3 MCP server Docker container
+build-container-nexus:
+  stage: build
+  image:
+    name: $NXRM_DOCKER_REGISTRY/kaniko-project/executor:v1.9.2-debug
+    entrypoint: [""]
+  variables:
+    DOCKERFILE_PATH: Dockerfile
+    KUBERNETES_CPU_REQUEST: "500m"
+    KUBERNETES_MEMORY_REQUEST: "100Mi"
+  script:
+    # Set up image destination tags
+    - >
+      if [ "$CI_COMMIT_TAG" != "" ]; then
+        export TAGGED_IMAGE_DEST="--destination=$NXRM_DOCKER_REGISTRY_URL/$MCP_SERVER_IMAGE:${CI_COMMIT_TAG}"
+      fi
+    # Configure Docker authentication
+    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
+    # Build and push container
+    - |
+      /kaniko/executor \
+      --context=$CI_PROJECT_DIR \
+      --dockerfile="$DOCKERFILE_PATH" \
+      --destination="$NXRM_DOCKER_REGISTRY_URL/$MCP_SERVER_IMAGE:latest" \
+      --destination="$NXRM_DOCKER_REGISTRY_URL/$MCP_SERVER_IMAGE:$CI_COMMIT_SHA" \
+      $TAGGED_IMAGE_DEST \
+      --snapshot-mode=redo \
+      --single-snapshot \
+      --cache-ttl=12h \
+      --cache=true
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: on_success
+    - if: $CI_COMMIT_TAG =~ /^\d{4}-\d{2}-\d{2}\.\d+$/
+      when: on_success
+    - when: manual

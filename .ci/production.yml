@@ -1,0 +1,51 @@
+# After merging into main and creating a tag, We want to push a copy of the h3-cli to prod s3 bucket
+production-deploy:
+  stage: production
+  image:
+    name: $NXRM_DOCKER_REGISTRY_URL/aws-cli:latest
+    pull_policy: always
+  tags:
+    - us-c2-k8s-runner
+  variables:
+    ASSUME_ROLE_ARN: '$GLAB_PROD_US_ASSUME_ROLE_ARN'
+    EXTERNAL_ID: '$GLAB_EXTERNAL_ID'
+  script:
+    - echo "Starting production-deploy for tag $CI_COMMIT_TAG"
+
+    # Get super secret access roles
+    - !reference [.assume_role_scripts, assume_with_external_id]
+    - aws sts get-caller-identity
+
+    # strip out non-public stuff
+    - rm -rf argocd
+    - rm -rf .gitlab-ci.yml
+    - rm -rf mcp Dockerfile   
+
+    # wrap up code into .zip
+    - zip -r h3-cli.zip ./*
+
+    # Upload to S3
+    - sha256sum easy_install.sh > easy_install.sha256.checksum
+    - aws s3 cp easy_install.sh s3://downloads-prod-us-east-1/utilities/cli/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+    - aws s3 cp easy_install.sha256.checksum s3://downloads-prod-us-east-1/utilities/cli/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+
+    # Upload to S3
+    - sha256sum h3-cli.zip > h3-cli.sha256.checksum
+    - aws s3 cp h3-cli.zip s3://downloads-prod-us-east-1/utilities/cli/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+    - aws s3 cp h3-cli.sha256.checksum s3://downloads-prod-us-east-1/utilities/cli/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+
+    # Upload to S3 with Tag name
+    - EASY_INSTALL_NAME="easy_install-$CI_COMMIT_TAG"
+    - mv easy_install.sh $EASY_INSTALL_NAME.sh
+    - sha256sum $EASY_INSTALL_NAME.sh > $EASY_INSTALL_NAME.sha256.checksum
+    - aws s3 cp $EASY_INSTALL_NAME.sh s3://downloads-prod-us-east-1/utilities/cli/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+    - aws s3 cp $EASY_INSTALL_NAME.sha256.checksum s3://downloads-prod-us-east-1/utilities/cli/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+
+    # Upload to S3 with Tag name
+    - H3_CLI_NAME="h3-cli-$CI_COMMIT_TAG"
+    - mv h3-cli.zip $H3_CLI_NAME.zip
+    - sha256sum $H3_CLI_NAME.zip > $H3_CLI_NAME.sha256.checksum
+    - aws s3 cp $H3_CLI_NAME.zip s3://downloads-prod-us-east-1/utilities/cli/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+    - aws s3 cp $H3_CLI_NAME.sha256.checksum s3://downloads-prod-us-east-1/utilities/cli/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+  rules:
+    - !reference [.deploy-production, rules]

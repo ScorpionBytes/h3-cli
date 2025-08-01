@@ -1,0 +1,43 @@
+stage-merge:
+  stage: stage
+  image:
+    name: $NXRM_DOCKER_REGISTRY_URL/aws-cli:latest
+    pull_policy: always
+  script:
+    - echo "Space holder for possible merge checks"
+  rules:
+    - !reference [.merge, rules]
+
+# After merging into main, push a copy of the h3-cli to dev s3 bucket
+stage-deploy:
+  stage: stage
+  image:
+    name: $NXRM_DOCKER_REGISTRY_URL/aws-cli:latest
+    pull_policy: always
+  variables:
+    ASSUME_ROLE_ARN: '$GLAB_NON_PROD_ASSUME_ROLE_ARN'
+    EXTERNAL_ID: '$GLAB_EXTERNAL_ID'
+  script:
+    # Get super secret access roles
+    - !reference [.assume_role_scripts, assume_with_external_id]
+    - aws sts get-caller-identity
+
+    # strip out non-public stuff
+    - rm -rf argocd
+    - rm -rf .gitlab-ci.yml
+    - rm -rf mcp Dockerfile   
+
+    # wrap up code into .zip
+    - zip -r h3-cli.zip ./*
+
+    # Upload easy_install script to S3
+    - sha256sum easy_install.sh > easy_install.sha256.checksum
+    - aws s3 cp easy_install.sh s3://downloads-devstage-us-east-1/utilities/cli/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+    - aws s3 cp easy_install.sha256.checksum s3://downloads-devstage-us-east-1/utilities/cli/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+
+    # Upload h3-cli to S3
+    - sha256sum h3-cli.zip > h3-cli.sha256.checksum
+    - aws s3 cp h3-cli.zip s3://downloads-devstage-us-east-1/utilities/cli/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+    - aws s3 cp h3-cli.sha256.checksum s3://downloads-devstage-us-east-1/utilities/cli/ --metadata id=$CI_PIPELINE_ID --region us-east-1 --acl bucket-owner-full-control
+  rules:
+    - !reference [.deploy-stage, rules]

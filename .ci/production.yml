@@ -19,7 +19,8 @@ production-deploy:
     # strip out non-public stuff
     - rm -rf argocd
     - rm -rf .gitlab-ci.yml
-    - rm -rf mcp Dockerfile   
+    - rm -rf mcp Dockerfile
+    - rm -rf .ci
 
     # wrap up code into .zip
     - zip -r h3-cli.zip ./*

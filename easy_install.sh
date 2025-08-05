@@ -79,7 +79,7 @@ function via_unzip {
         echoerr "ERROR: unzip h3-cli-public.zip failed"
         exit 1
     fi
-    echo "$TEMP_DIR/h3-cli-public"
+    echo "`pwd`/h3-cli-public"
 }
 
 # :returns: download dir
@@ -95,7 +95,7 @@ function via_tar {
         echoerr "ERROR: curl $tar_url | tar failed"
         exit 1
     fi
-    echo "$TEMP_DIR/h3-cli-public"
+    echo "`pwd`/h3-cli-public"
 }
 
 # :returns: download dir
@@ -119,7 +119,7 @@ function via_unzip_ng {
         echoerr "ERROR: unzip h3-cli.zip failed"
         exit 1
     fi
-    echo "$TEMP_DIR/h3-cli"
+    echo "`pwd`/h3-cli"
 }
 
 # downloads into $H3_CLI_HOME

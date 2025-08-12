@@ -12,9 +12,9 @@ default:
 stages:
   - stage
   - production
+  - deploy
   - build
   - release-image
-  - deploy
 
 variables:
   MCP_SERVER_IMAGE: h3-mcp-server

@@ -4,6 +4,7 @@ build-container-nexus:
   image:
     name: $NXRM_DOCKER_REGISTRY/kaniko-project/executor:v1.9.2-debug
     entrypoint: [""]
+  needs: []
   variables:
     DOCKERFILE_PATH: Dockerfile
     KUBERNETES_CPU_REQUEST: "500m"

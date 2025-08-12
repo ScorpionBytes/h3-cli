@@ -10,10 +10,10 @@ default:
     - h3internal-k8s-runner
 
 stages:
-  - build
-  - release-image
   - stage
   - production
+  - build
+  - release-image
   - deploy
 
 variables:

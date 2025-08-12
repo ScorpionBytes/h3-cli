@@ -21,6 +21,7 @@ production-deploy:
     - rm -rf .gitlab-ci.yml
     - rm -rf mcp Dockerfile
     - rm -rf .ci
+    - rm -rf ecr_auth_token
 
     # wrap up code into .zip
     - zip -r h3-cli.zip ./*
